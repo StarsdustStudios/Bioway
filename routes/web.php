@@ -18,5 +18,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('admin');
     })->name('admin');
 });
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
