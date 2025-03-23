@@ -1,33 +1,13 @@
-import { type SharedData } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenuSub,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarProvider,
   SidebarHeader,
   SidebarFooter,
   SidebarRail,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
 } from "@/components/ui/sidebar"
 
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
-
-import {
-  IconArrowUp,
   IconBarrierBlock,
   IconBrowserCheck,
   IconBug,
@@ -36,16 +16,13 @@ import {
   IconCar,
   IconCarGarage,
   IconChecklist,
-  IconDashboard,
   IconError404,
   IconHelp,
   IconLayoutDashboard,
   IconLock,
-  IconLockAccess,
   IconMessageReport,
   IconMessages,
   IconNews,
-  IconNotes,
   IconNotification,
   IconPackages,
   IconPalette,
@@ -61,24 +38,30 @@ import {
   IconUsers,
 } from '@tabler/icons-react'
 
-import { NavUser } from '@/components/nav-user';
+import { type SharedData } from '@/types';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area"
+
 import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
 import { type SidebarData } from '@/components/layout/types'
 import { TeamSwitcher } from '@/components/team-switcher';
-import { NavNormal } from '@/components/nav-normal';
+
+import { NavUser } from '@/components/nav-user';
 import { NavGroup } from '@/components/nav-group';
 
 const sidebarData: SidebarData = {
   user: {
-    name: 'satnaing',
-    email: 'satnaingdev@gmail.com',
-    avatar: '/avatars/shadcn.jpg',
+    name: 'Stardust Studio',
+    email: 'starduststudio@hotmail.com',
+    avatar: '@/assets/stardust.png',
   },
   teams: [
     {
-      name: 'Shadcn Admin',
+      name: 'Bioway Admin',
       logo: Command,
-      plan: 'Vite + ShadcnUI',
+      plan: 'Laravel + Vite + ShadcnUI',
     },
     {
       name: 'Acme Inc',
@@ -138,17 +121,17 @@ const sidebarData: SidebarData = {
             {
               title: 'Tags',
               icon: IconTag,
-              url: '/sign-in',
+              url: '/tags',
             },
             {
               title: 'Promo',
               icon: IconTicket,
-              url: '/sign-in-2',
+              url: '/promo',
             },
             {
-              title: 'Artikel/Berita',
+              title: 'Post',
               icon: IconMessageReport,
-              url: '/sign-up',
+              url: '/post',
             },
           ],
         },
@@ -255,27 +238,23 @@ const sidebarData: SidebarData = {
   ],
 }
 
-
-const item = {
-    title: 'Dashboard',
-    icon: IconLayoutDashboard,
-    url: '/'}
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible='icon' variant='floating' {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={sidebarData.teams} />
       </SidebarHeader>
+      <SidebarRail />
+      <ScrollArea className="flex-1 overflow-y-auto px-4">
       <SidebarContent>
         {sidebarData.navGroups.map((props) => (
           <NavGroup key={props.title} {...props} />
         ))}
       </SidebarContent>
+      </ScrollArea>
       <SidebarFooter>
         <NavUser user={sidebarData.user} />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   )
 }
