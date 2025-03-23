@@ -1,33 +1,4 @@
-import { type SharedData } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenuSub,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-  SidebarHeader,
-  SidebarFooter,
-  SidebarRail,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
-} from "@/components/ui/sidebar"
-
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
-
-import {
-  IconArrowUp,
   IconBarrierBlock,
   IconBrowserCheck,
   IconBug,
@@ -36,7 +7,6 @@ import {
   IconCar,
   IconCarGarage,
   IconChecklist,
-  IconDashboard,
   IconError404,
   IconHelp,
   IconLayoutDashboard,
@@ -60,15 +30,10 @@ import {
   IconUserOff,
   IconUsers,
 } from '@tabler/icons-react'
-
-import { NavUser } from '@/components/nav-user';
 import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-react'
-import { type SidebarData } from '@/components/layout/types'
-import { TeamSwitcher } from '@/components/team-switcher';
-import { NavNormal } from '@/components/nav-normal';
-import { NavGroup } from '@/components/nav-group';
+import { type SidebarData } from '../types'
 
-const sidebarData: SidebarData = {
+export const sidebarData: SidebarData = {
   user: {
     name: 'satnaing',
     email: 'satnaingdev@gmail.com',
@@ -253,65 +218,4 @@ const sidebarData: SidebarData = {
       ],
     },
   ],
-}
-
-
-const item = {
-    title: 'Dashboard',
-    icon: IconLayoutDashboard,
-    url: '/'}
-
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  return (
-    <Sidebar collapsible='icon' variant='floating' {...props}>
-      <SidebarHeader>
-        <TeamSwitcher teams={sidebarData.teams} />
-      </SidebarHeader>
-      <SidebarContent>
-        {sidebarData.navGroups.map((props) => (
-          <NavGroup key={props.title} {...props} />
-        ))}
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={sidebarData.user} />
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>
-  )
-}
-export default function Welcome() {
-  const { auth } = usePage<SharedData>().props;
-  return (
-    <SidebarProvider>
-      <Head title="Welcome">
-        <link rel="preconnect" href="https://fonts.bunny.net" />
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-      </Head>
-      <div className="flex h-screen">
-        <AppSidebar />
-
-        {/* Main Content */}
-        <div className="flex flex-col flex-1">
-          {/* Top Navigation */}
-          <div className="border-b p-4 flex justify-between items-center">
-            <h1 className="text-xl font-semibold">Welcome, {auth?.user?.name || 'Guest'}</h1>
-            <Button asChild>
-              <Link href={auth ? '/dashboard' : '/login'}>
-                {auth ? 'Go to Dashboard' : 'Sign In'}
-              </Link>
-            </Button>
-          </div>
-
-          {/* Content Area */}
-          <div className="p-6">
-            <Card>
-              <CardContent>
-                <p>Welcome to the dashboard!</p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </SidebarProvider>
-  );
 }
