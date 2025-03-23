@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import {
   BadgeCheck,
   Bell,
@@ -22,7 +23,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { Link, useForm } from '@inertiajs/react'
 
 export function NavUser({
   user,
@@ -34,11 +34,6 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-  const { post } = useForm()
-
-  const handleLogout = () => {
-    post(route('logout'))
-  }
 
   return (
     <SidebarMenu>
@@ -88,26 +83,26 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
-                <Link href='/settings/account'>
+                <Link to='/settings/account'>
                   <BadgeCheck />
                   Account
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href='/settings'>
+                <Link to='/settings'>
                   <CreditCard />
                   Billing
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href='/settings/notifications'>
+                <Link to='/settings/notifications'>
                   <Bell />
                   Notifications
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
+            <DropdownMenuItem>
               <LogOut />
               Log out
             </DropdownMenuItem>
