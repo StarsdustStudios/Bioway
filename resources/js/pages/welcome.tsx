@@ -55,7 +55,7 @@ const sidebarData: SidebarData = {
   user: {
     name: 'Stardust Studio',
     email: 'starduststudio@hotmail.com',
-    avatar: '@/assets/stardust.png',
+    avatar: 'https://github.com/StarsdustStudios/Bioway/blob/Frontend-test/resources/js/assets/logo.png?raw=true',
   },
   teams: [
     {
