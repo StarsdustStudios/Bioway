@@ -8,6 +8,27 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+
+// Route::middleware(['auth'])->prefix('product')->group(function () {
+// Tuker bawah ini sama yang pake auth diatas kalau udah
+Route::prefix('product')->group(function () { 
+    Route::get('/rental', fn() => Inertia::render('welcome'))->name('product.rental');
+    Route::get('/carter', fn() => Inertia::render('welcome'))->name('product.carter');
+    Route::get('/shuttle-bus', fn() => Inertia::render('welcome'))->name('product.shuttlebus');
+    Route::get('/travel', fn() => Inertia::render('welcome'))->name('product.travel');
+    Route::get('/delivery', fn() => Inertia::render('welcome'))->name('product.delivery');
+});
+
+
+// Route::middleware(['auth'])->prefix('cms')->group(function () {
+// Tuker bawah ini sama yang pake auth diatas kalau udah
+Route::prefix('cms')->group(function () { 
+    Route::get('/tags', fn() => Inertia::render('welcome'))->name('product.tags');
+    Route::get('/promo', fn() => Inertia::render('welcome'))->name('product.promo');
+    Route::get('/post', fn() => Inertia::render('welcome'))->name('product.post');
+});
+
+// require __DIR__.'/settings.php';
 // Route::middleware('auth')->group(function () {
     
 // });
