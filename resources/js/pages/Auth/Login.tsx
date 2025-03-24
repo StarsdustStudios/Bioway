@@ -1,20 +1,32 @@
 import { useForm } from '@inertiajs/react';
+import { useEffect } from 'react';
+import { usePage } from '@inertiajs/react';
 
 export default function Login() {
-    const { data, setData, post, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         username: '',
         password: '',
     });
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const { auth } = usePage().props; // Get auth data from Inertia
+
+    useEffect(() => {
+        if (auth?.user) {
+            window.location.href = '/dashboard'; // Redirect if already logged in
+        }
+    }, [auth]);
+
+    const handleSubmit = (e: { preventDefault: () => void }) => {
         e.preventDefault();
-        post('/login');
+        post('/login', {
+            onSuccess: () => window.location.href = '/dashboard', // Redirect after successful login
+        });
     };
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
             <h1 className="text-3xl font-bold">Login</h1>
-            <form onSubmit={handleSubmit} className="mt-4">
+            <form onSubmit={handleSubmit} className="mt-4 w-80">
                 <input
                     type="text"
                     placeholder="Username"
@@ -33,8 +45,12 @@ export default function Login() {
                 />
                 {errors.password && <p className="text-red-500">{errors.password}</p>}
 
-                <button type="submit" className="mt-4 bg-blue-500 text-white px-4 py-2">
-                    Login
+                <button
+                    type="submit"
+                    disabled={processing}
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 w-full"
+                >
+                    {processing ? 'Logging in...' : 'Login'}
                 </button>
             </form>
         </div>
