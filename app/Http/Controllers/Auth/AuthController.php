@@ -1,57 +1,34 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * Handle an incoming authentication request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function authenticate(Request $request)
+    public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required',
-            'password' => 'required',
+            'username' => 'required|string',
+            'password' => 'required|string',
         ]);
-
-        $credentials = $request->only('username', 'password');
-
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return redirect()->intended('dashboard');
+    
+        $user = User::where('username', $request->username)->first();
+    
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'username' => 'Invalid credentials',
+            ]);
         }
-
-        return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
-        ]);
-    }
-
-    /**
-     * Handle an incoming registration request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function register(Request $request)
-    {
-        $request->validate([
-            'username' => 'required',
-            'password' => 'required',
-        ]);
-
-        User::create([
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
-        ]);
-
-        return redirect('login');
+    
+        Auth::login($user);
+        $request->session()->regenerate();
+    
+        return redirect('/dashboard'); // Redirect to dashboard after login
     }
 }
