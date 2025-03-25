@@ -1,6 +1,6 @@
 import { usePage } from "@inertiajs/react";
 
-export default function Rental() {
+export default function Rentalr() {
 
   return (
     <div>
