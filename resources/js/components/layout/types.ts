@@ -39,4 +39,11 @@ interface SidebarData {
   navGroups: NavGroup[];
 }
 
-export type { User, SidebarData, NavGroup, NavItem, NavCollapsible, NavLink };
+interface ProductData {
+  productName: string;
+  productColumns: string[];
+  productColDataset: string[];
+  productStatus: string[];
+}
+
+export type { User, SidebarData, ProductData, NavGroup, NavItem, NavCollapsible, NavLink };

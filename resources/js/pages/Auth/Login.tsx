@@ -8,7 +8,7 @@ export default function Login() {
         password: '',
     });
 
-    const { auth } = usePage().props; // Get auth data from Inertia
+    const { auth } = usePage().props; 
 
     useEffect(() => {
         if (auth?.user) {
