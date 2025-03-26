@@ -3,8 +3,8 @@ import { Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { userTypes } from '../data/data'
-import { DataTableFacetedFilter } from './data-table-faceted-filter'
-import { DataTableViewOptions } from './data-table-view-options'
+import { DataTableFacetedFilter } from './static/data-table-faceted-filter'
+import { DataTableViewOptions } from './static/data-table-view-options'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -34,8 +34,8 @@ export function DataTableToolbar<TData>({
               column={table.getColumn('status')}
               title='Status'
               options={[
-                { label: 'Active', value: 'active' },
-                { label: 'Inactive', value: 'inactive' },
+                { label: 'Aktif', value: 'active' },
+                { label: 'NonAktif', value: 'inactive' },
                 { label: 'Invited', value: 'invited' },
                 { label: 'Suspended', value: 'suspended' },
               ]}

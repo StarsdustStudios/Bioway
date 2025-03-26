@@ -1,22 +1,16 @@
-import { useUsers } from '../context/users-context'
-import { UsersActionDialog } from './users-action-dialog'
-import { UsersDeleteDialog } from './users-delete-dialog'
-import { UsersInviteDialog } from './users-invite-dialog'
+import { useProduct } from '../../context/product-context'
+import { UsersActionDialog } from '../add-product-dialog'
+import { UsersDeleteDialog } from '../delete-product-dialog'
 
-export function UsersDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useUsers()
+export function ProductDialogs({ type }: { type: number }) {
+  const { open, setOpen, currentRow, setCurrentRow } = useProduct()
   return (
     <>
       <UsersActionDialog
         key='user-add'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
-      />
-
-      <UsersInviteDialog
-        key='user-invite'
-        open={open === 'invite'}
-        onOpenChange={() => setOpen('invite')}
+        type = {type}
       />
 
       {currentRow && (
@@ -31,6 +25,7 @@ export function UsersDialogs() {
               }, 500)
             }}
             currentRow={currentRow}
+            type = {type}
           />
 
           <UsersDeleteDialog
