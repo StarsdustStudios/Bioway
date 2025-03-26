@@ -17,11 +17,11 @@ const productRoleSchema = z.union([
 
 const productSchema = z.object({
   id: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
-  username: z.string(),
-  email: z.string(),
-  phoneNumber: z.string(),
+  imgUrl: z.string().url(),
+  brand: z.string(),
+  price: z.coerce.number().positive(),
+  driverFee: z.coerce.number().positive(),
+  location: z.string(),
   status: productStatusSchema,
   role: productRoleSchema,
   createdAt: z.coerce.date(),

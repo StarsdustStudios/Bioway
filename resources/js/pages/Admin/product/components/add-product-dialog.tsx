@@ -132,7 +132,6 @@ export function UsersActionDialog({ currentRow, open, onOpenChange, type}: Props
     onOpenChange(false)
   }
 
-  const isPasswordTouched = !!form.formState.dirtyFields.password
   const productName = productData[type].productName
   return (
     <Dialog

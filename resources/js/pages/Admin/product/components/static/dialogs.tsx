@@ -1,4 +1,4 @@
-import { useProduct } from '../../context/product-context'
+import { useProduct } from '../../../../../context/product-context'
 import { UsersActionDialog } from '../add-product-dialog'
 import { UsersDeleteDialog } from '../delete-product-dialog'
 

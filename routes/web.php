@@ -46,6 +46,8 @@ Route::get('/login', function () {
     return Inertia::render('Auth/Login'); // Ensure "Login.tsx" exists in your React frontend
 })->name('login');
 
+
+
 // Login request handler
 Route::post('/login', [AuthController::class, 'login']);
 // Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');

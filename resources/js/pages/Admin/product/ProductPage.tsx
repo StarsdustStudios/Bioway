@@ -7,9 +7,9 @@ import { getColumns } from './components/table-columns'
 import { ProductDialogs } from './components/static/dialogs'
 import { ProductPrimaryButton } from './components/static/add-product-btn'
 import { ProductTable } from './components/static/table'
-import ProductProvider from './context/product-context'
+import ProductProvider from '../../../context/product-context'
 import { productListSchema } from './data/schema'
-import { product } from './data/users'
+import { product } from './data/products'
 import { productData } from '@/components/layout/data/product-data'
 
 export function ProductPage({ index }: { index: number }) {

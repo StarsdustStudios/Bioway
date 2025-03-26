@@ -7,13 +7,13 @@ import { AppSidebar } from '@/components/app-sidebar';
 import Tags from './cms/Tags';
 import Promo from './cms/Promo';
 import Post from './cms/Post';
-import { ProductPage } from './product/rental/ProductPage';
+import { ProductPage } from './product/ProductPage';
 import { SearchProvider } from '@/context/search-context';
 
 
 export default function Dashboard() {
   const { url } = usePage(); // Get the current URL from Inertia
-  const { auth } = usePage<SharedData>().props;
+  // const { auth } = usePage<SharedData>().props;
 
   return (
     <SearchProvider>

@@ -1,6 +1,6 @@
 import { IconUserPlus } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
-import { useProduct } from '../../context/product-context'
+import { useProduct } from '../../../../../context/product-context'
 
 export function ProductPrimaryButton() {
   const { setOpen } = useProduct()

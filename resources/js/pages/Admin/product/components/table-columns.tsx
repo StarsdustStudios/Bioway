@@ -1,25 +1,28 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
-import { Checkbox } from '@/components/ui/checkbox'
 import LongText from '@/components/long-text'
-import { callTypes, userTypes } from '../data/data'
+import { callTypes } from '../data/data'
 import { Product } from '../data/schema'
 import { DataTableColumnHeader } from './static/data-table-column-header'
 import { DataTableRowActions } from './static/data-table-row-actions'
-import { fa } from '@faker-js/faker'
 import { productData } from '@/components/layout/data/product-data'
 
 export function getColumns({ index }: { index: number }): ColumnDef<Product>[] {
 
-  const dynamicColumns = productData[index].productColumns.map((key) => ({
-    
-      accessorKey: "email",
+  const dynamicColumns = productData[index].productColumns.map((key, colIndex) => ({
+      accessorKey: productData[index].productColDataset[colIndex],
       header: ({ column }: {column : any}) => (
         <DataTableColumnHeader column={column} title={key} />
       ),
       cell: ({ row }: {row : any}) => (
-        <div className='w-fit text-nowrap'>{row.getValue('email')}</div>
+        <div className="w-fit text-nowrap">
+          {productData[index].productColDataset[colIndex] === "imgUrl" ? (
+            <img src="@/assets/stardust.png" alt="Product" className="w-16 h-16 rounded-lg" />
+          ) : (
+            row.getValue(productData[index].productColDataset[colIndex])
+          )}
+        </div>
       ),
       enableSorting: false,
     
@@ -32,9 +35,9 @@ export function getColumns({ index }: { index: number }): ColumnDef<Product>[] {
         <DataTableColumnHeader column={column} title="Id/Nopol" />
       ),
       cell: ({ row }) => {
-        const { firstName, lastName } = row.original;
+        const { id } = row.original;
         return (
-          <LongText className='max-w-36'>{`${firstName} ${lastName}`}</LongText>
+          <LongText className='max-w-36'>{id}</LongText>
         );
       },
       meta: { className: 'w-36' },

@@ -10,7 +10,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useProduct } from '../../context/product-context'
+import { useProduct } from '../../../../../context/product-context'
 import { Product } from '../../data/schema'
 
 interface DataTableRowActionsProps {

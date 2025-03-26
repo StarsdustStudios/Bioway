@@ -42,7 +42,8 @@ interface SidebarData {
 interface ProductData {
   productName: string;
   productColumns: string[];
-  productStatus: string[]
+  productColDataset: string[];
+  productStatus: string[];
 }
 
 export type { User, SidebarData, ProductData, NavGroup, NavItem, NavCollapsible, NavLink };
