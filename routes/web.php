@@ -23,9 +23,9 @@ Route::prefix('product')->group(function () {
 // Route::middleware(['auth'])->prefix('cms')->group(function () {
 // Tuker bawah ini sama yang pake auth diatas kalau udah
 Route::prefix('cms')->group(function () { 
-    Route::get('/tags', fn() => Inertia::render('Dashboard'))->name('product.tags');
-    Route::get('/promo', fn() => Inertia::render('Dashboard'))->name('product.promo');
-    Route::get('/post', fn() => Inertia::render('Dashboard'))->name('product.post');
+    Route::get('/tags', fn() => Inertia::render('Admin/Dashboard'))->name('product.tags');
+    Route::get('/promo', fn() => Inertia::render('Admin/Dashboard'))->name('product.promo');
+    Route::get('/post', fn() => Inertia::render('Admin/Dashboard'))->name('product.post');
 });
 
 // require __DIR__.'/settings.php';

@@ -7,9 +7,7 @@ import { SearchProvider } from '@/context/search-context'
 import AppSidebar from '@/components/app-sidebar'
 
 // Lazy load CMS and Product components
-const Tags = lazy(() => import('./cms/Tags'))
-const Promo = lazy(() => import('./cms/Promo'))
-const Post = lazy(() => import('./cms/Post'))
+const CmsPage = lazy(() => import('./cms/CmsPage'))
 const ProductPage = lazy(() => import('./product/ProductPage'))
 
 export default function Dashboard() {
@@ -37,11 +35,11 @@ export default function Dashboard() {
     if (url.startsWith('/cms')) {
       switch (url) {
         case '/cms/tags':
-          return <Tags />
+          return <CmsPage index={0} />
         case '/cms/promo':
-          return <Promo />
+          return <CmsPage index={1} />
         case '/cms/post':
-          return <Post />
+          return <CmsPage index={2} />
         default:
           return <div>Page not found</div>
       }
