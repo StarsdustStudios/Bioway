@@ -3,7 +3,7 @@ import { usePage } from '@inertiajs/react'
 import { type SharedData } from '@/types'
 
 import { SidebarProvider } from '@/components/ui/sidebar'
-import { SearchProvider } from '@/context/search-context'
+// import { SearchProvider } from '@/context/search-context'
 import AppSidebar from '@/components/app-sidebar'
 
 // Lazy load CMS and Product components
@@ -49,7 +49,7 @@ export default function Dashboard() {
   }
 
   return (
-    <SearchProvider>
+    // <SearchProvider>
       <SidebarProvider defaultOpen={true}>
         <AppSidebar />
         <div
@@ -61,6 +61,6 @@ export default function Dashboard() {
           </Suspense>
         </div>
       </SidebarProvider>
-    </SearchProvider>
+    // </SearchProvider>
   )
 }

@@ -31,7 +31,7 @@ export const sidebarData: SidebarData = {
     user: {
       name: 'Stardust Studio',
       email: 'starduststudio@hotmail.com',
-      avatar: 'https://github.com/StarsdustStudios/Bioway/blob/Frontend-test/resources/js/assets/logo.png?raw=true',
+      avatar: 'https:github.com/StarsdustStudios/Bioway/blob/Frontend-test/resources/js/assets/logo.png?raw=true',
     },
     teams: [
       {
