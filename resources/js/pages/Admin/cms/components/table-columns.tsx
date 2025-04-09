@@ -3,24 +3,24 @@ import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import LongText from '@/components/long-text'
 import { callTypes } from '../data/data'
-import { Product } from '../data/schema'
+import { Cms } from '../data/schema'
 import { DataTableColumnHeader } from './static/data-table-column-header'
 import { DataTableRowActions } from './static/data-table-row-actions'
-import { productData } from '@/components/layout/data/product-data'
+import { cmsData } from '@/components/layout/data/cms-data'
 
-export function getColumns({ index }: { index: number }): ColumnDef<Product>[] {
+export function getColumns({ index }: { index: number }): ColumnDef<Cms>[] {
 
-  const dynamicColumns = productData[index].productColumns.map((key, colIndex) => ({
-      accessorKey: productData[index].productColDataset[colIndex],
+  const dynamicColumns = cmsData[index].cmsColumns.map((key, colIndex) => ({
+      accessorKey: cmsData[index].cmsColDataset[colIndex],
       header: ({ column }: {column : any}) => (
         <DataTableColumnHeader column={column} title={key} />
       ),
       cell: ({ row }: {row : any}) => (
         <div className="w-fit text-nowrap">
-          {productData[index].productColDataset[colIndex] === "imgUrl" ? (
-            <img src="/stardust.png" alt="Product" className="w-16 h-16 rounded-lg" />
+          {cmsData[index].cmsColDataset[colIndex] === "imgUrl" ? (
+            <img src="/stardust.png" alt="Cms" className="w-16 h-16 rounded-lg" />
           ) : (
-            row.getValue(productData[index].productColDataset[colIndex])
+            row.getValue(cmsData[index].cmsColDataset[colIndex])
           )}
         </div>
       ),

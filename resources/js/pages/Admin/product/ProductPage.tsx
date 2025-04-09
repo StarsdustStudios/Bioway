@@ -12,7 +12,7 @@ import { productListSchema } from './data/schema'
 import { product } from './data/products'
 import { productData } from '@/components/layout/data/product-data'
 
-export function ProductPage({ index }: { index: number }) {
+export default function ProductPage({ index }: { index: number }) {
   // Parse user list
   const userList = productListSchema.parse(product)
 

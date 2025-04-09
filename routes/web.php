@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Auth\AuthController;
 
-Route::get('/', function () {
-    return Inertia::render('Admin/Dashboard');
-})->name('dashboard');
+// Route::get('/', function () {
+//     return Inertia::render('Admin/Dashboard');
+// })->name('dashboard');
 
 
 // Route::middleware(['auth'])->prefix('product')->group(function () {
@@ -23,9 +23,9 @@ Route::prefix('product')->group(function () {
 // Route::middleware(['auth'])->prefix('cms')->group(function () {
 // Tuker bawah ini sama yang pake auth diatas kalau udah
 Route::prefix('cms')->group(function () { 
-    Route::get('/tags', fn() => Inertia::render('Dashboard'))->name('product.tags');
-    Route::get('/promo', fn() => Inertia::render('Dashboard'))->name('product.promo');
-    Route::get('/post', fn() => Inertia::render('Dashboard'))->name('product.post');
+    Route::get('/tags', fn() => Inertia::render('Admin/Dashboard'))->name('product.tags');
+    Route::get('/promo', fn() => Inertia::render('Admin/Dashboard'))->name('product.promo');
+    Route::get('/post', fn() => Inertia::render('Admin/Dashboard'))->name('product.post');
 });
 
 // require __DIR__.'/settings.php';
@@ -47,17 +47,16 @@ Route::get('/login', function () {
 })->name('login');
 
 
-
 // Login request handler
 Route::post('/login', [AuthController::class, 'login']);
 // Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
 // Dashboard route (protected)
-Route::middleware(['auth'])->group(function () {
+// Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        return Inertia::render('Admin/Dashboard');
     });
-});
+// });
 
 require __DIR__.'/settings.php';
 // require __DIR__.'/auth.php';
