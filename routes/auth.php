@@ -8,6 +8,8 @@ use Inertia\Inertia;
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+
+    //Frontend
     Route::get('/dashboard', function () {
         return Inertia::render('Admin/Dashboard');
     });
@@ -25,5 +27,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/promo', fn() => Inertia::render('Admin/Dashboard'))->name('product.promo');
         Route::get('/post', fn() => Inertia::render('Admin/Dashboard'))->name('product.post');
     });
+
+    //Backend
 
 });
