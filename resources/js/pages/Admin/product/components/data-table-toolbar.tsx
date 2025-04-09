@@ -20,15 +20,15 @@ export function DataTableToolbar<TData>({
         <Input
           placeholder='Filter...'
           value={
-            (table.getColumn('id')?.getFilterValue() as string) ?? ''
+            (table.getColumn('brand')?.getFilterValue() as string) ?? ''
           }
           onChange={(event) =>
-            table.getColumn('id')?.setFilterValue(event.target.value)
+            table.getColumn('brand')?.setFilterValue(event.target.value)
           }
           className='h-8 w-[150px] lg:w-[250px]'
         />
         <div className='flex gap-x-2'>
-          {table.getColumn('status') && (
+          {/* {table.getColumn('status') && (
             <DataTableFacetedFilter
               column={table.getColumn('status')}
               title='Status'
@@ -39,7 +39,7 @@ export function DataTableToolbar<TData>({
                 { label: 'Suspended', value: 'suspended' },
               ]}
             />
-          )}
+          )} */}
         </div>
         {isFiltered && (
           <Button

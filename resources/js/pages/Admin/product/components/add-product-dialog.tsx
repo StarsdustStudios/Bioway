@@ -24,69 +24,28 @@ import {
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { SelectDropdown } from '@/components/select-dropdown'
-import { userTypes } from '../data/data'
-import { Product } from '../data/schema'
 import { productData } from '@/components/layout/data/product-data'
+import { Product } from '../data/schema'
 
+// Form schema without the password fields
 const formSchema = z
   .object({
-    firstName: z.string().min(1, { message: 'First Name is required.' }),
-    lastName: z.string().min(1, { message: 'Last Name is required.' }),
-    username: z.string().min(1, { message: 'Username is required.' }),
-    phoneNumber: z.string().min(1, { message: 'Phone number is required.' }),
-    email: z
-      .string()
-      .min(1, { message: 'Email is required.' })
-      .email({ message: 'Email is invalid.' }),
-    password: z.string().transform((pwd) => pwd.trim()),
+    imgUrl: z.string().url(),
+    brand: z.string().min(1, { message: 'Brand is required.' }),
+    price: z.coerce.number().positive().min(1, { message: 'Price cannot be less than 1.' }),
+    driverFee: z.coerce.number().positive().min(1, { message: 'Driver fee is required.' }),
+    location: z.string().min(1, { message: 'Location is required.' }),
+    passengerCapacity: z.coerce.number().positive().min(1, { message: 'Passenger capacity is required.' }),
+    luggageCapacity: z.coerce.number().positive().min(1, { message: 'Luggage capacity is required.' }),
+    destination: z.string().min(1, { message: 'Destination is required.' }),
+    status: z.string().min(1, { message: 'Status is required.' }),
     role: z.string().min(1, { message: 'Role is required.' }),
-    confirmPassword: z.string().transform((pwd) => pwd.trim()),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
     isEdit: z.boolean(),
   })
-  .superRefine(({ isEdit, password, confirmPassword }, ctx) => {
-    if (!isEdit || (isEdit && password !== '')) {
-      if (password === '') {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Password is required.',
-          path: ['password'],
-        })
-      }
 
-      if (password.length < 8) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Password must be at least 8 characters long.',
-          path: ['password'],
-        })
-      }
-
-      if (!password.match(/[a-z]/)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Password must contain at least one lowercase letter.',
-          path: ['password'],
-        })
-      }
-
-      if (!password.match(/\d/)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Password must contain at least one number.',
-          path: ['password'],
-        })
-      }
-
-      if (password !== confirmPassword) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Passwords don't match.",
-          path: ['confirmPassword'],
-        })
-      }
-    }
-  })
-type UserForm = z.infer<typeof formSchema>
+type ProductForm = z.infer<typeof formSchema>
 
 interface Props {
   currentRow?: Product
@@ -95,31 +54,34 @@ interface Props {
   type: number
 }
 
-export function UsersActionDialog({ currentRow, open, onOpenChange, type}: Props) {
+export function ProductsActionDialog({ currentRow, open, onOpenChange, type }: Props) {
   const isEdit = !!currentRow
-  const form = useForm<UserForm>({
+  const product = productData[type]
+  const form = useForm<ProductForm>({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
           ...currentRow,
-          password: '',
-          confirmPassword: '',
           isEdit,
         }
       : {
-          firstName: '',
-          lastName: '',
-          username: '',
-          email: '',
+          imgUrl: '',
+          brand: '',
+          price: 0,
+          driverFee: 0,
+          location: '',
+          passengerCapacity: 0,
+          luggageCapacity: 0,
+          destination: '',
+          status: '',
           role: '',
-          phoneNumber: '',
-          password: '',
-          confirmPassword: '',
+          createdAt: new Date(),
+          updatedAt: new Date(),
           isEdit,
         },
   })
 
-  const onSubmit = (values: UserForm) => {
+  const onSubmit = (values: ProductForm) => {
     form.reset()
     toast({
       title: 'You submitted the following values:',
@@ -132,7 +94,6 @@ export function UsersActionDialog({ currentRow, open, onOpenChange, type}: Props
     onOpenChange(false)
   }
 
-  const productName = productData[type].productName
   return (
     <Dialog
       open={open}
@@ -143,143 +104,77 @@ export function UsersActionDialog({ currentRow, open, onOpenChange, type}: Props
     >
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-left'>
-          <DialogTitle>{isEdit ? 'Edit ' + productName : 'Tambahkan ' + productName}</DialogTitle>
+          <DialogTitle>{isEdit ? 'Edit ' + product.productName : 'Add ' + product.productName}</DialogTitle>
           <DialogDescription>
-            {isEdit ? 'Update the user here. ' : 'Tambahkan ' + productName + " disini. "}
-            Tekan tombol save jika sudah selesai.
+            {isEdit ? 'Update the product here.' : 'Add ' + product.productName + ' here.'}
+            Click the save button when finished.
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className='-mr-4 h-[26.25rem] w-full py-1 pr-4'>
           <Form {...form}>
             <form
-              id='user-form'
+              id='product-form'
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4 p-0.5'
             >
-              <FormField
+              {product.productColumns.map((column, index) => {
+                const fieldName = product.productColDataset[index] // Get the field name dynamically
+                const placeHolder = product.productColumns[index] // Get the placeholder dynamically
+                const isRequired = placeHolder !== 'destination' && placeHolder !== 'imgUrl'
+
+                return (
+                  <FormField
+                    key={placeHolder}
+                    control={form.control}
+                    name={fieldName}
+                    render={({ field }) => (
+                      <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
+                        <FormLabel className='col-span-2 text-right'>{column}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={"Masukkan " + column + "..."}
+                            className='col-span-4'
+                            {...field}
+                            autoComplete='off'
+                            required={isRequired}
+                          />
+                        </FormControl>
+                        <FormMessage className='col-span-4 col-start-3' />
+                      </FormItem>
+                    )}
+                  />
+                )
+              })}
+
+              {/* Add dynamic status dropdown */}
+              {/* <FormField
                 control={form.control}
-                name='firstName'
+                name='status'
+                key={"Status"}
                 render={({ field }) => (
                   <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Id/Nopol
-                    </FormLabel>
+                    <FormLabel className='col-span-2 text-right'>Status</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder='KT XXXX'
+                      <SelectDropdown
+                        defaultValue={field.value}
+                        onValueChange={field.onChange}
+                        placeholder='Select a status'
                         className='col-span-4'
-                        autoComplete='off'
-                        {...field}
+                        items={product.productStatus.map((status) => ({
+                          label: status,
+                          value: status,
+                        }))}
                       />
                     </FormControl>
                     <FormMessage className='col-span-4 col-start-3' />
                   </FormItem>
                 )}
-              />
-               <FormField
-                control={form.control}
-                name='phoneNumber'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Foto
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Upload...'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='lastName'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Harga
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='1.500.000'
-                        className='col-span-4'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='username'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Penumpang
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='4'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='email'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Bagasi
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='2'
-                        className='col-span-4'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='role'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
-                    <FormLabel className='col-span-2 text-right'>
-                      Status
-                    </FormLabel>
-                    <SelectDropdown
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                      placeholder='Select a role'
-                      className='col-span-4'
-                      items={userTypes.map(({ label, value }) => ({
-                        label,
-                        value,
-                      }))}
-                    />
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
+              /> */}
             </form>
           </Form>
         </ScrollArea>
         <DialogFooter>
-          <Button type='submit' form='user-form'>
+          <Button type='submit' form='product-form'>
             Save
           </Button>
         </DialogFooter>

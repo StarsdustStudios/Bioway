@@ -7,6 +7,8 @@ import {
     IconCamper,
     IconCar,
     IconCarGarage,
+    IconDashboard,
+    IconDashboardFilled,
     IconError404,
     IconHelp,
     IconLock,
@@ -31,7 +33,7 @@ export const sidebarData: SidebarData = {
     user: {
       name: 'Stardust Studio',
       email: 'starduststudio@hotmail.com',
-      avatar: 'https://github.com/StarsdustStudios/Bioway/blob/Frontend-test/resources/js/assets/logo.png?raw=true',
+      avatar: 'https:github.com/StarsdustStudios/Bioway/blob/Frontend-test/resources/js/assets/logo.png?raw=true',
     },
     teams: [
       {
@@ -54,6 +56,11 @@ export const sidebarData: SidebarData = {
       {
         title: 'Dashboard',
         items: [
+          {
+            title: 'Dashboard',
+            icon: IconDashboardFilled,
+            url: '/dashboard',
+          },
           {
             title: 'Produk',
             icon: IconShoppingCart,

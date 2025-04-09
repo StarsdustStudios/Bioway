@@ -5,28 +5,32 @@ const cmsStatusSchema = z.union([
   z.literal('Nonaktif'),
   z.literal('Dipesan'),
   z.literal('Bertugas')
-])
-export type CmsStatus = z.infer<typeof cmsStatusSchema>
+]);
 
-const cmsRoleSchema = z.union([
-  z.literal('superadmin'),
-  z.literal('admin'),
-  z.literal('cashier'),
-  z.literal('manager'),
-])
+const cmsCategorySchema = z.union([
+  z.literal('Artikel'),
+  z.literal('Berita'),
+]);
+
+const cmsIsShownSchema = z.union([
+  z.literal('Ya'),
+  z.literal('Tidak'),
+]);
+
 
 const cmsSchema = z.object({
-  id: z.string(),
-  imgUrl: z.string().url(),
-  brand: z.string(),
-  price: z.coerce.number().positive(),
-  driverFee: z.coerce.number().positive(),
-  location: z.string(),
-  status: cmsStatusSchema,
-  role: cmsRoleSchema,
+  title: z.string(),
+  thumbnailImg: z.string(),
+  category: cmsCategorySchema,
+  views: z.coerce.number().positive(),
+  isShown: cmsIsShownSchema,
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-})
-export type Cms = z.infer<typeof cmsSchema>
+});
 
-export const cmsListSchema = z.array(cmsSchema)
+export type Cms = z.infer<typeof cmsSchema>;
+export type CmsStatus = z.infer<typeof cmsStatusSchema>;
+
+export const cmsListSchema = z.array(cmsSchema);
+
+
