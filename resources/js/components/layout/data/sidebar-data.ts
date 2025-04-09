@@ -7,6 +7,8 @@ import {
     IconCamper,
     IconCar,
     IconCarGarage,
+    IconDashboard,
+    IconDashboardFilled,
     IconError404,
     IconHelp,
     IconLock,
@@ -54,6 +56,11 @@ export const sidebarData: SidebarData = {
       {
         title: 'Dashboard',
         items: [
+          {
+            title: 'Dashboard',
+            icon: IconDashboardFilled,
+            url: '/dashboard',
+          },
           {
             title: 'Produk',
             icon: IconShoppingCart,

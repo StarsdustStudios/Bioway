@@ -1,12 +1,12 @@
 import { useCms } from '../../../../../context/cms-context'
-import { UsersActionDialog } from '../add-cms-dialog'
+import { CmsActionDialog } from '../add-cms-dialog'
 import { UsersDeleteDialog } from '../delete-cms-dialog'
 
 export function CmsDialogs({ type }: { type: number }) {
   const { open, setOpen, currentRow, setCurrentRow } = useCms()
   return (
     <>
-      <UsersActionDialog
+      <CmsActionDialog
         key='user-add'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
@@ -15,8 +15,8 @@ export function CmsDialogs({ type }: { type: number }) {
 
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`user-edit-${currentRow.id}`}
+          <CmsActionDialog
+            key={`user-edit-${currentRow.brand}`}
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
@@ -29,7 +29,7 @@ export function CmsDialogs({ type }: { type: number }) {
           />
 
           <UsersDeleteDialog
-            key={`user-delete-${currentRow.id}`}
+            key={`user-delete-${currentRow.brand}`}
             open={open === 'delete'}
             onOpenChange={() => {
               setOpen('delete')

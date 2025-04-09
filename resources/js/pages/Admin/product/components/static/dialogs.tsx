@@ -1,12 +1,12 @@
 import { useProduct } from '../../../../../context/product-context'
-import { UsersActionDialog } from '../add-product-dialog'
+import { ProductsActionDialog } from '../add-product-dialog'
 import { UsersDeleteDialog } from '../delete-product-dialog'
 
 export function ProductDialogs({ type }: { type: number }) {
   const { open, setOpen, currentRow, setCurrentRow } = useProduct()
   return (
     <>
-      <UsersActionDialog
+      <ProductsActionDialog
         key='user-add'
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
@@ -15,8 +15,8 @@ export function ProductDialogs({ type }: { type: number }) {
 
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`user-edit-${currentRow.id}`}
+          <ProductsActionDialog
+            key={`user-edit-${currentRow.brand}`}
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
@@ -29,7 +29,7 @@ export function ProductDialogs({ type }: { type: number }) {
           />
 
           <UsersDeleteDialog
-            key={`user-delete-${currentRow.id}`}
+            key={`user-delete-${currentRow.brand}`}
             open={open === 'delete'}
             onOpenChange={() => {
               setOpen('delete')
