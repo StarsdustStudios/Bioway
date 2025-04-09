@@ -1,17 +1,29 @@
 <?php
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
-
-// Public routes (guest users)
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
-});
+use Inertia\Inertia;
 
 // Protected routes (authenticated users)
 Route::middleware('auth')->group(function () {
-    Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    Route::get('/dashboard', function () {
+        return Inertia::render('Admin/Dashboard');
+    });
+
+    Route::prefix('product')->group(function () { 
+        Route::get('/rental', fn() => Inertia::render('Admin/Dashboard'))->name('product.rental');
+        Route::get('/carter', fn() => Inertia::render('Admin/Dashboard'))->name('product.carter');
+        Route::get('/shuttle-bus', fn() => Inertia::render('Admin/Dashboard'))->name('product.shuttlebus');
+        Route::get('/travel', fn() => Inertia::render('Admin/Dashboard'))->name('product.travel');
+        Route::get('/delivery', fn() => Inertia::render('Admin/Dashboard'))->name('product.delivery');
+    });
+    
+    Route::prefix('cms')->group(function () { 
+        Route::get('/tags', fn() => Inertia::render('Admin/Dashboard'))->name('product.tags');
+        Route::get('/promo', fn() => Inertia::render('Admin/Dashboard'))->name('product.promo');
+        Route::get('/post', fn() => Inertia::render('Admin/Dashboard'))->name('product.post');
+    });
 
 });
