@@ -20,6 +20,6 @@ Route::prefix('blog')->group(function () {
     Route::get('/{slug}', fn() => Inertia::render('Blog/Detail'))->name('blog.detail');
 });
 
-Route::get('/about', function () {
+Route::get('/profil', function () {
     return Inertia::render('About');
-})->name('about');
+})->name('profil');
