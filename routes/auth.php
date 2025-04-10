@@ -1,6 +1,8 @@
 <?php
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CRUD\Product\BrandController;
+use App\Http\Controllers\CRUD\Product\CarController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -20,6 +22,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/shuttle-bus', fn() => Inertia::render('Admin/Dashboard'))->name('product.shuttlebus');
         Route::get('/travel', fn() => Inertia::render('Admin/Dashboard'))->name('product.travel');
         Route::get('/delivery', fn() => Inertia::render('Admin/Dashboard'))->name('product.delivery');
+        Route::resource('cars', CarController::class);
+        // ->except(['show']);
+        Route::resource('brands', BrandController::class);
+        // ->except(['show']);
+
     });
     
     Route::prefix('cms')->group(function () { 
