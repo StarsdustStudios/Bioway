@@ -39,12 +39,13 @@ const handleSystemThemeChange = () => {
 };
 
 export function initializeTheme() {
-    const savedAppearance = (localStorage.getItem('appearance') as Appearance) || 'system';
+    if (typeof window === 'undefined') return
 
-    applyTheme(savedAppearance);
-
-    // Add the event listener for system theme changes...
-    mediaQuery()?.addEventListener('change', handleSystemThemeChange);
+    const storedTheme = localStorage.getItem('theme')
+    const theme = storedTheme || 'light' // force light as default
+  
+    document.documentElement.classList.remove('light', 'dark', 'ocean')
+    document.documentElement.classList.add(theme)
 }
 
 export function useAppearance() {
