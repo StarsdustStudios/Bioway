@@ -2,8 +2,7 @@
 namespace App\Http\Controllers\CRUD\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\CarBrandRequest;
-use App\Models\Car;
+use App\Http\Requests\Product\BrandRequest;
 use App\Models\Brand;
 use  Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -21,7 +20,7 @@ class BrandController extends Controller
     {
         return Inertia::render('');
     }
-    public function store(CarBrandRequest $request)
+    public function store(BrandRequest $request)
     {
         $validated = $request->validated();
         $validated['brand_logo'] = $request->file('brand_logo')->store('brands', 'public');
@@ -35,7 +34,7 @@ class BrandController extends Controller
         ]);
     }
 
-    public function update(CarBrandRequest $request, Brand $brand)
+    public function update(BrandRequest $request, Brand $brand)
     {
         $validated = $request->validated();
         if ($request->hasFile('brand_logo')) {
