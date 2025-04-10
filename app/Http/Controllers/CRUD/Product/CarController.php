@@ -2,7 +2,7 @@
 namespace App\Http\Controllers\CRUD\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\CarBrandRequest;
+use App\Http\Requests\Product\CarRequest;
 use App\Models\Car;
 use App\Models\Brand;
 use  Illuminate\Support\Facades\Storage;
@@ -24,7 +24,7 @@ class CarController extends Controller
             'brands' => $brands,
         ]);
     }
-    public function store(CarBrandRequest $request)
+    public function store(CarRequest $request)
     {
         $validated = $request->validated();
         $validated['car_image'] = $request->file('car_image')->store('cars', 'public');
@@ -39,7 +39,7 @@ class CarController extends Controller
             'brands' => $brands,
         ]);
     }
-    public function update(CarBrandRequest $request, Car $car)
+    public function update(CarRequest $request, Car $car)
     {
         $validated = $request->validated();
         if ($request->hasFile('car_image')) {
