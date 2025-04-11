@@ -15,5 +15,32 @@ use Illuminate\Support\Facades\Auth;
 //Class
 class ShuttleBusController extends Controller
 {
-    
+    public function index()
+    {
+
+    }
+    public function create()
+    {
+
+    }
+    public function store(Request $request)
+    {
+
+    }
+    public function edit(Carter $carter)
+    {
+
+    }
+    public function update(Request $request, Carter $carter)
+    {
+
+    }
+    public function destroy(Carter $carter)
+    {
+
+    }
+    private function saveBus($request, Carter $carter = null)
+    {
+
+    }
 }
