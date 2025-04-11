@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Home');
+    return Inertia::render('Main/Home');
 })->name('Home');
 
 Route::prefix('produk')->group(function () { 
@@ -21,5 +21,5 @@ Route::prefix('blog')->group(function () {
 });
 
 Route::get('/profil', function () {
-    return Inertia::render('About');
+    return Inertia::render('Main/About');
 })->name('profil');
