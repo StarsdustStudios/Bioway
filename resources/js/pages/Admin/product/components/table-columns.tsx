@@ -1,12 +1,12 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
-import LongText from '@/components/long-text'
+import LongText from '@/components/ui/long-text'
 import { callTypes } from '../data/data'
 import { Product } from '../data/schema'
-import { DataTableColumnHeader } from './static/data-table-column-header'
+import { DataTableColumnHeader } from '@/components/tables/data-table-column-header'
 import { DataTableRowActions } from './static/data-table-row-actions'
-import { productData } from '@/components/layout/data/product-data'
+import { productData } from '@/components/data/product-data'
 
 export function getColumns({ index }: { index: number }): ColumnDef<Product>[] {
 

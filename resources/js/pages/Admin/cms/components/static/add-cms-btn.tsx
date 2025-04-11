@@ -1,6 +1,6 @@
 import { IconUserPlus } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
-import { useCms } from '../../../../../context/cms-context'
+import { useCms } from '@/context/cms-context'
 
 export function CmsPrimaryButton() {
   const { setOpen } = useCms()

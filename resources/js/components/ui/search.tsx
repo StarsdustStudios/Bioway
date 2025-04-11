@@ -1,7 +1,7 @@
 import { IconSearch } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
 import { useSearch } from '@/context/search-context'
-import { Button } from './ui/button'
+import { Button } from './button'
 
 interface Props {
   className?: string

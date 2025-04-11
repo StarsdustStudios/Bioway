@@ -21,10 +21,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { Input } from '@/components/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { SelectDropdown } from '@/components/select-dropdown'
-import { cmsData } from '@/components/layout/data/cms-data'
+import { SelectDropdown } from '@/components/ui/select-dropdown'
+import { cmsData } from '@/components/data/cms-data'
 import { Cms } from '../data/schema'
 
 // Form schema without the password fields

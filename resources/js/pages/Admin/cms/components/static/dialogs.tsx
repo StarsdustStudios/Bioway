@@ -1,4 +1,4 @@
-import { useCms } from '../../../../../context/cms-context'
+import { useCms } from '@/context/cms-context'
 import { CmsActionDialog } from '../add-cms-dialog'
 import { UsersDeleteDialog } from '../delete-cms-dialog'
 

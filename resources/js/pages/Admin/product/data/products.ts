@@ -1,8 +1,10 @@
 import { faker } from '@faker-js/faker'
 
 export const product = Array.from({ length: 20 }, () => {
+  const image = 'stardust.png'
   return {
     imgUrl: faker.image.url(),
+    image: faker.image.url(),
     brand: faker.vehicle.manufacturer(),
     price: Number(faker.commerce.price({ min: 800000, max: 10000000, dec: 2 })),
     driverFee: Number(faker.commerce.price({ min: 200000, max: 800000, dec: 2 })),
