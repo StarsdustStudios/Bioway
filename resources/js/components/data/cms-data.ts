@@ -1,4 +1,4 @@
-import { CmsData } from '../types'
+import { CmsData } from '../layout/types'
 
 export const cmsData: CmsData[] = [
     {

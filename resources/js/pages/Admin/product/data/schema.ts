@@ -16,6 +16,10 @@ const productRoleSchema = z.union([
 
 const productSchema = z.object({
   imgUrl: z.string().url(),
+  image: z.string().url(),
+  // .instanceof(File)
+  // .refine(file => file.type.startsWith("image/"))
+  // .refine(file => file.size <= 2 * 1024 * 1024),
   brand: z.string(),
   price: z.coerce.number().positive(),
   driverFee: z.coerce.number().positive(),

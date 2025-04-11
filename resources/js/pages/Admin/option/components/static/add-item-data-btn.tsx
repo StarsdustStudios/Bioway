@@ -1,9 +1,9 @@
 import { IconUserPlus } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
-import { useProduct } from '../../../../../context/product-context'
+import { useItemData } from '@/context/item-data-context'
 
-export function ProductPrimaryButton() {
-  const { setOpen } = useProduct()
+export function ItemDataPrimaryButton() {
+  const { setOpen } = useItemData()
   return (
     <div className='flex gap-2'>
       <Button className='space-x-1' onClick={() => setOpen('add')}>

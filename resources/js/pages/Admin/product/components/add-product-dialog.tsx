@@ -21,16 +21,24 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { Input } from '@/components/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { SelectDropdown } from '@/components/select-dropdown'
-import { productData } from '@/components/layout/data/product-data'
+import { SelectDropdown } from '@/components/ui/select-dropdown'
+import { productData } from '@/components/data/product-data'
 import { Product } from '../data/schema'
+import { Label } from '@/components/ui/label'
 
 // Form schema without the password fields
 const formSchema = z
   .object({
     imgUrl: z.string().url(),
+    image:  z.instanceof(File) // Memastikan ini adalah file
+    .refine((file) => file.type.startsWith("image/"), {
+      message: "File harus berupa gambar",
+    })
+    .refine((file) => file.size <= 5 * 1024 * 1024, { // Maksimum 5MB
+      message: "Ukuran file harus kurang dari 5MB",
+    }),
     brand: z.string().min(1, { message: 'Brand is required.' }),
     price: z.coerce.number().positive().min(1, { message: 'Price cannot be less than 1.' }),
     driverFee: z.coerce.number().positive().min(1, { message: 'Driver fee is required.' }),
@@ -67,11 +75,7 @@ export function ProductsActionDialog({ currentRow, open, onOpenChange, type }: P
       : {
           imgUrl: '',
           brand: '',
-          price: 0,
-          driverFee: 0,
           location: '',
-          passengerCapacity: 0,
-          luggageCapacity: 0,
           destination: '',
           status: '',
           role: '',
@@ -106,7 +110,7 @@ export function ProductsActionDialog({ currentRow, open, onOpenChange, type }: P
         <DialogHeader className='text-left'>
           <DialogTitle>{isEdit ? 'Edit ' + product.productName : 'Add ' + product.productName}</DialogTitle>
           <DialogDescription>
-            {isEdit ? 'Update the product here.' : 'Add ' + product.productName + ' here.'}
+            {isEdit ? 'Update the product here. ' : 'Add ' + product.productName + ' here.'}
             Click the save button when finished.
           </DialogDescription>
         </DialogHeader>
@@ -131,14 +135,16 @@ export function ProductsActionDialog({ currentRow, open, onOpenChange, type }: P
                       <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
                         <FormLabel className='col-span-2 text-right'>{column}</FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder={"Masukkan " + column + "..."}
-                            className='col-span-4'
-                            {...field}
-                            autoComplete='off'
-                            required={isRequired}
-                          />
-                        </FormControl>
+                            {/* Input untuk teks */}
+                            <Input
+                              placeholder={"Masukkan " + column + "..."}
+                              className="col-span-4"
+                              {...field}
+                              type={fieldName === 'imgUrl' ? 'url' : fieldName === 'image' ? 'file' : 'text'}
+                              autoComplete="off"
+                              required={isRequired}
+                            />
+                          </FormControl>
                         <FormMessage className='col-span-4 col-start-3' />
                       </FormItem>
                     )}

@@ -10,15 +10,15 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useCms } from '@/context/cms-context'
-import { Cms } from '../../data/schema'
+import { useItemData } from '@/context/item-data-context'
+import { OptionData } from '../../data/schema'
 
 interface DataTableRowActionsProps {
-  row: Row<Cms>
+  row: Row<OptionData>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const { setOpen, setCurrentRow } = useCms()
+  const { setOpen, setCurrentRow } = useItemData()
   return (
     <>
       <DropdownMenu modal={false}>

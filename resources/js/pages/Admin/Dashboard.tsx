@@ -5,8 +5,10 @@ import { type SharedData } from '@/types'
 import { SidebarProvider } from '@/components/ui/sidebar'
 // import { SearchProvider } from '@/context/search-context'
 import AppSidebar from '@/components/app-sidebar'
+import ItemDataPage from './option/OptionPage'
 
 // Lazy load CMS and Product components
+const NotFoundError = lazy(() => import('../errors/not-found-error'))
 const CmsPage = lazy(() => import('./cms/CmsPage'))
 const ProductPage = lazy(() => import('./product/ProductPage'))
 
@@ -24,11 +26,12 @@ export default function Dashboard() {
         case '/product/shuttle-bus':
           return <ProductPage index={2} />
         case '/product/travel':
-          return <ProductPage index={3} />
+          return <ItemDataPage index={0} />
         case '/product/delivery':
-          return <ProductPage index={4} />
+          // return <ProductPage index={4} />
+          return <NotFoundError/>
         default:
-          return <div>Page not found</div>
+          return <NotFoundError/>
       }
     }
 
@@ -39,9 +42,9 @@ export default function Dashboard() {
         case '/cms/promo':
           return <CmsPage index={1} />
         case '/cms/post':
-          return <CmsPage index={2} />
+          return <CmsPage index={3} />
         default:
-          return <div>Page not found</div>
+          return <NotFoundError/>
       }
     }
 

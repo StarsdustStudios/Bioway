@@ -4,20 +4,20 @@ import { ProfileDropdown } from '@/components/ui/profile-dropdown'
 import { Search } from '@/components/ui/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { getColumns } from './components/table-columns'
-import { CmsDialogs } from './components/static/dialogs'
-import { CmsPrimaryButton } from './components/static/add-cms-btn'
-import { CmsTable } from './components/static/table'
-import CmsProvider from '../../../context/cms-context'
-import { cmsListSchema } from './data/schema'
-import { cms } from './data/cms'
-import { cmsData } from '@/components/data/cms-data'
+import { ItemDataDialogs } from './components/static/dialogs'
+import { ItemDataPrimaryButton } from './components/static/add-item-data-btn'
+import { OptionDataTable } from './components/static/table'
+import ItemDataProvider from '@/context/item-data-context'
+import { itemListSchema } from './data/schema'
+import { optionData } from './data/option'
+import { itemDatas } from '@/components/data/item-data'
 
-export default function CmsPage({ index }: { index: number }) {
+export default function ItemDataPage({ index }: { index: number }) {
   // Parse user list
-  const userList = cmsListSchema.parse(cms)
+  const userList = itemListSchema.parse(optionData)
 
   return (
-    <CmsProvider>
+    <ItemDataProvider>
       <Header fixed>
         {/* <Search /> */}
         <div className='ml-auto flex items-center space-x-4'>
@@ -29,18 +29,18 @@ export default function CmsPage({ index }: { index: number }) {
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>{cmsData[index].cmsName}</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{itemDatas[index].optionName}</h2>
             <p className='text-muted-foreground'>
-              Atur layanan {cmsData[index].cmsName} anda disini
+              Atur layanan {itemDatas[index].optionName} anda disini
             </p>
           </div>
-          <CmsPrimaryButton />
+          <ItemDataPrimaryButton />
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <CmsTable data={userList} columns={getColumns({index})} type={index}/>
+          <OptionDataTable data={userList} columns={getColumns({index})} type={index}/>
         </div>
       </Main>
-        <CmsDialogs type={index}/>
-    </CmsProvider>
+        <ItemDataDialogs type={index}/>
+    </ItemDataProvider>
   )
 }

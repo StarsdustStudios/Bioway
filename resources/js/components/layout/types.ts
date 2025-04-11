@@ -53,4 +53,11 @@ interface CmsData {
   cmsStatus: string[];
 }
 
-export type { User, SidebarData, ProductData, CmsData, NavGroup, NavItem, NavCollapsible, NavLink };
+interface OptionData {
+  optionName: string;
+  optionColumns: string[];
+  optionColDataset: string[];
+  optionStatus: string[];
+}
+
+export type { User, SidebarData, ProductData, CmsData, OptionData, NavGroup, NavItem, NavCollapsible, NavLink };

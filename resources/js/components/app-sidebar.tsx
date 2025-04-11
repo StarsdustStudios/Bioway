@@ -8,9 +8,9 @@ import {
   } from "@/components/ui/sidebar"
   
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { NavGroup } from './nav-group';
+import { NavGroup } from './layout/nav-group';
 import { NavUser } from './nav-user';
-import { sidebarData } from './layout/data/sidebar-data';
+import { sidebarData } from '@/components/data/sidebar-data';
 
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (

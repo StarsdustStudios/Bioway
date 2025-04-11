@@ -1,16 +1,15 @@
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { ProfileDropdown } from '@/components/profile-dropdown'
-import { Search } from '@/components/search'
+import { ProfileDropdown } from '@/components/ui/profile-dropdown'
+import { Search } from '@/components/ui/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { getColumns } from './components/table-columns'
 import { ProductDialogs } from './components/static/dialogs'
-import { ProductPrimaryButton } from './components/static/add-product-btn'
 import { ProductTable } from './components/static/table'
-import ProductProvider from '../../../context/product-context'
+import ProductProvider from '@/context/product-context'
 import { productListSchema } from './data/schema'
 import { product } from './data/products'
-import { productData } from '@/components/layout/data/product-data'
+import { productData } from '@/components/data/product-data'
 
 export default function ProductPage({ index }: { index: number }) {
   // Parse user list
@@ -42,5 +41,21 @@ export default function ProductPage({ index }: { index: number }) {
       </Main>
         <ProductDialogs type={index}/>
     </ProductProvider>
+  )
+}
+
+
+import { IconUserPlus } from '@tabler/icons-react'
+import { Button } from '@/components/ui/button'
+import { useProduct } from '@/context/product-context'
+
+function ProductPrimaryButton() {
+  const { setOpen } = useProduct()
+  return (
+    <div className='flex gap-2'>
+      <Button className='space-x-1' onClick={() => setOpen('add')}>
+        <span>Tambahkan</span> <IconUserPlus size={18} />
+      </Button>
+    </div>
   )
 }

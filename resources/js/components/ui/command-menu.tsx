@@ -17,8 +17,8 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command';
-import { ScrollArea } from './ui/scroll-area';
-import { sidebarData } from './layout/data/sidebar-data';
+import { ScrollArea } from './scroll-area';
+import { sidebarData } from '@/components/data/sidebar-data';
 
 export function CommandMenu() {
   const { setTheme } = useTheme();

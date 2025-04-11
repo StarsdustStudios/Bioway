@@ -22,9 +22,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Cms } from '../../data/schema'
+import { OptionData } from '../../data/schema'
 import { DataTablePagination } from '@/components/tables/data-table-pagination'
-import { DataTableToolbar } from '@/components/tables/data-table-toolbar'
+import { DataTableToolbar } from '../data-table-toolbar'
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,12 +34,12 @@ declare module '@tanstack/react-table' {
 }
 
 interface DataTableProps {
-  columns: ColumnDef<Cms>[]
-  data: Cms[]
+  columns: ColumnDef<OptionData>[]
+  data: OptionData[]
   type: number
 }
 
-export function CmsTable({ columns, data, type }: DataTableProps) {
+export function OptionDataTable({ columns, data, type }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
