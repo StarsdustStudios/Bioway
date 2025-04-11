@@ -15,4 +15,32 @@ use Illuminate\Support\Facades\Auth;
 //Class
 class RentalController extends Controller
 {
+    public function index()
+    {
+
+    }
+    public function create()
+    {
+
+    }
+    public function store(Request $request)
+    {
+
+    }
+    public function edit(Carter $carter)
+    {
+
+    }
+    public function update(Request $request, Carter $carter)
+    {
+
+    }
+    public function destroy(Carter $carter)
+    {
+
+    }
+    private function saveRental($request, Carter $carter = null)
+    {
+
+    }
 }
