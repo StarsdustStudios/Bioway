@@ -14,13 +14,11 @@ import {
 const menuItems = [
   { label: "Home", icon: IconHomeFilled, path: "/" },
   { label: "Product", icon: IconStack2Filled, path: "/produk/rental" },
-  { label: "Blog", icon: IconNews,path: "/blog/" },
+  { label: "Blog", icon: IconNews, path: "/blog/" },
   { label: "About", icon: IconInfoSquareFilled, path: "/profil" },
 ]
 
 import { Link, usePage } from "@inertiajs/react"
-import path from "path";
-
 
 
 function MenuLink({ label, Icon }: { label: string; Icon: React.ElementType }) {
@@ -62,8 +60,10 @@ export function MobileNavBar() {
     <div className="bg-blue-400 fixed bottom-0 w-full p-2 flex items-center justify-center h-fit rounded-t-4xl">
       <NavigationMenu>
         <NavigationMenuList className="flex items-center gap-5 justify-center">
-          {menuItems.map((item) => (
-            <MenuLink key={item.label} label={item.label} Icon={item.icon} />
+        {menuItems.map((item) => (
+            <Link href={item.path || "#"} className="">
+              <MenuLink key={item.label} label={item.label} Icon={item.icon} />
+            </Link>
           ))}
         </NavigationMenuList>
       </NavigationMenu>
