@@ -16,8 +16,8 @@ Route::prefix('produk')->group(function () {
 });
 
 Route::prefix('blog')->group(function () { 
-    Route::get('/', fn() => Inertia::render('Blog/Index'))->name('blog.index');
-    Route::get('/{slug}', fn() => Inertia::render('Blog/Detail'))->name('blog.detail');
+    Route::get('/', fn() => Inertia::render('Main/Blog/Blog'))->name('blog.index');
+    // Route::get('/{slug}', fn() => Inertia::render('Blog/Detail'))->name('blog.detail');
 });
 
 Route::get('/profil', function () {
