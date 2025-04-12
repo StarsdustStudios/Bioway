@@ -6,13 +6,34 @@ import { SidebarProvider } from '@/components/ui/sidebar'
 // import { SearchProvider } from '@/context/search-context'
 import AppSidebar from '@/components/app-sidebar'
 import ItemDataPage from './option/OptionPage'
+import ForbiddenError from '../errors/forbidden'
 
 // Lazy load CMS and Product components
 const NotFoundError = lazy(() => import('../errors/not-found-error'))
 const CmsPage = lazy(() => import('./cms/CmsPage'))
 const ProductPage = lazy(() => import('./product/ProductPage'))
 
-export default function Dashboard() {
+interface Car {
+  id: number;
+  name: string;
+}
+
+interface Brand {
+  id: number;
+  name: string;
+  brand_logo: string;
+  created_at: string;
+  updated_at: string;
+  cars: Car[];
+}
+
+interface ApiResponse {
+  brands: Brand[];
+}
+
+export type DashboardData = { brands: Brand[] } | { otherData: OtherType[] };
+
+export default function Dashboard(data: {data: DashboardData}) {
   const { url } = usePage<SharedData>() // Get current URL
 
   // Route handler
@@ -26,12 +47,24 @@ export default function Dashboard() {
         case '/product/shuttle-bus':
           return <ProductPage index={2} />
         case '/product/travel':
-          return <ItemDataPage index={0} />
+          return <ProductPage index={3} />
         case '/product/delivery':
-          // return <ProductPage index={4} />
-          return <NotFoundError/>
-        default:
-          return <NotFoundError/>
+          return <ProductPage index={4} />
+          // return <NotFoundError/>
+          default:
+            if (url === '/product/brands') {
+              return ItemDataPage({index: 0}, {data})
+            }
+            else if (url.startsWith('/product/brands')) {
+              window.location.replace('/product/brands')
+            }
+
+            if (url === '/product/cars') {
+              return ItemDataPage({index: 1}, {data})
+            }
+            else if (url.startsWith('/product/cars')) {
+              window.location.replace('/product/cars')
+            }
       }
     }
 
@@ -47,6 +80,7 @@ export default function Dashboard() {
           return <NotFoundError/>
       }
     }
+
 
     return <div>Welcome to Dashboard</div>
   }

@@ -13,14 +13,14 @@ class CarController extends Controller
     public function index()
     {
         $cars = Car::with('brand')->get();
-        return Inertia::render('CRUD/Product/Car/Index', [
+        return Inertia::render('Admin/Dashboard', [
             'cars' => $cars,
         ]);
     }
     public function create()
     {
         $brands = Brand::all();
-        return Inertia::render('CRUD/Product/Car/Create', [
+        return Inertia::render('Admin/Dashboard', [
             'brands' => $brands,
         ]);
     }
@@ -34,7 +34,7 @@ class CarController extends Controller
     public function edit(Car $car)
     {
         $brands = Brand::all();
-        return Inertia::render('CRUD/Product/Car/Edit', [
+        return Inertia::render('Admin/Dashboard', [
             'car' => $car,
             'brands' => $brands,
         ]);

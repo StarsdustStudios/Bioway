@@ -8,17 +8,15 @@ const itemStatusSchema = z.union([
 ]);
 
 const itemSchema = z.object({
+  id: z.number(),
   name: z.string(),
-  model : z.string(),
-  logoImg: z.string().url(),
-  carImg: z.string().url(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
+  brand_logo: z.string(),
+  created_at: z.coerce.date(),
+  updated_at: z.coerce.date(),
+  cars: z.array(z.string()),
 });
 
 export type OptionData = z.infer<typeof itemSchema>;
 export type OptionStatus = z.infer<typeof itemStatusSchema>;
 
 export const itemListSchema = z.array(itemSchema);
-
-

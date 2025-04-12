@@ -29,11 +29,8 @@ import { router } from '@inertiajs/react'
 
 // ✅ Zod schema (file can be any)
 const formSchema = z.object({
-  isEdit: z.boolean(),
-  name: z.string().min(1, { message: 'Name is required.' }),
-  logoImg: z.any().optional(),
-  createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
+  name: z.string().min(1, 'Nama wajib diisi'),
+  brand_logo: z.string().min(1, 'Logo wajib diisi'),
 })
 
 type ItemDataForm = z.infer<typeof formSchema>
@@ -60,53 +57,49 @@ export function ItemDataActionDialog({
       ? { ...currentRow, isEdit }
       : {
           name: '',
-          logoImg: '',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          isEdit,
+          brand_logo: '',
         },
-  })
+  });
 
-  // ✅ Submit handler using FormData
-  const onSubmit = async (values: ItemDataForm) => {
-    try {
-      toast({
-        title: 'Submitting...',
-        description: 'Please wait while we save your data.',
-      })
+  // ✅ Submit handler
+  const onSubmit = (values: ItemDataForm) => {
+    if (isEdit && !currentRow?.id) return;
+  
+    toast({ title: isEdit ? 'Updating...' : 'Submitting...', description: 'Please wait...' });
+  
+    const route = isEdit
+      ? `/product/brands/${currentRow.id}`
+      : '/product/brands';
+  
+    const payload = isEdit
+      ? { ...values, _method: 'put' }
+      : values;
+  
+    router.post(route, payload, {
+      onSuccess: () => {
+        toast({
+          title: isEdit ? 'Updated!' : 'Success!',
+          description: isEdit
+            ? 'Brand updated successfully!'
+            : 'Brand created successfully!',
+        });
+        form.reset();
+        onOpenChange(false);
+      },
+      onError: (errors) => {
+        toast({
+          title: isEdit ? 'Update Failed' : 'Submission Failed',
+          description: errors.message ?? 'Something went wrong.',
+        });
+      },
+    });
+  };
+  
 
-      const formData = new FormData()
-      formData.append('name', values.name)
-      if (values.logoImg instanceof File) {
-        formData.append('brand_logo', values.logoImg)
-      }
-
-      await router.post('/product/brands', formData, {
-        forceFormData: true,
-        onSuccess: () => {
-          form.reset()
-          toast({
-            title: 'Success!',
-            description: 'Brand was created successfully.',
-          })
-          onOpenChange(false)
-        },
-        onError: (errors) => {
-          console.error('🔴 Validation or server error:', errors)
-          toast({
-            title: 'Error!',
-            description: 'There was an error with the submission.',
-          })
-        },
-      })
-    } catch (error) {
-      console.error('🔥 Unhandled error during form submission:', error)
-      toast({
-        title: 'Unexpected Error',
-        description: 'Something went wrong. Please try again later.',
-      })
-    }
-  }
+  
+  
+  
+  
 
   return (
     <Dialog
@@ -137,7 +130,6 @@ export function ItemDataActionDialog({
             >
               {itemData.optionColumns.map((column, index) => {
                 const fieldName = itemData.optionColDataset[index]
-                const isFileInput = fieldName === 'logoImg'
                 const isRequired =
                   column !== 'destination' && column !== 'imgUrl'
 
@@ -152,22 +144,28 @@ export function ItemDataActionDialog({
                           {column}
                         </FormLabel>
                         <FormControl className='col-span-4'>
-                          {isFileInput ? (
+                          {fieldName === 'imgUrl' ? (
+                            // For imgUrl (string), use a simple input field
                             <Input
-                              type='file'
-                              accept='image/*'
-                              onChange={(e) => field.onChange(e.target.files?.[0])}
+                              placeholder={'Enter ' + column + ' URL...'}
+                              {...field}
+                              autoComplete='off'
+                              required={isRequired}
                             />
                           ) : (
+                            // Other fields can be handled as needed
                             <Input
-                              placeholder={'Masukkan ' + column + '...'}
+                              placeholder={'Enter ' + column + '...'}
                               {...field}
                               autoComplete='off'
                               required={isRequired}
                             />
                           )}
                         </FormControl>
-                        <FormMessage className='col-span-4 col-start-3' />
+                        {/* Displaying error messages */}
+                        <FormMessage className='col-span-4 col-start-3'>
+                          {form.formState.errors[fieldName]?.message}
+                        </FormMessage>
                       </FormItem>
                     )}
                   />
@@ -178,7 +176,8 @@ export function ItemDataActionDialog({
         </ScrollArea>
 
         <DialogFooter>
-          <Button type='submit' onClick={() => console.log("Click")} form='itemData-form'>
+          {/* Button now displays errors if the form is invalid */}
+          <Button type='submit' form='itemData-form'>
             Save
           </Button>
         </DialogFooter>
