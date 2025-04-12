@@ -28,23 +28,29 @@ class BrandController extends Controller
     }
 
     public function store(BrandRequest $request)
-    {
-        // Validate and handle the incoming data
-        $validated = $request->validated();
+{
+    $validated = $request->validated();
 
-        // Save brand to the database
-        $brand = new Brand();
-        $brand->name = $validated['name'];
-        $brand->brand_logo = $validated['brand_logo'];  // Storing string URL here
-        $brand->save();
-
-        $brands = Brand::with('cars')->get();
-
-        return Inertia::render('Admin/Dashboard', [
-            'message' => 'Brand created successfully!',
-            'brands' => $brands,
-        ]);
+    if ($request->hasFile('brand_logo') && $request->file('brand_logo')->isValid()) {
+        // Store to storage/app/public/brands and make it accessible via /storage
+        $path = $request->file('brand_logo')->store('brands', 'public');
+    } else {
+        return back()->withErrors(['brand_logo' => 'Invalid file upload']);
     }
+
+    $brand = new Brand();
+    $brand->name = $validated['name'];
+    $brand->brand_logo = $path; // Example: "brands/logo.png"
+    $brand->save();
+
+    $brands = Brand::with('cars')->get();
+
+    return Inertia::render('Admin/Dashboard', [
+        'message' => 'Brand created successfully!',
+        'brands' => $brands,
+    ]);
+}
+
 
     public function edit(Brand $brand)
     {
@@ -68,7 +74,13 @@ class BrandController extends Controller
 
         $brand->delete();
 
-        return redirect()->route('brands.index')->with('success', 'Brand deleted successfully!');
+        
+        $brands = Brand::with('cars')->get();
+
+        return Inertia::render('Admin/Dashboard', [
+            'message' => 'Brand deleted successfully!',
+            'brands' => $brands,
+        ]);
     }
 
     /**

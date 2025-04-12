@@ -30,8 +30,17 @@ import { router } from '@inertiajs/react'
 // ✅ Zod schema (file can be any)
 const formSchema = z.object({
   name: z.string().min(1, 'Nama wajib diisi'),
-  brand_logo: z.string().min(1, 'Logo wajib diisi'),
-})
+  brand_logo: z
+    .any()
+    .refine((file) => file instanceof File, 'Logo wajib diunggah')
+    .refine((file) => file?.size <= 2 * 1024 * 1024, 'Maksimal 2MB')
+    .refine(
+      (file) =>
+        ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'].includes(file?.type),
+      'Format tidak valid (jpeg, png, jpg, gif, svg saja)'
+    ),
+});
+
 
 type ItemDataForm = z.infer<typeof formSchema>
 
@@ -62,38 +71,21 @@ export function ItemDataActionDialog({
   });
 
   // ✅ Submit handler
-  const onSubmit = (values: ItemDataForm) => {
-    if (isEdit && !currentRow?.id) return;
+  const onSubmit = (data: ItemDataForm) => {
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('brand_logo', data.brand_logo); // ✅ now a File
   
-    toast({ title: isEdit ? 'Updating...' : 'Submitting...', description: 'Please wait...' });
-  
-    const route = isEdit
-      ? `/product/brands/${currentRow.id}`
-      : '/product/brands';
-  
-    const payload = isEdit
-      ? { ...values, _method: 'put' }
-      : values;
-  
-    router.post(route, payload, {
+    router.post('/product/brands', formData, {
+      forceFormData: true,
       onSuccess: () => {
-        toast({
-          title: isEdit ? 'Updated!' : 'Success!',
-          description: isEdit
-            ? 'Brand updated successfully!'
-            : 'Brand created successfully!',
-        });
-        form.reset();
+        toast({ title: 'Uploaded!' });
         onOpenChange(false);
-      },
-      onError: (errors) => {
-        toast({
-          title: isEdit ? 'Update Failed' : 'Submission Failed',
-          description: errors.message ?? 'Something went wrong.',
-        });
+        form.reset();
       },
     });
   };
+  
   
 
   
@@ -144,14 +136,16 @@ export function ItemDataActionDialog({
                           {column}
                         </FormLabel>
                         <FormControl className='col-span-4'>
-                          {fieldName === 'imgUrl' ? (
+                          {fieldName === 'brand_logo' ? (
                             // For imgUrl (string), use a simple input field
                             <Input
-                              placeholder={'Enter ' + column + ' URL...'}
-                              {...field}
-                              autoComplete='off'
-                              required={isRequired}
-                            />
+                            type='file'
+                            accept='image/*'
+                            onChange={(e) => {
+                              form.setValue('brand_logo', e.target.files?.[0])
+                            }}
+                          />
+                          
                           ) : (
                             // Other fields can be handled as needed
                             <Input
