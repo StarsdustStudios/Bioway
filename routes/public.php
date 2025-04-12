@@ -8,11 +8,11 @@ Route::get('/', function () {
 })->name('Home');
 
 Route::prefix('produk')->group(function () { 
-    Route::get('/rental', fn() => Inertia::render('Product/Rental'))->name('product.rental');
-    Route::get('/carter', fn() => Inertia::render('Product/Carter'))->name('product.carter');
-    Route::get('/shuttle-bus', fn() => Inertia::render('Product/ShuttleBus'))->name('product.shuttlebus');
-    Route::get('/travel', fn() => Inertia::render('Product/Travel'))->name('product.travel');
-    Route::get('/delivery', fn() => Inertia::render('Product/Delivery'))->name('product.delivery');
+    Route::get('/rental', fn() => Inertia::render('Main/Product/Rent'))->name('product.rental');
+    Route::get('/carter', fn() => Inertia::render('Main/Product/Carter'))->name('product.carter');
+    Route::get('/shuttle-bus', fn() => Inertia::render('Main/Product/ShuttleBus'))->name('product.shuttlebus');
+    Route::get('/travel', fn() => Inertia::render('Main/Product/Travel'))->name('product.travel');
+    Route::get('/delivery', fn() => Inertia::render('Main/Product/Delivery'))->name('product.delivery');
 });
 
 Route::prefix('blog')->group(function () { 
