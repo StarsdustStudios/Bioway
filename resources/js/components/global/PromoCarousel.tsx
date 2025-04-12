@@ -9,14 +9,16 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import useEmblaCarousel from "embla-carousel-react"
 
 export function PromoCarousel() {
   const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true })
+    Autoplay({ delay: 3000, stopOnInteraction: false })
   )
 
   return (
     <Carousel
+      opts={{ loop: true }}
       plugins={[plugin.current]}
       className="w-full max-w-4xl"
       onMouseEnter={plugin.current.stop}
@@ -39,8 +41,6 @@ export function PromoCarousel() {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
     </Carousel>
   )
 }
