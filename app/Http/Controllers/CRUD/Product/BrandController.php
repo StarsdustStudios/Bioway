@@ -27,20 +27,43 @@ class BrandController extends Controller
         return Inertia::render('Admin/Dashboard');
     }
 
+    // public function store(BrandRequest $request)
+    // {
+    //     // Validate and handle the incoming data
+    //     $validated = $request->validated();
+
+    //     // Save brand to the database
+    //     $brand = new Brand();
+    //     $brand->name = $validated['name'];
+    //     $brand->brand_logo = $validated['brand_logo'];  // Storing string URL here
+    //     $brand->save();
+
+    //     $brands = Brand::with('cars')->get();
+
+    //     return Inertia::render('Admin/Dashboard', [
+    //         'message' => 'Brand created successfully!',
+    //         'brands' => $brands,
+    //     ]);
+    // }
+
     public function store(BrandRequest $request)
 {
     $validated = $request->validated();
 
     if ($request->hasFile('brand_logo') && $request->file('brand_logo')->isValid()) {
-        // Store to storage/app/public/brands and make it accessible via /storage
-        $path = $request->file('brand_logo')->store('brands', 'public');
+        $file = $request->file('brand_logo');
+        $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+        $path = 'brands/' . $fileName;
+
+        // Simpan file secara manual ke disk 'public'
+        Storage::disk('public')->put($path, file_get_contents($file));
     } else {
-        return back()->withErrors(['brand_logo' => 'Invalid file upload']);
+        return back()->withErrors(['brand_logo' => 'Invalid or missing logo file']);
     }
 
     $brand = new Brand();
     $brand->name = $validated['name'];
-    $brand->brand_logo = $path; // Example: "brands/logo.png"
+    $brand->brand_logo ='/storage/brands/' . $fileName; // save as brands/xxx.jpg
     $brand->save();
 
     $brands = Brand::with('cars')->get();
@@ -50,6 +73,7 @@ class BrandController extends Controller
         'brands' => $brands,
     ]);
 }
+
 
 
     public function edit(Brand $brand)

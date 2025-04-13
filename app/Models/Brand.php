@@ -16,4 +16,9 @@ class Brand extends Model
     {
         return $this->hasMany(Car::class);
     }
+
+    public function getLogoUrlAttribute()
+    {
+        return $this->brand_logo ? Storage::url($this->brand_logo) : null;
+    }
 }

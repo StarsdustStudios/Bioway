@@ -17,8 +17,15 @@ export function getColumns({ index }: { index: number }): ColumnDef<OptionData>[
     ),
     cell: ({ row }: { row: any }) => (
       <div className="w-fit text-nowrap">
-        {row.getValue(itemDatas[index].optionColDataset[colIndex])}
-      </div>
+          {
+          itemDatas[index].optionColDataset[colIndex] === "brand_logo" ? (
+            <img src={row.getValue(itemDatas[index].optionColDataset[colIndex])
+            } alt="Logo" className="w-16 h-16 rounded-lg" />
+          ) : (
+            row.getValue(itemDatas[index].optionColDataset[colIndex])
+          )
+          }
+        </div>
     ),
     enableSorting: false,
   }));
