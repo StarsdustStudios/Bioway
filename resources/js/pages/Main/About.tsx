@@ -1,7 +1,7 @@
 import MainLayout from './Main'
 import { PromoCarousel } from '@/components/global/PromoCarousel'
 
-function Product() {
+function About() {
     return (
         <>
             <PromoCarousel />
@@ -11,6 +11,6 @@ function Product() {
     )
 }
 
-Product.layout = (page: React.ReactNode) => <MainLayout>{page}</MainLayout>
+About.layout = (page: React.ReactNode) => <MainLayout>{page}</MainLayout>
 
-export default Product
+export default About

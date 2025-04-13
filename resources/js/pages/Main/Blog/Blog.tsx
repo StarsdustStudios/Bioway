@@ -22,8 +22,6 @@ export default function Blog() {
             <PromoCarousel/>
             <h1 className="text-4xl font-bold mb-4">Artikel dan Berita</h1>
             <p className="text-lg mb-8">This is the home page.</p>
-            {isDesktop ? <DesktopNavBar /> : <MobileNavBar />}
-            {<BlogCard title='Title' description='Lorem ipsum' imageUrl='https' link='ww'/>}
         </div>
     )
 }

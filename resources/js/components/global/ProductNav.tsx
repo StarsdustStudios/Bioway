@@ -46,7 +46,6 @@ export function ProductNav() {
                                     <item.icon className="" />
                                     {item.label}
                                 </div>
-
                             </MenubarTrigger>
                         </Link>
                     </MenubarMenu>
