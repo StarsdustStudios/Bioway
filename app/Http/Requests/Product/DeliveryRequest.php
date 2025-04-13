@@ -22,7 +22,9 @@ class DeliveryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //for data
+            'location_id' => ['required', 'exists:locations,id'],
+            'size' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'integer', 'min:0'],
         ];
     }
 }

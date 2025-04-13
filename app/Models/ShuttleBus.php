@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Carter extends Model
+
+class ShuttleBus extends Model
 {
     protected $fillable = [
         'car_id',
-        'location_id',
+        'from',
+        'to',
         'price',
+        'driver_fee',
     ];
 
     public function car(): BelongsTo

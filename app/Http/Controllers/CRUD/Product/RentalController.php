@@ -17,29 +17,49 @@ class RentalController extends Controller
 {
     public function index()
     {
-
+        $rentals = Rental::with('car')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'rentals' => $rentals,
+        ]);
     }
     public function create()
     {
-
+        $cars = Car::all();
+        return Inertia::render('Admin/Dashboard', [
+            'cars' => $cars,
+        ]);
     }
     public function store(Request $request)
     {
+        $validated = $request->validated();
+
+        $rentals = new Rental();
+        $rentals->car_id = $validated['car_id'];
+        $rentals->location_id = $validated['location_id'];
+        $rentals->price = $validated['price'];
+        $rentals->driver_fee = $validated['driver_fee'];
+        $rentals->save();
+
+        $rentals = Rental::with('car')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'message' => 'Rental created successfully!',
+            'rentals' => $rentals,
+        ]);
 
     }
-    public function edit(Carter $carter)
+    public function edit(Rental $Rental)
     {
 
     }
-    public function update(Request $request, Carter $carter)
+    public function update(Request $request, Rental $Rental)
     {
 
     }
-    public function destroy(Carter $carter)
+    public function destroy(Rental $Rental)
     {
 
     }
-    private function saveRental($request, Carter $carter = null)
+    private function saveRental($request, Rental $Rental = null)
     {
 
     }

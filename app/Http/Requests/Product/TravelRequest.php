@@ -22,7 +22,7 @@ class TravelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //for data
+            
         ];
     }
 }
