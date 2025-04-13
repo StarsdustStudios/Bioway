@@ -11,11 +11,13 @@ import ItemDataProvider from '@/context/item-data-context'
 import { itemListSchema } from './data/schema'
 import { optionData } from './data/option'
 import { itemDatas } from '@/components/data/item-data'
+import { usePage } from '@inertiajs/react'
+import { SharedData } from '@/types'
 
-export default function ItemDataPage({ index }: { index: number }) {
+export default function ItemDataPage({ index }: { index: number }, {data}) {
   // Parse user list
-  const userList = itemListSchema.parse(optionData)
-
+  const userList = itemListSchema.parse(data.brands)
+  
   return (
     <ItemDataProvider>
       <Header fixed>
@@ -39,6 +41,9 @@ export default function ItemDataPage({ index }: { index: number }) {
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
           <OptionDataTable data={userList} columns={getColumns({index})} type={index}/>
         </div>
+        <script>
+          console.log(data)
+        </script>
       </Main>
         <ItemDataDialogs type={index}/>
     </ItemDataProvider>

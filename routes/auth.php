@@ -24,7 +24,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/delivery', fn() => Inertia::render('Admin/Dashboard'))->name('product.delivery');
         Route::resource('cars', CarController::class);
         // ->except(['show']);
-        Route::resource('brands', BrandController::class);
+        Route::resource('brands', BrandController::class)->names([
+            'index' => 'product.brands',
+            'create' => 'product.brands.create',
+            'store' => 'product.brands.store',
+            'show' => 'product.brands.show',
+            'edit' => 'product.brands.edit',
+            'update' => 'product.brands.update',
+            'destroy' => 'product.brands.destroy',
+        ]);
         // ->except(['show']);
 
     });

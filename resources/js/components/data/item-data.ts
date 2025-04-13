@@ -4,7 +4,7 @@ export const itemDatas : OptionData[] = [
     {
         optionName: "Brand",
         optionColumns: ["Nama", "Logo"],
-        optionColDataset: ["name", "logoImg"],
+        optionColDataset: ["name", "brand_logo"],
         optionStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"],
     },
     {
