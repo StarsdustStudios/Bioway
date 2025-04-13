@@ -134,12 +134,12 @@ export const sidebarData: SidebarData = {
               {
                 title: 'Brand',
                 icon: IconBrandMetabrainz,
-                url: '/option/brand',
+                url: '/product/brands',
               },
               {
                 title: 'Mobil',
                 icon: IconCarCrane,
-                url: '/option/car',
+                url: '/product/cars',
               },
             ]
           }
