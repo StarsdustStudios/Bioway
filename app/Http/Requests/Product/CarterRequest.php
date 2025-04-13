@@ -22,7 +22,9 @@ class CarterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //for data
+            'car_id' => ['required', 'exists:cars,id'],
+            'location_id' => ['required', 'exists:locations,id'],
+            'price' => ['required', 'integer', 'min:0'],
         ];
     }
 }

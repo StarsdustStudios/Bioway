@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('carters', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('car_id')->constrained('cars')->onDelete('cascade');
+            $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
+            $table->integer('price');
             $table->timestamps();
         });
     }

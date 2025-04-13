@@ -4,7 +4,7 @@ namespace App\Http\Requests\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class RentalRequest extends FormRequest
+class ShuttleBusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,9 @@ class RentalRequest extends FormRequest
     {
         return [
             'car_id' => ['required', 'exists:cars,id'],
-            'location_id' => ['required', 'exists:locations,id'],
+            'from' => ['required', 'exists:locations,id'],
+            'to' => ['required', 'exists:locations,id'],
             'price' => ['required', 'integer', 'min:0'],
-            'driver_fee' => ['required', 'integer', 'min:0'],
         ];
     }
 }

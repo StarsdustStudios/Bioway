@@ -17,6 +17,7 @@ class BrandController extends Controller
         return Inertia::render('Admin/Dashboard', [
             'brands' => $brands,
         ]);
+
     //      return response()->json([
     //     'brands' => $brands,
     // ]);
