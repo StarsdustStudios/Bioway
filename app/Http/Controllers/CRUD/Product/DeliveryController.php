@@ -17,30 +17,51 @@ class DeliveryController extends Controller
 {
     public function index()
     {
-
+        $deliveries = Delivery::with('car')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'deliveries' => $deliveries,
+        ]);
     }
-    public function create()
-    {
+    // public function create()
+    // {
 
-    }
+    // }
     public function store(Request $request)
     {
+        $validated = $request->validated();
 
+        $deliveries = new Delivery();
+        $deliveries->location_id = $validated['location_id'];
+        $deliveries->size = $validated['size'];
+        $deliveries->price = $validated['price'];
+        $deliveries->save();
+
+        $deliveries = Delivery::with('car')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'message' => 'Delivery created successfully!',
+            'deliveries' => $deliveries,
+        ]);
     }
-    public function edit(Carter $carter)
+    // public function edit(Delivery $delivery)
+    // {
+
+    // }
+    public function update(Request $request, Delivery $delivery)
     {
-
+        return $this->saveDelivery($request, $delivery);
     }
-    public function update(Request $request, Carter $carter)
+    public function destroy(Delivery $delivery)
     {
+        $delivery->delete();
 
+        $deliveries = Delivery::with('car')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'message' => 'Delivery deleted successfully!',
+            'deliveries' => $deliveries,
+        ]);
     }
-    public function destroy(Carter $carter)
-    {
+    // private function saveDelivery($request, Delivery $delivery = null)
+    // {
 
-    }
-    private function saveDelivery($request, Carter $carter = null)
-    {
-
-    }
+    // }
 }

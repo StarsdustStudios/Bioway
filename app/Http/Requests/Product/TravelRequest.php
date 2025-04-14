@@ -22,7 +22,9 @@ class TravelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            
+            'location_1' => ['required', 'exists:locations,id'],
+            'location_2' => ['required', 'exists:locations,id'],
+            'price' => ['required', 'integer', 'min:0'],
         ];
     }
 }

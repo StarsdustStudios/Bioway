@@ -17,13 +17,12 @@ class BrandController extends Controller
         return Inertia::render('Admin/Dashboard', [
             'brands' => $brands,
         ]);
-
     }
 
-    public function create()
-    {
-        return Inertia::render('Admin/Dashboard');
-    }
+    // public function create()
+    // {
+    //     return Inertia::render('Admin/Dashboard');
+    // }
 
     public function store(BrandRequest $request)
     {
@@ -54,12 +53,12 @@ class BrandController extends Controller
     }
 
 
-    public function edit(Brand $brand)
-    {
-        return Inertia::render('Admin/Dashboard', [
-            'brand' => $brand,
-        ]);
-    }
+    // public function edit(Brand $brand)
+    // {
+    //     return Inertia::render('Admin/Dashboard', [
+    //         'brand' => $brand,
+    //     ]);
+    // }
 
     public function update(BrandRequest $request, Brand $brand)
     {
