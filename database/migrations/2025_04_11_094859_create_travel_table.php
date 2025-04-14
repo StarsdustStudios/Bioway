@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('travel', function (Blueprint $table) {
             $table->id();
-
+            $table->foreignID('location_1')->constrained('locations')->onDelete('cascade');
+            $table->foreignID('location_2')->constrained('locations')->onDelete('cascade');
+            $table->integer('price');
             $table->timestamps();
         });
     }

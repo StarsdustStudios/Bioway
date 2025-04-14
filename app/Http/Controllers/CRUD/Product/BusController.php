@@ -17,7 +17,10 @@ class ShuttleBusController extends Controller
 {
     public function index()
     {
-
+        $shuttleBuses = ShuttleBus::with('car')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'shuttleBuses' => $shuttleBuses,
+        ]);
     }
     public function create()
     {
@@ -25,8 +28,22 @@ class ShuttleBusController extends Controller
     }
     public function store(Request $request)
     {
+        $validated = $request->validated();
 
+        $shuttleBuses = new ShuttleBus();
+        $shuttleBuses->car_id = $validated['car_id'];
+        $shuttleBuses->location_id = $validated['location_id'];
+        $shuttleBuses->price = $validated['price'];
+        $shuttleBuses->driver_fee = $validated['driver_fee'];
+        $shuttleBuses->save();
+
+        $shuttleBuses = ShuttleBus::with('car')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'message' => 'Shuttle Bus created successfully!',
+            'shuttleBuses' => $shuttleBuses,
+        ]);
     }
+    
     public function edit(Carter $carter)
     {
 

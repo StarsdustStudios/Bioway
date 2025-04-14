@@ -24,6 +24,16 @@ class Car extends Model
         return $this->hasMany(Rental::class);
     }
 
+    public function shuttleBuses(): HasMany
+    {
+        return $this->hasMany(ShuttleBus::class);
+    }
+    
+    public function carters(): HasMany
+    {
+        return $this->hasMany(Carter::class);
+    }
+
     public function getImageUrlAttribute()
     {
         return $this->car_image ? Storage::url($this->car_image) : null;
