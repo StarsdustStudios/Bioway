@@ -49,18 +49,28 @@ class RentalController extends Controller
     }
     public function edit(Rental $Rental)
     {
-
+        return Inertia::render('Admin/Dashboard', [
+            'Rental' => $Rental,
+        ]);
     }
     public function update(Request $request, Rental $Rental)
     {
-
+        return $this->saveRental($request, $Rental);
     }
     public function destroy(Rental $Rental)
     {
+        $Rental->delete();
 
+        $Rentals = Rental::with('car')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'message' => 'Rental deleted successfully!',
+            'rentals' => $Rentals,
+        ]);
     }
-    private function saveRental($request, Rental $Rental = null)
-    {
+    // private function saveRental($request, Rental $Rental = null)
+    // {
+    //     $data = $request->validated();
 
-    }
+    //     return redirect()->route('rental.index')->with('success', 'Rental saved successfully!');
+    // }
 }

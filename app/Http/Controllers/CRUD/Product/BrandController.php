@@ -18,9 +18,6 @@ class BrandController extends Controller
             'brands' => $brands,
         ]);
 
-    //      return response()->json([
-    //     'brands' => $brands,
-    // ]);
     }
 
     public function create()
@@ -29,33 +26,32 @@ class BrandController extends Controller
     }
 
     public function store(BrandRequest $request)
-{
-    $validated = $request->validated();
+    {
+        $validated = $request->validated();
 
-    if ($request->hasFile('brand_logo') && $request->file('brand_logo')->isValid()) {
-        $file = $request->file('brand_logo');
-        $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
-        $path = 'brands/' . $fileName;
+        if ($request->hasFile('brand_logo') && $request->file('brand_logo')->isValid()) {
+            $file = $request->file('brand_logo');
+            $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = 'brands/' . $fileName;
 
-        // Simpan file secara manual ke disk 'public'
-        Storage::disk('public')->put($path, file_get_contents($file));
-    } else {
-        return back()->withErrors(['brand_logo' => 'Invalid or missing logo file']);
+            // Simpan file secara manual ke disk 'public'
+            Storage::disk('public')->put($path, file_get_contents($file));
+        } else {
+            return back()->withErrors(['brand_logo' => 'Invalid or missing logo file']);
+        }
+
+        $brand = new Brand();
+        $brand->name = $validated['name'];
+        $brand->brand_logo ='/storage/brands/' . $fileName; // save as brands/xxx.jpg
+        $brand->save();
+
+        $brands = Brand::with('cars')->get();
+
+        return Inertia::render('Admin/Dashboard', [
+            'message' => 'Brand created successfully!',
+            'brands' => $brands,
+        ]);
     }
-
-    $brand = new Brand();
-    $brand->name = $validated['name'];
-    $brand->brand_logo ='/storage/brands/' . $fileName; // save as brands/xxx.jpg
-    $brand->save();
-
-    $brands = Brand::with('cars')->get();
-
-    return Inertia::render('Admin/Dashboard', [
-        'message' => 'Brand created successfully!',
-        'brands' => $brands,
-    ]);
-}
-
 
 
     public function edit(Brand $brand)
@@ -86,20 +82,20 @@ class BrandController extends Controller
     /**
      * Shared method to create or update a brand.
      */
-    private function saveBrand(BrandRequest $request, Brand $brand = null)
-    {
-        $data = $request->validated();
+    // private function saveBrand(BrandRequest $request, Brand $brand = null)
+    // {
+    //     $data = $request->validated();
 
-        // Since brand_logo is a string URL now, no need to handle file uploads
-        // The frontend is passing the brand_logo as a string (URL)
-        if ($brand) {
-            $brand->update($data);
-            $message = 'Brand updated successfully!';
-        } else {
-            Brand::create($data);
-            $message = 'Brand created successfully!';
-        }
+    //     // Since brand_logo is a string URL now, no need to handle file uploads
+    //     // The frontend is passing the brand_logo as a string (URL)
+    //     if ($brand) {
+    //         $brand->update($data);
+    //         $message = 'Brand updated successfully!';
+    //     } else {
+    //         Brand::create($data);
+    //         $message = 'Brand created successfully!';
+    //     }
 
-        return redirect()->route('brands.index')->with('success', $message);
-    }
+    //     return redirect()->route('brands.index')->with('success', $message);
+    // }
 }
