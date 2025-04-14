@@ -1,0 +1,48 @@
+name: Deploy Laravel + React App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+
+      - name: Install dependencies for Laravel
+        run: |
+          composer install --no-interaction --prefer-dist
+
+      - name: Set up Node.js for React 19
+        uses: actions/setup-node@v2
+        with:
+          node-version: '19'  # React 19
+
+      - name: Install dependencies for React
+        run: |
+          npm install
+
+      - name: Build React frontend
+        run: |
+          npm run build
+
+      - name: Run Laravel migrations
+        run: |
+          php artisan migrate --force
+
+    #   - name: Deploy to Hostinger or Other Platform
+    #     run: |
+    #       # Your deploy script here, e.g., SSH into your server
+    #       # Example: SSH into Hostinger and upload files, restart services, etc.
