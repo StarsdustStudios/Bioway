@@ -28,25 +28,6 @@ class BrandController extends Controller
         return Inertia::render('Admin/Dashboard');
     }
 
-    // public function store(BrandRequest $request)
-    // {
-    //     // Validate and handle the incoming data
-    //     $validated = $request->validated();
-
-    //     // Save brand to the database
-    //     $brand = new Brand();
-    //     $brand->name = $validated['name'];
-    //     $brand->brand_logo = $validated['brand_logo'];  // Storing string URL here
-    //     $brand->save();
-
-    //     $brands = Brand::with('cars')->get();
-
-    //     return Inertia::render('Admin/Dashboard', [
-    //         'message' => 'Brand created successfully!',
-    //         'brands' => $brands,
-    //     ]);
-    // }
-
     public function store(BrandRequest $request)
 {
     $validated = $request->validated();
@@ -91,12 +72,6 @@ class BrandController extends Controller
 
     public function destroy(Brand $brand)
     {
-        if ($brand->brand_logo) {
-            // If brand_logo is a URL, no need to delete from storage
-            // If it's an actual file path, you'd delete it as follows:
-            // Storage::disk('public')->delete($brand->brand_logo);
-        }
-
         $brand->delete();
 
         
