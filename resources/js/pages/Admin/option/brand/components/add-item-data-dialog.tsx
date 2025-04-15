@@ -1,7 +1,6 @@
 'use client'
-
 import { z } from 'zod'
-import { useForm } from 'react-hook-form'
+import { FieldErrors, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
@@ -24,28 +23,20 @@ import {
 import { Input } from '@/components/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { itemDatas } from '@/components/data/item-data'
-import { OptionData } from '../data/schema'
+import { BrandGetData, brandPostSchema, brandPutSchema } from './schema'
 import { router } from '@inertiajs/react'
 
-// ✅ Zod schema (file can be any)
-const formSchema = z.object({
-  name: z.string().min(1, 'Nama wajib diisi'),
-  brand_logo: z
-    .any()
-    .refine((file) => file instanceof File, 'Logo wajib diunggah')
-    .refine((file) => file?.size <= 2 * 1024 * 1024, 'Maksimal 2MB')
-    .refine(
-      (file) =>
-        ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'].includes(file?.type),
-      'Format tidak valid (jpeg, png, jpg, gif, svg saja)'
-    ),
-});
 
+const postFormSchema = brandPostSchema;
+const putFormSchema = brandPutSchema;
+type PostDataForm = z.infer<typeof postFormSchema>
+type PutDataForm = z.infer<typeof putFormSchema>
 
-type ItemDataForm = z.infer<typeof formSchema>
+type FormType = PostDataForm | PutDataForm
+type FormField = keyof FormType
 
 interface Props {
-  currentRow?: OptionData
+  currentRow?: BrandGetData
   open: boolean
   onOpenChange: (open: boolean) => void
   type: number
@@ -60,32 +51,49 @@ export function ItemDataActionDialog({
   const isEdit = !!currentRow
   const itemData = itemDatas[type]
 
-  const form = useForm<ItemDataForm>({
-    resolver: zodResolver(formSchema),
-    defaultValues: isEdit
-      ? { ...currentRow, isEdit }
-      : {
-          name: '',
-          brand_logo: '',
-        },
+  const defaultValues = isEdit
+    ? { ...currentRow, isEdit, brand_logo: currentRow?.brand_logo ?? '' }
+    : { name: '', brand_logo: '' }
+
+  const form = useForm<PutDataForm | PostDataForm>({
+    resolver: zodResolver(isEdit ? postFormSchema : putFormSchema),
+    defaultValues,
   });
 
-  // ✅ Submit handler
-  const onSubmit = (data: ItemDataForm) => {
+  const onSubmit = (data: PutDataForm | PostDataForm) => {
     const formData = new FormData();
+
     formData.append('name', data.name);
-    formData.append('brand_logo', data.brand_logo); // ✅ now a File
-  
-    router.post('/product/brands', formData, {
-      forceFormData: true,
-      onSuccess: () => {
-        toast({ title: 'Uploaded!' });
-        onOpenChange(false);
-        form.reset();
-      },
-    });
-  };  
-  
+    formData.append('brand_logo', data.brand_logo);
+
+    if (isEdit && currentRow?.id) {
+      router.put(`/product/brands/${currentRow.id}`, formData, {
+        forceFormData: true,
+        onSuccess: () => {
+          toast({ title: 'Updated!' });
+          onOpenChange(false);
+          form.reset();
+        },
+      });
+    } else {
+      router.post('/product/brands', formData, {
+        forceFormData: true,
+        onSuccess: () => {
+          toast({ title: 'Uploaded!' });
+          onOpenChange(false);
+          form.reset();
+        },
+      });
+    }
+  };
+
+  function getErrorMessage(
+    errors: FieldErrors<FormType>,
+    field: string
+  ): string | undefined {
+    return (errors as Record<string, { message?: string }>)[field]?.message
+  }
+
   return (
     <Dialog
       open={open}
@@ -122,7 +130,7 @@ export function ItemDataActionDialog({
                   <FormField
                     key={fieldName}
                     control={form.control}
-                    name={fieldName as keyof ItemDataForm}
+                    name={fieldName as keyof (PutDataForm | PostDataForm)}
                     render={({ field }) => (
                       <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
                         <FormLabel className='col-span-2 text-right'>
@@ -130,17 +138,25 @@ export function ItemDataActionDialog({
                         </FormLabel>
                         <FormControl className='col-span-4'>
                           {fieldName === 'brand_logo' ? (
-                            // For imgUrl (string), use a simple input field
-                            <Input
-                            type='file'
-                            accept='image/*'
-                            onChange={(e) => {
-                              form.setValue('brand_logo', e.target.files?.[0])
-                            }}
-                          />
-                          
+                            <div className="flex flex-col items-center space-y-2">
+                              {/* Display image preview if there is a brand_logo */}
+                              {(isEdit && currentRow?.brand_logo) || form.watch('brand_logo') ? (
+                                <img
+                                  src={isEdit && currentRow?.brand_logo ? currentRow.brand_logo : URL.createObjectURL(form.watch('brand_logo'))}
+                                  alt="Brand logo"
+                                  className="w-16 h-16 object-cover mb-2" // Adjust size as needed
+                                />
+                              ) : null}
+
+                              <Input
+                                type='file'
+                                accept='image/*'
+                                onChange={(e) => {
+                                  form.setValue('brand_logo', e.target.files?.[0]) // Update form value with the file
+                                }}
+                              />
+                            </div>
                           ) : (
-                            // Other fields can be handled as needed
                             <Input
                               placeholder={'Enter ' + column + '...'}
                               {...field}
@@ -149,11 +165,11 @@ export function ItemDataActionDialog({
                             />
                           )}
                         </FormControl>
-                        {/* Displaying error messages */}
                         <FormMessage className='col-span-4 col-start-3'>
-                          {form.formState.errors[fieldName]?.message}
+                          {getErrorMessage(form.formState.errors, fieldName)}
                         </FormMessage>
                       </FormItem>
+
                     )}
                   />
                 )
@@ -163,7 +179,6 @@ export function ItemDataActionDialog({
         </ScrollArea>
 
         <DialogFooter>
-          {/* Button now displays errors if the form is invalid */}
           <Button type='submit' form='itemData-form'>
             Save
           </Button>

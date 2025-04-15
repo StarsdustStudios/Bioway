@@ -1,23 +1,20 @@
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/ui/profile-dropdown'
-import { Search } from '@/components/ui/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { getColumns } from './components/table-columns'
 import { ItemDataDialogs } from './components/static/dialogs'
 import { ItemDataPrimaryButton } from './components/static/add-item-data-btn'
 import { OptionDataTable } from './components/static/table'
 import ItemDataProvider from '@/context/item-data-context'
-import { itemListSchema } from './data/schema'
-import { optionData } from './data/option'
+import { brandListSchema, itemListSchema } from './data/schema'
 import { itemDatas } from '@/components/data/item-data'
 import { usePage } from '@inertiajs/react'
-import { SharedData } from '@/types'
 
-export default function ItemDataPage({ index }: { index: number }, {data}) {
+export default function CarsPage({ index }: { index: number }, {data}) {
   // Parse user list
-  const userList = itemListSchema.parse(data.brands)
-  
+  const userList = itemListSchema.parse(data.cars)
+
   return (
     <ItemDataProvider>
       <Header fixed>
@@ -41,9 +38,6 @@ export default function ItemDataPage({ index }: { index: number }, {data}) {
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
           <OptionDataTable data={userList} columns={getColumns({index})} type={index}/>
         </div>
-        <script>
-          console.log(data)
-        </script>
       </Main>
         <ItemDataDialogs type={index}/>
     </ItemDataProvider>
