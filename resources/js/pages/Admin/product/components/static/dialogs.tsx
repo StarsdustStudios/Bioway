@@ -29,7 +29,7 @@ export function ProductDialogs({ type }: { type: number }) {
           />
 
           <UsersDeleteDialog
-            key={`user-delete-${currentRow.brand}`}
+            key={`user-delete-${currentRow.id}`}
             open={open === 'delete'}
             onOpenChange={() => {
               setOpen('delete')

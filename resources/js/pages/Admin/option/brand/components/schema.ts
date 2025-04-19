@@ -19,28 +19,36 @@ const getSchema = z.object({
 export const brandPostSchema = z.object({
   name: z.string().min(1, 'Nama brand wajib diisi'),
   brand_logo: z
-    .any()
-    .refine((file) => file instanceof File, 'Logo wajib diunggah')
-    .refine((file) => file?.size <= 2 * 1024 * 1024, 'Maksimal 2MB')
-    .refine(
-      (file) =>
-        ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'].includes(file?.type),
-      'Format tidak valid (jpeg, png, jpg, gif, svg saja)'
-    ),
+  .union([
+    z
+      .instanceof(File)
+      .refine((file) => file.size <= 2 * 1024 * 1024, 'Maksimal 2MB')
+      .refine(
+        (file) =>
+          ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'].includes(file.type),
+        'Format tidak valid (jpeg, png, jpg, gif, svg saja)'
+      ),
+    z.null(),
+    z.undefined(),
+  ]),
 });
 
 export const brandPutSchema = z.object({
-  // id: z.number().optional(),
+  id: z.number().optional(),
   name: z.string().min(1, 'Nama brand wajib diisi'),
   brand_logo: z
-    .any()
-    .refine((file) => file instanceof File, 'Logo wajib diunggah')
-    .refine((file) => file?.size <= 2 * 1024 * 1024, 'Maksimal 2MB')
-    .refine(
-      (file) =>
-        ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'].includes(file?.type),
-      'Format tidak valid (jpeg, png, jpg, gif, svg saja)'
-    ).optional(),
+  .union([
+    z
+      .instanceof(File)
+      .refine((file) => file.size <= 2 * 1024 * 1024, 'Maksimal 2MB')
+      .refine(
+        (file) =>
+          ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'].includes(file.type),
+        'Format tidak valid (jpeg, png, jpg, gif, svg saja)'
+      ),
+    z.null(),
+    z.undefined(),
+  ]),
 })
 
 export type BrandGetData = z.infer<typeof getSchema>;

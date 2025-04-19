@@ -51,12 +51,12 @@ export default function Dashboard(data: {data: DashboardData}) {
           return <ProductPage index={4} />
           // return <NotFoundError/>
           default:
-            if (url === '/product/brands') {
+            if (url.startsWith('/product/brands')) {
               return BrandPage({index: 0}, {data})
             }
-            else if (url.startsWith('/product/brands')) {
-              window.location.replace('/product/brands')
-            }
+            // else if (url.startsWith('/product/brands')) {
+            //   window.location.replace('/product/brands')
+            // }
 
             if (url === '/product/cars') {
               return CarsPage({index: 1}, {data})

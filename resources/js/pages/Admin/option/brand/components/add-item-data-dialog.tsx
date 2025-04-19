@@ -52,8 +52,8 @@ export function ItemDataActionDialog({
   const itemData = itemDatas[type]
 
   const defaultValues = isEdit
-    ? { ...currentRow, isEdit, brand_logo: currentRow?.brand_logo ?? '' }
-    : { name: '', brand_logo: '' }
+    ? { ...currentRow, isEdit, brand_logo: currentRow?.brand_logo ?? null }
+    : { name: '', brand_logo: null }
 
   const form = useForm<PutDataForm | PostDataForm>({
     resolver: zodResolver(isEdit ? postFormSchema : putFormSchema),
@@ -64,19 +64,25 @@ export function ItemDataActionDialog({
     const formData = new FormData();
 
     formData.append('name', data.name);
-    formData.append('brand_logo', data.brand_logo);
-
+    if(data.brand_logo != null) {
+      formData.append('brand_logo', data.brand_logo);
+    }
     if (isEdit && currentRow?.id) {
-      router.put(`/product/brands/${currentRow.id}`, formData, {
-        forceFormData: true,
+      formData.append('id', currentRow.id.toString());
+      formData.append('_method', 'PUT');
+      router.post(route('product.brands.update', currentRow.id), formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
         onSuccess: () => {
-          toast({ title: 'Updated!' });
           onOpenChange(false);
           form.reset();
-        },
+        }
       });
-    } else {
-      router.post('/product/brands', formData, {
+      
+    }  
+     else {
+      router.post(route('product.brands.store'), formData, {
         forceFormData: true,
         onSuccess: () => {
           toast({ title: 'Uploaded!' });
@@ -142,7 +148,8 @@ export function ItemDataActionDialog({
                               {/* Display image preview if there is a brand_logo */}
                               {(isEdit && currentRow?.brand_logo) || form.watch('brand_logo') ? (
                                 <img
-                                  src={isEdit && currentRow?.brand_logo ? currentRow.brand_logo : URL.createObjectURL(form.watch('brand_logo'))}
+                                  // src={"/storage/" + isEdit && currentRow?.brand_logo ? currentRow.brand_logo : "/storage/" + URL.createObjectURL(form.watch('brand_logo'))}
+                                  src={"/storage/"+currentRow?.brand_logo} 
                                   alt="Brand logo"
                                   className="w-16 h-16 object-cover mb-2" // Adjust size as needed
                                 />

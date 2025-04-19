@@ -20,32 +20,32 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
   const [value, setValue] = useState('')
 
     
-    const handleDelete = () => {
-      if (!currentRow || !currentRow.id) {
-        toast({
-          title: 'Delete Failed',
-          description: 'Invalid ID. Cannot delete this item.',
-        });
-        return;
-      }
-    
-      router.delete(`/product/brands/${currentRow.id}`, {
-        onSuccess: () => {
-          toast({
-            title: 'Deleted!',
-            description: `User '${currentRow.name}' has been permanently removed.`,
-          });
-          onOpenChange(false);
-      
-          // 🔁 Reload data without navigation
-          router.reload({ only: ['brands'] });
-        },
+  const handleDelete = () => {
+    if (!currentRow || !currentRow.id) {
+      toast({
+        title: 'Delete Failed',
+        description: 'Invalid ID. Cannot delete this item.',
       });
-      
-    };
+      return;
+    }
+  
+    if (value.trim() !== currentRow.name) {
+      toast({
+        title: 'Delete Failed',
+        description: 'The entered brand name does not match.',
+      });
+      return;
+    }
+    console.log(currentRow.id)
+    router.delete(route('product.brands.destroy', currentRow.id), {
+      preserveScroll: true,
+      onSuccess: () => {
+        console.log('Deleted!')
+        window.location.replace('/product/brands')
+      }
+    })    
+  }
     
-
-
   return (
     <ConfirmDialog
       open={open}
