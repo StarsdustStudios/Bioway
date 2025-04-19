@@ -52,7 +52,7 @@ export function ItemDataActionDialog({
   const itemData = itemDatas[type]
 
   const defaultValues = isEdit
-    ? { ...currentRow, isEdit, brand_logo: currentRow?.brand_logo ?? null }
+    ? { ...currentRow, isEdit, brand_logo: null }
     : { name: '', brand_logo: null }
 
   const form = useForm<PutDataForm | PostDataForm>({
