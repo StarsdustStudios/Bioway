@@ -27,7 +27,7 @@ class BrandController extends Controller
 
         $imagePath = '/storage/brands/placeholder.png';
 
-        if ($request->has('brand_logo') && $request->image != null) {
+        if ($request->has('brand_logo') && $request->brand_logo != null) {
             $imagePath = $request->file('brand_logo')->store('brands', 'public');
             $brand->brand_logo = $imagePath;
         }
@@ -51,7 +51,7 @@ class BrandController extends Controller
         $brand = Brand::where('id', $request->id)->first();
         $brand->name = $request->name;
         $imagePath = $brand->brand_logo;
-        if ($request->has('brand_logo') && $request->image != null) {
+        if ($request->has('brand_logo') && $request->brand_logo != null) {
             $imagePath = $request->file('brand_logo')->store('brands', 'public');
         }
         $brand->brand_logo = $imagePath;
