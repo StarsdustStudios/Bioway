@@ -17,30 +17,45 @@ class TravelController extends Controller
 {
     public function index()
     {
-
+        $travels = Travel::with('car')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'travels' => $travels,
+        ]);
     }
-    public function create()
-    {
+    // public function create()
+    // {
 
-    }
+    // }
+
     public function store(Request $request)
     {
+        $validated = $request->validated();
 
+        $travels = new Travel();
+        $travels->location_1 = $validated['location_1'];
+        $travels->location_2 = $validated['location_2'];
+        $travels->price = $validated['price'];
     }
-    public function edit(Carter $carter)
+    // public function edit(Travel $travel)
+    // {
+
+    // }
+    public function update(Request $request, Travel $travel)
     {
-
+        return $this->saveTravel($request, $travel);
     }
-    public function update(Request $request, Carter $carter)
+    public function destroy(Travel $travel)
     {
+        $travel->delete();
 
+        $travels = Travel::with('car')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'message' => 'Travel deleted successfully!',
+            'travels' => $travels,
+        ]);
     }
-    public function destroy(Carter $carter)
-    {
+    // private function saveTravel($request, Travel $travel = null)
+    // {
 
-    }
-    private function saveTravel($request, Carter $carter = null)
-    {
-
-    }
+    // }
 }

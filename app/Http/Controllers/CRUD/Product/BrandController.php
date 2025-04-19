@@ -19,10 +19,10 @@ class BrandController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        return Inertia::render('Admin/Dashboard');
-    }
+    // public function create()
+    // {
+    //     return Inertia::render('Admin/Dashboard');
+    // }
 
     public function store(BrandRequest $request)
     {
@@ -42,8 +42,26 @@ class BrandController extends Controller
         $brand->brand_logo ='/storage/brands/' . $fileName;
         $brand->save();
 
+<<<<<<< HEAD
         return redirect()->back()->with('success', 'Brand created successfully!');
     }
+=======
+        $brands = Brand::with('cars')->get();
+
+        return Inertia::render('Admin/Dashboard', [
+            'message' => 'Brand created successfully!',
+            'brands' => $brands,
+        ]);
+    }
+
+
+    // public function edit(Brand $brand)
+    // {
+    //     return Inertia::render('Admin/Dashboard', [
+    //         'brand' => $brand,
+    //     ]);
+    // }
+>>>>>>> 55c727a1001d4b82ba6f4a27ab4bba24a521c834
 
     public function update(BrandRequest $request, Brand $brand)
     {

@@ -22,10 +22,10 @@ class ShuttleBusController extends Controller
             'shuttleBuses' => $shuttleBuses,
         ]);
     }
-    public function create()
-    {
+    // public function create()
+    // {
 
-    }
+    // }
     public function store(Request $request)
     {
         $validated = $request->validated();
@@ -44,20 +44,26 @@ class ShuttleBusController extends Controller
         ]);
     }
     
-    public function edit(Carter $carter)
-    {
+    // public function edit(ShuttleBus $ShuttleBus)
+    // {
 
-    }
-    public function update(Request $request, Carter $carter)
+    // }
+    public function update(Request $request, ShuttleBus $ShuttleBus)
     {
-
+        return $this->saveBus($request, $ShuttleBus);
     }
-    public function destroy(Carter $carter)
+    public function destroy(ShuttleBus $ShuttleBus)
     {
+        $ShuttleBus->delete();
 
+        $shuttleBuses = ShuttleBus::with('car')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'message' => 'Shuttle Bus deleted successfully!',
+            'shuttleBuses' => $shuttleBuses,
+        ]);
     }
-    private function saveBus($request, Carter $carter = null)
-    {
+    // private function saveBus($request, ShuttleBus $ShuttleBus = null)
+    // {
 
-    }
+    // }
 }

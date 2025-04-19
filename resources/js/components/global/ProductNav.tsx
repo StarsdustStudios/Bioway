@@ -18,7 +18,8 @@ import {
     IconUsersGroup,
     IconBus,
     IconLocation,
-    IconTruckDelivery
+    IconTruckDelivery,
+    IconMap2,
 } from "@tabler/icons-react"
 
 // import { Inertia } from "@inertiajs/inertia"
@@ -29,6 +30,7 @@ const menuItems = [
     { label: "Carter", icon: IconUsersGroup, path: '/produk/carter' },
     { label: "Shuttle Bus", icon: IconBus, path: '/produk/shuttle-bus' },
     { label: "Travel", icon: IconLocation, path: '/produk/travel' },
+    { label: "Tour", icon: IconMap2, path: '/produk/tour' },
     { label: "Delivery", icon: IconTruckDelivery, path: '/produk/delivery' },
 ]
 
