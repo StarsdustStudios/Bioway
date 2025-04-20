@@ -4,6 +4,7 @@ import { type SharedData } from '@/types'
 
 import { SidebarProvider } from '@/components/ui/sidebar'
 import AppSidebar from '@/components/app-sidebar'
+import { ThemeProvider } from '@/context/theme-context'
 
 const NotFoundError = lazy(() => import('../errors/not-found-error'))
 const CmsPage = lazy(() => import('./cms/CmsPage'))
@@ -76,7 +77,7 @@ export default function Dashboard(data: {data: DashboardData}) {
   }
 
   return (
-    // <SearchProvider>
+    <ThemeProvider>
       <SidebarProvider defaultOpen={true}>
         <AppSidebar />
         <div
@@ -88,6 +89,6 @@ export default function Dashboard(data: {data: DashboardData}) {
           </Suspense>
         </div>
       </SidebarProvider>
-    // </SearchProvider>
-  )
+    </ThemeProvider>
+    )
 }
