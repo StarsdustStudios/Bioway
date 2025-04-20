@@ -36,7 +36,7 @@ import {
 import { CarGetData, brandListSchema, carListSchema, carSchema } from './components/schema'
 import { BrandGetData } from '../brand/components/schema'
 
-let brandList = undefined
+let brandList: BrandGetData[] | undefined = undefined
 
 const getBrandImage = (brandId : number) => {
   if (brandList != undefined) {
@@ -68,7 +68,7 @@ export default function CarsPage({ index, data }: { index: number; data: any }) 
           <ItemDataPrimaryButton/>
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <CarGetDataTable data={userList} columns={getColumns({index})} type={index}/>
+          <CarGetDataTable data={userList} columns={getColumns({index})}/>
         </div>
       </Main>
         <ItemDataDialogs type={index}/>
@@ -160,7 +160,7 @@ function getColumns({ index }: { index: number }): ColumnDef<CarGetData>[] {
         }
       </div>
     ),
-    enableSorting: false,
+    enableSorting: itemDatas[index].optionColDataset[colIndex] === "model" ? true : false,
   }));
 
   return [
@@ -240,13 +240,14 @@ declare module '@tanstack/react-table' {
 
 interface DataTableProps {
   columns: ColumnDef<CarGetData>[]
-  brand: BrandGetData[]
   data: CarGetData[]
 }
 
-function CarGetDataTable({ columns, data, brand }: DataTableProps) {
+function CarGetDataTable({columns, data}: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    id: false,
+  })
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
 
