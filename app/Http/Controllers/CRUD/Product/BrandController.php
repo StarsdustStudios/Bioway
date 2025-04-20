@@ -19,82 +19,62 @@ class BrandController extends Controller
         ]);
     }
 
-    // public function create()
-    // {
-    //     return Inertia::render('Admin/Dashboard');
-    // }
 
     public function store(BrandRequest $request)
     {
-        $validated = $request->validated();
+        $brand = new Brand();
+        $brand->name = $request->name;
 
-        if ($request->hasFile('brand_logo') && $request->file('brand_logo')->isValid()) {
-            $file = $request->file('brand_logo');
-            $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
-            $path = 'brands/' . $fileName;
+        $imagePath = '/storage/brands/placeholder.png';
 
-            // Simpan file secara manual ke disk 'public'
-            Storage::disk('public')->put($path, file_get_contents($file));
-        } else {
-            return back()->withErrors(['brand_logo' => 'Invalid or missing logo file']);
+        if ($request->has('brand_logo') && $request->brand_logo != null) {
+            $imagePath = $request->file('brand_logo')->store('brands', 'public');
+            $brand->brand_logo = $imagePath;
         }
 
-        $brand = new Brand();
-        $brand->name = $validated['name'];
-        $brand->brand_logo ='/storage/brands/' . $fileName; // save as brands/xxx.jpg
+        $brand->brand_logo = $imagePath;
+
         $brand->save();
 
-        $brands = Brand::with('cars')->get();
+        return redirect()->back()->with('success', 'Brand created successfully!');
+    }
 
+    public function edit(Brand $brand)
+    {
         return Inertia::render('Admin/Dashboard', [
-            'message' => 'Brand created successfully!',
-            'brands' => $brands,
+            'brand' => $brand,
         ]);
     }
 
-
-    // public function edit(Brand $brand)
-    // {
-    //     return Inertia::render('Admin/Dashboard', [
-    //         'brand' => $brand,
-    //     ]);
-    // }
-
-    public function update(BrandRequest $request, Brand $brand)
+    public function update(BrandRequest $request)
     {
-        return $this->saveBrand($request, $brand);
-    }
+        $brand = Brand::where('id', $request->id)->first();
+        $brand->name = $request->name;
+        $imagePath = $brand->brand_logo;
+        if ($request->has('brand_logo') && $request->brand_logo != null) {
+            $imagePath = $request->file('brand_logo')->store('brands', 'public');
+        }
+        $brand->brand_logo = $imagePath;
 
+        $brand->update();
+
+        return redirect()->back()->with('success', 'Brand created successfully!');
+    }
+    
+
+
+
+    // udah fix gini
     public function destroy(Brand $brand)
     {
+        $path = str_replace('/storage/', '', $brand->brand_logo);
+        Storage::disk('public')->delete($path);
         $brand->delete();
 
-        
         $brands = Brand::with('cars')->get();
-
         return Inertia::render('Admin/Dashboard', [
             'message' => 'Brand deleted successfully!',
             'brands' => $brands,
         ]);
     }
-
-    /**
-     * Shared method to create or update a brand.
-     */
-    // private function saveBrand(BrandRequest $request, Brand $brand = null)
-    // {
-    //     $data = $request->validated();
-
-    //     // Since brand_logo is a string URL now, no need to handle file uploads
-    //     // The frontend is passing the brand_logo as a string (URL)
-    //     if ($brand) {
-    //         $brand->update($data);
-    //         $message = 'Brand updated successfully!';
-    //     } else {
-    //         Brand::create($data);
-    //         $message = 'Brand created successfully!';
-    //     }
-
-    //     return redirect()->route('brands.index')->with('success', $message);
-    // }
 }
