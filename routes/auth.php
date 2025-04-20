@@ -29,7 +29,6 @@ Route::middleware('auth')->group(function () {
             'create' => 'product.brands.create',
             'store' => 'product.brands.store',
             'show' => 'product.brands.show',
-            'edit' => 'product.brands.edit',
             'update' => 'product.brands.update',
             'destroy' => 'product.brands.destroy',
         ]);
