@@ -71,7 +71,7 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
           </p>
 
           <Label className='my-2'>
-            Confirm by typing the username:
+            Confirm by typing the Brand Name:
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}

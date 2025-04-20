@@ -36,7 +36,7 @@ import {
 } from '@tanstack/react-table'
 
 
-export default function BrandPage({ index }: { index: number }, {data}) {
+export default function BrandPage({ index, data }: { index: number; data: any }) {
   // Parse user list
   const userList = brandGetSchema.parse(data.brands)
 

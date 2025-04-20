@@ -148,10 +148,9 @@ export function ItemDataActionDialog({
                               {/* Display image preview if there is a brand_logo */}
                               {(isEdit && currentRow?.brand_logo) || form.watch('brand_logo') ? (
                                 <img
-                                  // src={"/storage/" + isEdit && currentRow?.brand_logo ? currentRow.brand_logo : "/storage/" + URL.createObjectURL(form.watch('brand_logo'))}
                                   src={"/storage/"+currentRow?.brand_logo} 
                                   alt="Brand logo"
-                                  className="w-16 h-16 object-cover mb-2" // Adjust size as needed
+                                  className="w-16 h-16 object-cover mb-2"
                                 />
                               ) : null}
 

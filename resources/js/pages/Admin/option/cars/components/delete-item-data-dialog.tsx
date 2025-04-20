@@ -7,45 +7,45 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/input'
 import { Label } from '@/components/ui/label'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
-import { OptionData } from '../data/schema'
 import { router } from '@inertiajs/react'
+import { CarGetData } from './schema'
 
 interface Props {
   open: boolean
   onOpenChange: (open: boolean) => void
-  currentRow: OptionData
+  currentRow: CarGetData
 }
 
 export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
   const [value, setValue] = useState('')
 
     
-    const handleDelete = () => {
-      if (!currentRow || !currentRow.id) {
-        toast({
-          title: 'Delete Failed',
-          description: 'Invalid ID. Cannot delete this item.',
-        });
-        return;
-      }
-    
-      router.delete(`/product/cars/${currentRow.id}`, {
-        onSuccess: () => {
-          toast({
-            title: 'Deleted!',
-            description: `User '${currentRow.model}' has been permanently removed.`,
-          });
-          onOpenChange(false);
-      
-          // 🔁 Reload data without navigation
-          router.reload({ only: ['brands'] });
-        },
+  const handleDelete = () => {
+    if (!currentRow || !currentRow.id) {
+      toast({
+        title: 'Delete Failed',
+        description: 'Invalid ID. Cannot delete this item.',
       });
-      
-    };
+      return;
+    }
+  
+    if (value.trim() !== currentRow.model) {
+      toast({
+        title: 'Delete Failed',
+        description: 'The entered brand name does not match.',
+      });
+      return;
+    }
+    console.log(currentRow.id)
+    router.delete(route('product.cars.destroy', currentRow.id), {
+      preserveScroll: true,
+      onSuccess: () => {
+        console.log('Deleted!')
+        window.location.replace('/product/cars')
+      }
+    })    
+  }
     
-
-
   return (
     <ConfirmDialog
       open={open}
@@ -67,15 +67,15 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
             Are you sure you want to delete{' '}
             <span className='font-bold'>{currentRow.model}</span>?
             <br />
-            This action will permanently remove this user from the system. This cannot be undone.
+            This action will permanently remove this brand from the system. This cannot be undone.
           </p>
 
           <Label className='my-2'>
-            Confirm by typing the username:
+            Confirm by typing the Model:
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter username to confirm deletion.'
+              placeholder='Enter Model Name to confirm deletion.'
             />
           </Label>
 
