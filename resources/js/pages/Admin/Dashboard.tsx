@@ -5,18 +5,14 @@ import { type SharedData } from '@/types'
 import { SidebarProvider } from '@/components/ui/sidebar'
 // import { SearchProvider } from '@/context/search-context'
 import AppSidebar from '@/components/app-sidebar'
-import ItemDataPage from './option/OptionPage'
+import BrandPage from './option/brand/BrandPage'
 import ForbiddenError from '../errors/forbidden'
+import CarsPage from './option/cars/CarsPage'
 
 // Lazy load CMS and Product components
 const NotFoundError = lazy(() => import('../errors/not-found-error'))
 const CmsPage = lazy(() => import('./cms/CmsPage'))
 const ProductPage = lazy(() => import('./product/ProductPage'))
-
-interface Car {
-  id: number;
-  name: string;
-}
 
 interface Brand {
   id: number;
@@ -24,14 +20,17 @@ interface Brand {
   brand_logo: string;
   created_at: string;
   updated_at: string;
-  cars: Car[];
+  cars: Cars[];
+}
+interface Cars {
+  model: string;
+  brand_id: number;
+  car_image: string;
+  created_at: string;
+  updated_at: string;
 }
 
-interface ApiResponse {
-  brands: Brand[];
-}
-
-export type DashboardData = { brands: Brand[] } | { otherData: OtherType[] };
+export type DashboardData = { brands: Brand[]} | { cars: Cars[]};
 
 export default function Dashboard(data: {data: DashboardData}) {
   const { url } = usePage<SharedData>() // Get current URL
@@ -52,15 +51,16 @@ export default function Dashboard(data: {data: DashboardData}) {
           return <ProductPage index={4} />
           // return <NotFoundError/>
           default:
-            if (url === '/product/brands') {
-              return ItemDataPage({index: 0}, {data})
+            if (url.startsWith('/product/brands')) {
+              return BrandPage({index: 0}, {data})
             }
-            else if (url.startsWith('/product/brands')) {
-              window.location.replace('/product/brands')
-            }
+            // else if (url.startsWith('/product/brands')) {
+            //   window.location.replace('/product/brands')
+            // }
 
             if (url === '/product/cars') {
-              return ItemDataPage({index: 1}, {data})
+              return CarsPage({index: 1}, {data})
+              // return <NotFoundError/>
             }
             else if (url.startsWith('/product/cars')) {
               window.location.replace('/product/cars')

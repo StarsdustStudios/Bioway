@@ -10,7 +10,7 @@ export const itemDatas : OptionData[] = [
     {
         optionName: "Mobil",
         optionColumns: ["Model", "Brand", "Foto"],
-        optionColDataset: ["model", "brand", "carImg"],
+        optionColDataset: ["model", "brand_id", "car_image"],
         optionStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"],
     },
 ]

@@ -29,11 +29,11 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
         return;
       }
     
-      router.delete(`/product/brands/${currentRow.id}`, {
+      router.delete(`/product/cars/${currentRow.id}`, {
         onSuccess: () => {
           toast({
             title: 'Deleted!',
-            description: `User '${currentRow.name}' has been permanently removed.`,
+            description: `User '${currentRow.model}' has been permanently removed.`,
           });
           onOpenChange(false);
       
@@ -51,7 +51,7 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
       open={open}
       onOpenChange={onOpenChange}
       handleConfirm={handleDelete}
-      disabled={value.trim() !== currentRow.name}
+      disabled={value.trim() !== currentRow.model}
       title={
         <span className='text-destructive'>
           <IconAlertTriangle
@@ -65,7 +65,7 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
         <div className='space-y-4'>
           <p className='mb-2'>
             Are you sure you want to delete{' '}
-            <span className='font-bold'>{currentRow.name}</span>?
+            <span className='font-bold'>{currentRow.model}</span>?
             <br />
             This action will permanently remove this user from the system. This cannot be undone.
           </p>

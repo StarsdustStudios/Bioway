@@ -23,7 +23,7 @@ class BrandRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255', Rule::unique('brands')->ignore($this->brand)],
-            'brand_logo' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'brand_logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ];
     }
 }
