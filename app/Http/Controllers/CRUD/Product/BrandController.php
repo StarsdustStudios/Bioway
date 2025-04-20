@@ -70,7 +70,7 @@ class BrandController extends Controller
         $brand->delete();
 
         
-        $brands = Brand::with('cars')->get();
+        $brands = Brand::get();
 
         return Inertia::render('Admin/Dashboard', [
             'message' => 'Brand deleted successfully!',
