@@ -3,16 +3,14 @@ import { usePage } from '@inertiajs/react'
 import { type SharedData } from '@/types'
 
 import { SidebarProvider } from '@/components/ui/sidebar'
-// import { SearchProvider } from '@/context/search-context'
 import AppSidebar from '@/components/app-sidebar'
-import BrandPage from './option/brand/BrandPage'
-import ForbiddenError from '../errors/forbidden'
-import CarsPage from './option/cars/CarsPage'
+import { ThemeProvider } from '@/context/theme-context'
 
-// Lazy load CMS and Product components
 const NotFoundError = lazy(() => import('../errors/not-found-error'))
 const CmsPage = lazy(() => import('./cms/CmsPage'))
 const ProductPage = lazy(() => import('./product/ProductPage'))
+const BrandPage = lazy(() => import('./option/brand/BrandPage'))
+const CarsPage = lazy(() => import('./option/cars/CarsPage'))
 
 interface Brand {
   id: number;
@@ -33,8 +31,7 @@ interface Cars {
 export type DashboardData = { brands: Brand[]} | { cars: Cars[]};
 
 export default function Dashboard(data: {data: DashboardData}) {
-  const { url } = usePage<SharedData>() // Get current URL
-
+  const { url } = usePage<SharedData>() 
   // Route handler
   const renderContent = () => {
     if (url.startsWith('/product')) {
@@ -49,18 +46,12 @@ export default function Dashboard(data: {data: DashboardData}) {
           return <ProductPage index={3} />
         case '/product/delivery':
           return <ProductPage index={4} />
-          // return <NotFoundError/>
           default:
             if (url.startsWith('/product/brands')) {
-              return BrandPage({index: 0}, {data})
+              return <BrandPage index={0} data={data} />
             }
-            // else if (url.startsWith('/product/brands')) {
-            //   window.location.replace('/product/brands')
-            // }
-
             if (url === '/product/cars') {
-              return CarsPage({index: 1}, {data})
-              // return <NotFoundError/>
+              return <CarsPage index={1} data={data}/>
             }
             else if (url.startsWith('/product/cars')) {
               window.location.replace('/product/cars')
@@ -86,7 +77,7 @@ export default function Dashboard(data: {data: DashboardData}) {
   }
 
   return (
-    // <SearchProvider>
+    <ThemeProvider>
       <SidebarProvider defaultOpen={true}>
         <AppSidebar />
         <div
@@ -98,6 +89,6 @@ export default function Dashboard(data: {data: DashboardData}) {
           </Suspense>
         </div>
       </SidebarProvider>
-    // </SearchProvider>
-  )
+    </ThemeProvider>
+    )
 }

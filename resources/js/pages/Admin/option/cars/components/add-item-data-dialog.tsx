@@ -2,7 +2,7 @@
 
 import { z } from 'zod'
 
-import { useForm } from 'react-hook-form'
+import { FieldErrors, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
@@ -25,11 +25,26 @@ import {
 import { Input } from '@/components/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { itemDatas } from '@/components/data/item-data'
-import { OptionData } from '../data/schema'
+import { CarGetData, carPostSchema } from './schema'
 import { router, usePage } from '@inertiajs/react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import React from 'react'
 
+const postFormSchema = carPostSchema;
+const putFormSchema = carPostSchema;
+
+type PostDataForm = z.infer<typeof postFormSchema>
+type PutDataForm = z.infer<typeof putFormSchema>
+
+type FormType = PostDataForm | PutDataForm
+type FormField = keyof FormType
+
+interface Props {
+  currentRow?: CarGetData
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  type: number
+}
 interface Brand {
   id: number;
   name: string;
@@ -38,36 +53,14 @@ interface Brand {
   updated_at: string;
   cars: Cars[];
 }
+
 interface Cars {
+  id: number;
   model: string;
   brand_id: number;
   car_image: string;
   created_at: string;
   updated_at: string;
-}
-
-// ✅ Zod schema (file can be any)
-const formSchema = z.object({
-  model: z.string().min(1, 'Model wajib diisi'),
-  brand_id: z.string().min(1, 'Brand wajib diisi'),
-  car_image: z
-    .any()
-    .refine((file) => file instanceof File, 'Logo wajib diunggah')
-    .refine((file) => file?.size <= 2 * 1024 * 1024, 'Maksimal 2MB')
-    .refine(
-      (file) =>
-        ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'].includes(file?.type),
-      'Format tidak valid (jpeg, png, jpg, gif, svg saja)'
-    ),
-});
-
-type ItemDataForm = z.infer<typeof formSchema>
-
-interface Props {
-  currentRow?: OptionData
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  type: number
 }
 
 export function ItemDataActionDialog({
@@ -79,35 +72,39 @@ export function ItemDataActionDialog({
   const isEdit = !!currentRow
   const itemData = itemDatas[type]
 
-  const form = useForm<ItemDataForm>({
-    resolver: zodResolver(formSchema),
-    defaultValues: isEdit
-      ? { ...currentRow, isEdit }
-      : {
-        model: '',
-        brand_id: '',
-        car_image: null,
-      },
+  const defaultValues = isEdit
+    ? { ...currentRow, isEdit, brand_logo: null }
+    : { name: '', brand_logo: null }
+
+  const form = useForm<PutDataForm | PostDataForm>({
+    resolver: zodResolver(isEdit ? postFormSchema : putFormSchema),
+    defaultValues,
   });
 
   // ✅ Submit handler
-  const onSubmit = (data: ItemDataForm) => {
+  const onSubmit = (data: PutDataForm | PostDataForm) => {
     const formData = new FormData();
     formData.append('model', data.model);
-    formData.append('brand_id', data.brand_id);
-    formData.append('car_image', data.car_image);
-  
+    if(data.car_image != null) {
+      formData.append('car_image', data.car_image);
+    }
+    formData.append('brand_id', String(Number(data.brand_id)));
     if (isEdit && currentRow?.id) {
-      router.put(`/product/cars/${currentRow.id}`, formData, {
-        forceFormData: true,
+      formData.append('id', String(currentRow.id));
+      formData.append('_method', 'PUT');
+      console.log('Submit data:', form.getValues());
+      router.post(route('product.cars.update', currentRow.id), formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
         onSuccess: () => {
-          toast({ title: 'Updated!' });
           onOpenChange(false);
           form.reset();
-        },
+        }
       });
-    } else {
-      router.post('/product/cars', formData, {
+    }  
+    else {
+      router.post(route('product.cars.store'), formData, {
         forceFormData: true,
         onSuccess: () => {
           toast({ title: 'Uploaded!' });
@@ -124,13 +121,13 @@ export function ItemDataActionDialog({
     if (currentRow) {
       form.reset({
         model: currentRow.model,
-        brand_id: currentRow.brand_id.toString(),
+        brand_id: String(currentRow.brand_id),
         car_image: null, // Do not preload image
       });
     }
   }, [currentRow, form]);
 
-  const { cars, brands } = usePage<{ cars: Cars[], brands: Brand[] }>().props
+  const { brands } = usePage<{brands: Brand[] }>().props
 
   return (
     <Dialog
@@ -162,30 +159,39 @@ export function ItemDataActionDialog({
               {itemData.optionColumns.map((column, index) => {
                 const fieldName = itemData.optionColDataset[index]
                 const isRequired = true
-                // column !== 'destination' && column !== 'imgUrl'
 
                 return (
                   <FormField
                     key={fieldName}
                     control={form.control}
-                    name={fieldName as keyof ItemDataForm}
+                    name={fieldName as keyof (PutDataForm | PostDataForm)}
                     render={({ field }) => (
                       <FormItem className="grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0">
                         <FormLabel className="col-span-2 text-right">{column}</FormLabel>
                         <FormControl className="col-span-4">
                           {fieldName === 'car_image' ? (
+                            <div className="flex flex-col items-center space-y-2">
+                            {/* Display image preview if there is a brand_logo */}
+                            {(isEdit && currentRow?.car_image) || form.watch('car_image') ? (
+                              <img
+                                src={"/storage/"+currentRow?.car_image} 
+                                alt="Car Image"
+                                className="w-16 h-16 object-cover mb-2"
+                              />
+                            ) : null}
+
                             <Input
-                              type="file"
-                              accept="image/*"
+                              type='file'
+                              accept='image/*'
                               onChange={(e) => {
-                                form.setValue('car_image', e.target.files?.[0])
+                                form.setValue('car_image', e.target.files?.[0]) // Update form value with the file
                               }}
                             />
+                          </div>
                           ) : fieldName === 'brand_id' ? (
                             <DropdownMenu>
   <DropdownMenuTrigger asChild>
     <Button variant="outline" className="w-full col-span-4 justify-between">
-      {/* Show the brand name based on the selected brand ID */}
       {brands.find((b) => b.id.toString() === field.value)?.name || 'Pilih Brand'}
     </Button>
   </DropdownMenuTrigger>
@@ -208,7 +214,7 @@ export function ItemDataActionDialog({
                               placeholder={'Enter ' + column + '...'}
                               {...field}
                               autoComplete="off"
-                              required={isRequired}
+                              required={true}
                             />
                           )}
                         </FormControl>

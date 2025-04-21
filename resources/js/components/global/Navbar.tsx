@@ -24,7 +24,7 @@ import { Link, usePage } from "@inertiajs/react"
 function MenuLink({ label, Icon }: { label: string; Icon: React.ElementType }) {
   return (
     <NavigationMenuItem className="">
-      <NavigationMenuLink className="hover:text-white mx-2 hover:bg-blue-400 hover:scale-105 flex rounded-lg items-center text-white px-2 py-1">
+      <NavigationMenuLink className="hover:text-white mx-2 hover:bg-blue-400 hover:scale-110 duration-300 ease-in-out flex rounded-lg items-center text-white px-2 py-1">
         <Icon color="white" className="!w-5 !h-5" />
         <span className="text-md mt-1">{label}</span>
       </NavigationMenuLink>
@@ -60,7 +60,7 @@ export function MobileNavBar() {
     <div className="bg-blue-400 fixed bottom-0 w-full p-2 flex items-center justify-center h-fit rounded-t-4xl">
       <NavigationMenu>
         <NavigationMenuList className="flex items-center gap-5 justify-center">
-        {menuItems.map((item) => (
+          {menuItems.map((item) => (
             <Link href={item.path || "#"} className="">
               <MenuLink key={item.label} label={item.label} Icon={item.icon} />
             </Link>

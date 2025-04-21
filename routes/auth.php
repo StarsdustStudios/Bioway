@@ -22,7 +22,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/shuttle-bus', fn() => Inertia::render('Admin/Dashboard'))->name('product.shuttlebus');
         Route::get('/travel', fn() => Inertia::render('Admin/Dashboard'))->name('product.travel');
         Route::get('/delivery', fn() => Inertia::render('Admin/Dashboard'))->name('product.delivery');
-        Route::resource('cars', CarController::class);
+        Route::resource('cars', CarController::class)->names([
+            'index' => 'product.cars',
+            'create' => 'product.cars.create',
+            'store' => 'product.cars.store',
+            'show' => 'product.cars.show',
+            'update' => 'product.cars.update',
+            'destroy' => 'product.cars.destroy',
+        ]);
         // ->except(['show']);
         Route::resource('brands', BrandController::class)->names([
             'index' => 'product.brands',
