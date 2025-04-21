@@ -14,9 +14,9 @@ import ItemDataProvider, { useItemData } from '@/context/item-data-context'
 import { itemDatas } from '@/components/data/item-data'
 import { IconEdit, IconTrash, IconUserPlus } from '@tabler/icons-react'
 import { Cross2Icon, DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { BrandGetData, brandGetSchema } from '../sponsor/components/schema'
-import { ItemDataActionDialog } from '../sponsor/components/add-item-data-dialog'
-import { UsersDeleteDialog } from '../sponsor/components/delete-item-data-dialog'
+import { BrandGetData, brandGetSchema } from '../brand/components/schema'
+import { ItemDataActionDialog } from '../brand/components/add-item-data-dialog'
+import { UsersDeleteDialog } from '../brand/components/delete-item-data-dialog'
 import {
   ColumnDef,
   Row,
