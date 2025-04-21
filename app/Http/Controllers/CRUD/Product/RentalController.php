@@ -1,76 +1,87 @@
 <?php
-//Rental CRUD
 namespace App\Http\Controllers\CRUD\Product;
 
 use App\Http\Controllers\Controller;
-use App\Models\Rental;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\Product\CarRequest;
+use App\Models\Car;
+use App\Models\Location;
+use App\Models\Brand;
+use  Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use Inertia\Response;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
 
-//Class
 class RentalController extends Controller
 {
+
     public function index()
     {
-        $rentals = Rental::with('car')->get();
+        $cars = Car::with('brand')->get();
+        $location = Location::with("cars")->get();
         return Inertia::render('Admin/Dashboard', [
-            'rentals' => $rentals,
+            'cars' => $cars,
+            'brands' => $brands,
         ]);
     }
-    public function create()
+
+    public function store(CarRequest $request)
     {
-        $cars = Car::all();
+        $car = new Car();
+        $car->model = $request->model;
+        $car->brand_id = $request->brand_id;
+        $imagePath = '/storage/brands/placeholder.png';
+
+        if ($request->has('car_image') && $request->car_image != null) {
+            $imagePath = $request->file('car_image')->store('brands', 'public');
+            $car->car_image = $imagePath;
+        }
+        $car->car_image = $imagePath;
+
+        $car->save();
+        return redirect()->back()->with('success', 'Car created successfully!');
+    }
+
+    public function edit(Car $car)
+    {
+        $brands = Brand::all();
         return Inertia::render('Admin/Dashboard', [
+            'cars' => $car,
+            'brands' => $brands,
+        ]);
+    }
+    
+    public function update(CarRequest $request)
+{
+    $car = Car::find($request->id);
+
+    if (!$car) {
+        return redirect()->back()->withErrors(['Car not found']);
+    }
+
+    $car->model = $request->model;
+    $car->brand_id = $request->brand_id;
+
+    if ($request->hasFile('car_image') && $request->file('car_image') != null) {
+        $imagePath = $request->file('car_image')->store('cars', 'public');
+        $car->car_image = $imagePath;
+    }
+
+    $car->save();
+
+    return redirect()->back()->with('success', 'Car updated successfully!');
+}
+
+
+    public function destroy(Car $car)
+    {
+        $path = str_replace('/storage/', '', $car->car_image);
+        Storage::disk('public')->delete($path);
+        $car->delete();
+
+        $brands = Brand::with('cars')->get();
+        $cars = Car::with('brand')->get();
+        return Inertia::render('Admin/Dashboard', [
+            'message' => 'Car deleted successfully!',
+            'brands' => $brands,
             'cars' => $cars,
         ]);
     }
-    public function store(Request $request)
-    {
-        $validated = $request->validated();
-
-        $rentals = new Rental();
-        $rentals->car_id = $validated['car_id'];
-        $rentals->location_id = $validated['location_id'];
-        $rentals->price = $validated['price'];
-        $rentals->driver_fee = $validated['driver_fee'];
-        $rentals->save();
-
-        $rentals = Rental::with('car')->get();
-        return Inertia::render('Admin/Dashboard', [
-            'message' => 'Rental created successfully!',
-            'rentals' => $rentals,
-        ]);
-
-    }
-    public function edit(Rental $Rental)
-    {
-        return Inertia::render('Admin/Dashboard', [
-            'Rental' => $Rental,
-        ]);
-    }
-    public function update(Request $request, Rental $Rental)
-    {
-        return $this->saveRental($request, $Rental);
-    }
-    public function destroy(Rental $Rental)
-    {
-        $Rental->delete();
-
-        $Rentals = Rental::with('car')->get();
-        return Inertia::render('Admin/Dashboard', [
-            'message' => 'Rental deleted successfully!',
-            'rentals' => $Rentals,
-        ]);
-    }
-    // private function saveRental($request, Rental $Rental = null)
-    // {
-    //     $data = $request->validated();
-
-    //     return redirect()->route('rental.index')->with('success', 'Rental saved successfully!');
-    // }
 }

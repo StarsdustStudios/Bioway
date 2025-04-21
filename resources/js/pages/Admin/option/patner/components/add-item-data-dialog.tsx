@@ -148,7 +148,7 @@ export function ItemDataActionDialog({
                               {/* Display image preview if there is a logo */}
                               {(isEdit && currentRow?.logo) || form.watch('logo') ? (
                                 <img
-                                  src={"/storage/"+currentRow?.logo} 
+                                  src={currentRow?.logo} 
                                   alt="Partner logo"
                                   className="w-16 h-16 object-cover mb-2"
                                 />

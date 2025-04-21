@@ -56,8 +56,7 @@ export function ItemDataActionDialog({
     : { name: '', logo: null }
 
   const form = useForm<PutDataForm | PostDataForm>({
-    resolver: zodResolver(isEdit ? postFormSchema : putFormSchema),
-    defaultValues,
+    resolver: zodResolver(isEdit ? postFormSchema : putFormSchema)
   });
 
   const onSubmit = (data: PutDataForm | PostDataForm) => {

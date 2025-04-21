@@ -133,7 +133,7 @@ function getColumns({ index }: { index: number }): ColumnDef<BrandGetData>[] {
       <div className="w-fit text-nowrap">
           {
           itemDatas[index].optionColDataset[colIndex] === "brand_logo" ? (
-            <img src={"/storage/"+row.getValue(itemDatas[index].optionColDataset[colIndex])
+            <img src={row.getValue(itemDatas[index].optionColDataset[colIndex])
             } alt="Logo" className="w-16 h-16 rounded-lg" />
           ) : (
             row.getValue(itemDatas[index].optionColDataset[colIndex])

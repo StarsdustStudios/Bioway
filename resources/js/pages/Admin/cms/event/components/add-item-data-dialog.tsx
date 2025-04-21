@@ -187,7 +187,7 @@ export function ItemDataActionDialog({
                               {/* Display image preview if there is a poster_img */}
                               {(isEdit && currentRow?.poster_img) || form.watch('poster_img') ? (
                                 <img
-                                  src={"/storage/" + currentRow?.poster_img}
+                                  src={currentRow?.poster_img}
                                   alt="Event logo"
                                   className="w-16 h-16 object-cover mb-2"
                                 />

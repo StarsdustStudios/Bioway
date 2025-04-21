@@ -8,31 +8,31 @@ use App\Models\Partner;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
+
 class PartnerController extends Controller
 {
     public function index()
     {
-        $partner = Partner::get();
+        $partners = Partner::all()->map(function ($partner) {
+            $partner->logo = asset('storage/' . $partner->logo);
+            return $partner;
+        });
 
         return Inertia::render('Admin/Dashboard', [
-            'partner' => $partner,
+            'partners' => $partners,
         ]);
     }
-
 
     public function store(PartnerRequest $request)
     {
         $partner = new Partner();
         $partner->name = $request->name;
 
-        $imagePath = '/storage/partner/placeholder.png';
-
-        if ($request->has('logo') && $request->logo != null) {
-            $imagePath = $request->file('logo')->store('partners', 'public');
-            $partner->logo = $imagePath;
+        if ($request->hasFile('logo')) {
+            $partner->logo = $request->file('logo')->store('partners', 'public');
+        } else {
+            $partner->logo = 'partner/placeholder.png';
         }
-
-        $partner->logo = $imagePath;
 
         $partner->save();
 
@@ -41,6 +41,8 @@ class PartnerController extends Controller
 
     public function edit(Partner $partner)
     {
+        $partner->logo = asset('storage/' . $partner->logo);
+
         return Inertia::render('Admin/Dashboard', [
             'partner' => $partner,
         ]);
@@ -48,30 +50,29 @@ class PartnerController extends Controller
 
     public function update(PartnerRequest $request)
     {
-        $partner = Partner::where('id', $request->id)->first();
+        $partner = Partner::findOrFail($request->id);
         $partner->name = $request->name;
-        $imagePath = $partner->logo;
-        if ($request->has('logo') && $request->logo != null) {
-            $imagePath = $request->file('logo')->store('partners', 'public');
+
+        if ($request->hasFile('logo')) {
+            $partner->logo = $request->file('logo')->store('partners', 'public');
         }
-        $partner->logo = $imagePath;
 
-        $partner->update();
+        $partner->save();
 
-        return redirect()->back()->with('success', 'Partner created successfully!');
+        return redirect()->back()->with('success', 'Partner updated successfully!');
     }
-    
 
-
-
-    // udah fix gini
     public function destroy(Partner $partner)
     {
         $path = str_replace('/storage/', '', $partner->logo);
         Storage::disk('public')->delete($path);
         $partner->delete();
 
-        $partners = Partner::get();
+        $partners = Partner::all()->map(function ($partner) {
+            $partner->logo = asset('storage/' . $partner->logo);
+            return $partner;
+        });
+
         return Inertia::render('Admin/Dashboard', [
             'message' => 'Partner deleted successfully!',
             'partners' => $partners,

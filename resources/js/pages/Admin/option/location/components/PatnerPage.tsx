@@ -14,7 +14,7 @@ import ItemDataProvider, { useItemData } from '@/context/item-data-context'
 import { itemDatas } from '@/components/data/item-data'
 import { IconEdit, IconTrash, IconUserPlus } from '@tabler/icons-react'
 import { Cross2Icon, DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { LocationGetData, locationGetSchema } from './components/schema'
+import { PartnerGetData, partnerGetSchema } from './components/schema'
 import { ItemDataActionDialog } from './components/add-item-data-dialog'
 import { UsersDeleteDialog } from './components/delete-item-data-dialog'
 import {
@@ -36,9 +36,9 @@ import {
 } from '@tanstack/react-table'
 
 
-export default function LocationPage({ index, data }: { index: number; data: any }) {
+export default function PatnerPage({ index, data }: { index: number; data: any }) {
   // Parse user list
-  const userList = locationGetSchema.parse(data.location)
+  const userList = partnerGetSchema.parse(data.partner)
 
   return (
     <ItemDataProvider>
@@ -60,7 +60,7 @@ export default function LocationPage({ index, data }: { index: number; data: any
           <ItemDataPrimaryButton/>
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <LocationGetDataTable data={userList} columns={getColumns({index})} type={index}/>
+          <PartnerGetDataTable data={userList} columns={getColumns({index})} type={index}/>
         </div>
       </Main>
         <ItemDataDialogs type={index}/>
@@ -122,7 +122,7 @@ function ItemDataPrimaryButton() {
   )
 }
 
-function getColumns({ index }: { index: number }): ColumnDef<LocationGetData>[] {
+function getColumns({ index }: { index: number }): ColumnDef<PartnerGetData>[] {
 
   const dynamicColumns = itemDatas[index].optionColumns.map((key, colIndex) => ({
     accessorKey: itemDatas[index].optionColDataset[colIndex],
@@ -131,10 +131,17 @@ function getColumns({ index }: { index: number }): ColumnDef<LocationGetData>[] 
     ),
     cell: ({ row }: { row: any }) => (
       <div className="w-fit text-nowrap">
-          {row.getValue(itemDatas[index].optionColDataset[colIndex])}
+          {
+          itemDatas[index].optionColDataset[colIndex] === "logo" ? (
+            <img src={"/storage/"+row.getValue(itemDatas[index].optionColDataset[colIndex])
+            } alt="Logo" className="w-16 h-16 rounded-lg" />
+          ) : (
+            row.getValue(itemDatas[index].optionColDataset[colIndex])
+          )
+          }
         </div>
     ),
-    enableSorting: itemDatas[index].optionColDataset[colIndex] === "city_name" ? true : false,
+    enableSorting: itemDatas[index].optionColDataset[colIndex] === "name" ? true : false,
   }));
 
   return [
@@ -156,7 +163,7 @@ function getColumns({ index }: { index: number }): ColumnDef<LocationGetData>[] 
 
 
 interface DataTableRowActionsProps {
-  row: Row<LocationGetData>
+  row: Row<PartnerGetData>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
@@ -212,12 +219,12 @@ declare module '@tanstack/react-table' {
 }
 
 interface DataTableProps {
-  columns: ColumnDef<LocationGetData>[]
-  data: LocationGetData[]
+  columns: ColumnDef<PartnerGetData>[]
+  data: PartnerGetData[]
   type: number
 }
 
-function LocationGetDataTable({ columns, data, type }: DataTableProps) {
+function PartnerGetDataTable({ columns, data, type }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     id: false, // 👈 Hide the 'id' column by default
@@ -329,10 +336,10 @@ export function DataTableToolbar<TData>({
         <Input
           placeholder='Filter...'
           value={
-            (table.getColumn('city_name')?.getFilterValue() as string) ?? ''
+            (table.getColumn('name')?.getFilterValue() as string) ?? ''
           }
           onChange={(event) =>
-            table.getColumn('city_name')?.setFilterValue(event.target.value)
+            table.getColumn('name')?.setFilterValue(event.target.value)
           }
           className='h-8 w-[150px] lg:w-[250px]'
         />

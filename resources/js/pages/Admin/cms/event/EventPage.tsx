@@ -131,12 +131,11 @@ function getColumns({ index }: { index: number }): ColumnDef<EventGetData>[] {
     ),
     cell: ({ row }: { row: any }) => {
       const value = row.getValue(cmsData[index].cmsColDataset[colIndex]);
-    
       return (
         <div className="w-fit text-nowrap">
           {cmsData[index].cmsColDataset[colIndex] === "poster_img" ? (
             <img
-              src={"/storage/" + value}
+              src={value}
               alt="Logo"
               className="w-16 h-9 rounded-lg"
             />
