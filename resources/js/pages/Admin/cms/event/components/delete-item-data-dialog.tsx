@@ -37,11 +37,11 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
       return;
     }
     console.log(currentRow.id)
-    router.delete(route('product.events.destroy', currentRow.id), {
+    router.delete(route('cms.events.destroy', currentRow.id), {
       preserveScroll: true,
       onSuccess: () => {
         console.log('Deleted!')
-        window.location.replace('/product/events')
+        window.location.replace('/cms/events')
       }
     })    
   }
