@@ -63,6 +63,18 @@ interface Cars {
   updated_at: string;
 }
 
+const isAspectRatio16by9 = (file: File): Promise<boolean> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const ratio = img.width / img.height;
+      resolve(Math.abs(ratio - 16 / 9) < 0.01); // 1% tolerance
+    };
+    img.onerror = () => resolve(false);
+    img.src = URL.createObjectURL(file);
+  });
+};
+
 export function ItemDataActionDialog({
   currentRow,
   open,
@@ -82,13 +94,25 @@ export function ItemDataActionDialog({
   });
 
   // ✅ Submit handler
-  const onSubmit = (data: PutDataForm | PostDataForm) => {
+  const onSubmit = async (data: PutDataForm | PostDataForm) => {
+    if (data.car_image instanceof File) {
+      const is16by9 = await isAspectRatio16by9(data.car_image);
+      if (!is16by9) {
+        form.setError('car_image', {
+          type: 'manual',
+          message: 'Gambar harus berasio 16:9',
+        });
+        return;
+      }
+    }
+  
     const formData = new FormData();
     formData.append('model', data.model);
-    if(data.car_image != null) {
+    if (data.car_image != null) {
       formData.append('car_image', data.car_image);
     }
     formData.append('brand_id', String(Number(data.brand_id)));
+  
     if (isEdit && currentRow?.id) {
       formData.append('id', String(currentRow.id));
       formData.append('_method', 'PUT');
@@ -100,10 +124,9 @@ export function ItemDataActionDialog({
         onSuccess: () => {
           onOpenChange(false);
           form.reset();
-        }
+        },
       });
-    }  
-    else {
+    } else {
       router.post(route('product.cars.store'), formData, {
         forceFormData: true,
         onSuccess: () => {
@@ -114,6 +137,7 @@ export function ItemDataActionDialog({
       });
     }
   };
+  
   
   
 

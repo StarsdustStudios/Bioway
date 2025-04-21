@@ -23,6 +23,7 @@ import {
     IconServerOff,
     IconSettings,
     IconShoppingCart,
+    IconSocial,
     IconTag,
     IconTicket,
     IconTool,
@@ -140,6 +141,11 @@ export const sidebarData: SidebarData = {
                 title: 'Mobil',
                 icon: IconCarCrane,
                 url: '/product/cars',
+              },
+              {
+                title: 'Mitra',
+                icon: IconSocial,
+                url: '/product/partners',
               },
             ]
           }

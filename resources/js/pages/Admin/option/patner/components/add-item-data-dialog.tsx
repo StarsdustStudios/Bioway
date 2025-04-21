@@ -23,12 +23,12 @@ import {
 import { Input } from '@/components/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { itemDatas } from '@/components/data/item-data'
-import { BrandGetData, brandPostSchema, brandPutSchema } from './schema'
+import { PartnerGetData, partnerPostSchema, partnerPutSchema } from './schema'
 import { router } from '@inertiajs/react'
 
 
-const postFormSchema = brandPostSchema;
-const putFormSchema = brandPutSchema;
+const postFormSchema = partnerPostSchema;
+const putFormSchema = partnerPutSchema;
 type PostDataForm = z.infer<typeof postFormSchema>
 type PutDataForm = z.infer<typeof putFormSchema>
 
@@ -36,34 +36,11 @@ type FormType = PostDataForm | PutDataForm
 type FormField = keyof FormType
 
 interface Props {
-  currentRow?: BrandGetData
+  currentRow?: PartnerGetData
   open: boolean
   onOpenChange: (open: boolean) => void
   type: number
 }
-
-const isAspectRatio1by1 = (file: File): Promise<boolean> => {
-  return new Promise((resolve) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-
-    img.onload = () => {
-      const ratio = img.width / img.height;
-      URL.revokeObjectURL(url); // Clean up
-      console.log(`Image dimensions: ${img.width}x${img.height}, ratio: ${ratio}`);
-      resolve(Math.abs(ratio - 1) < 0.01); // 1% tolerance
-    };
-
-    img.onerror = () => {
-      URL.revokeObjectURL(url); // Clean up
-      console.error('Image failed to load');
-      resolve(false);
-    };
-
-    img.src = url;
-  });
-};
-
 
 export function ItemDataActionDialog({
   currentRow,
@@ -75,32 +52,25 @@ export function ItemDataActionDialog({
   const itemData = itemDatas[type]
 
   const defaultValues = isEdit
-    ? { ...currentRow, isEdit, brand_logo: null }
-    : { name: '', brand_logo: null }
+    ? { ...currentRow, isEdit, logo: null }
+    : { name: '', logo: null }
 
   const form = useForm<PutDataForm | PostDataForm>({
     resolver: zodResolver(isEdit ? postFormSchema : putFormSchema),
     defaultValues,
   });
 
-  const onSubmit = async (data: PutDataForm | PostDataForm) => {
+  const onSubmit = (data: PutDataForm | PostDataForm) => {
     const formData = new FormData();
-  
+
     formData.append('name', data.name);
-  
-    if (data.brand_logo != null) {
-      const isValid = await isAspectRatio1by1(data.brand_logo);
-      if (!isValid) {
-        toast({ title: 'Image must be 1:1 aspect ratio.' });
-        return;
-      }
-      formData.append('brand_logo', data.brand_logo);
+    if(data.logo != null) {
+      formData.append('logo', data.logo);
     }
-  
     if (isEdit && currentRow?.id) {
       formData.append('id', currentRow.id.toString());
       formData.append('_method', 'PUT');
-      router.post(route('product.brands.update', currentRow.id), formData, {
+      router.post(route('product.partners.update', currentRow.id), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -109,8 +79,10 @@ export function ItemDataActionDialog({
           form.reset();
         }
       });
-    } else {
-      router.post(route('product.brands.store'), formData, {
+      
+    }  
+     else {
+      router.post(route('product.partners.store'), formData, {
         forceFormData: true,
         onSuccess: () => {
           toast({ title: 'Uploaded!' });
@@ -120,7 +92,6 @@ export function ItemDataActionDialog({
       });
     }
   };
-  
 
   function getErrorMessage(
     errors: FieldErrors<FormType>,
@@ -172,13 +143,13 @@ export function ItemDataActionDialog({
                           {column}
                         </FormLabel>
                         <FormControl className='col-span-4'>
-                          {fieldName === 'brand_logo' ? (
+                          {fieldName === 'logo' ? (
                             <div className="flex flex-col items-center space-y-2">
-                              {/* Display image preview if there is a brand_logo */}
-                              {(isEdit && currentRow?.brand_logo) || form.watch('brand_logo') ? (
+                              {/* Display image preview if there is a logo */}
+                              {(isEdit && currentRow?.logo) || form.watch('logo') ? (
                                 <img
-                                  src={"/storage/"+currentRow?.brand_logo} 
-                                  alt="Brand logo"
+                                  src={"/storage/"+currentRow?.logo} 
+                                  alt="Partner logo"
                                   className="w-16 h-16 object-cover mb-2"
                                 />
                               ) : null}
@@ -187,7 +158,7 @@ export function ItemDataActionDialog({
                                 type='file'
                                 accept='image/*'
                                 onChange={(e) => {
-                                  form.setValue('brand_logo', e.target.files?.[0]) // Update form value with the file
+                                  form.setValue('logo', e.target.files?.[0]) // Update form value with the file
                                 }}
                               />
                             </div>
