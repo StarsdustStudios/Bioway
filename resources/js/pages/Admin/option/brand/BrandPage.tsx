@@ -36,7 +36,7 @@ import {
 } from '@tanstack/react-table'
 
 
-export default function BrandPage({ index }: { index: number }, {data}) {
+export default function BrandPage({ index, data }: { index: number; data: any }) {
   // Parse user list
   const userList = brandGetSchema.parse(data.brands)
 
@@ -141,16 +141,16 @@ function getColumns({ index }: { index: number }): ColumnDef<BrandGetData>[] {
           }
         </div>
     ),
-    enableSorting: false,
+    enableSorting: itemDatas[index].optionColDataset[colIndex] === "name" ? true : false,
   }));
 
   return [
     ...dynamicColumns,
     {
       accessorKey: 'id',
-      header: '',
+      header: 'ID',
       enableSorting: false,
-      enableHiding: false, // cannot be toggled
+      enableHiding: true, // cannot be toggled
     },
     {
       id: 'actions',
@@ -226,7 +226,9 @@ interface DataTableProps {
 
 function BrandGetDataTable({ columns, data, type }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    id: false, // 👈 Hide the 'id' column by default
+  })
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
 
