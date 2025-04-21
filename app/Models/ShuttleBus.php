@@ -13,7 +13,6 @@ class ShuttleBus extends Model
         'from',
         'to',
         'price',
-        'driver_fee',
     ];
 
     public function car(): BelongsTo
