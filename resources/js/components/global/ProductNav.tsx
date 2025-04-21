@@ -22,7 +22,7 @@ export function ProductNav() {
                 flex flex-wrap
                 h-fit
                 mt-4 p-4
-                bg-blue-500
+                bg-blue-400
                 rounded-2xl
                 justify-center items-center gap-3
                 md:p-10 md:gap-5

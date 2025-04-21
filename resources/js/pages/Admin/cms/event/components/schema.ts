@@ -10,15 +10,16 @@ const itemStatusSchema = z.union([
 const getSchema = z.object({
   id: z.number(),
   name: z.string(),
-  brand_logo: z.string(),
+  poster_img: z.string(),
+  start_at: z.coerce.date(),
+  end_at: z.coerce.date(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
-  cars: z.array(z.any()),
 });
 
-export const brandPostSchema = z.object({
-  name: z.string().min(1, 'Nama brand wajib diisi'),
-  brand_logo: z
+export const eventPostSchema = z.object({
+  name: z.string().min(1, 'Nama Event wajib diisi'),
+  poster_img: z
   .union([
     z
       .instanceof(File)
@@ -31,12 +32,14 @@ export const brandPostSchema = z.object({
     z.null(),
     z.undefined(),
   ]),
+  start_at: z.coerce.date(),
+  end_at: z.coerce.date(),
 });
 
-export const brandPutSchema = z.object({
+export const eventPutSchema = z.object({
   id: z.number().optional(),
-  name: z.string().min(1, 'Nama brand wajib diisi'),
-  brand_logo: z
+  name: z.string().min(1, 'Nama Event wajib diisi'),
+  poster_img: z
   .union([
     z
       .instanceof(File)
@@ -49,9 +52,11 @@ export const brandPutSchema = z.object({
     z.null(),
     z.undefined(),
   ]),
+  start_at: z.coerce.date(),
+  end_at: z.coerce.date(),
 })
 
-export type BrandGetData = z.infer<typeof getSchema>;
-export type BrandStatus = z.infer<typeof itemStatusSchema>;
+export type EventGetData = z.infer<typeof getSchema>;
+export type EventStatus = z.infer<typeof itemStatusSchema>;
 
-export const brandGetSchema = z.array(getSchema);
+export const eventGetSchema = z.array(getSchema);

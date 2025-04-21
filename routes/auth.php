@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CRUD\Product\BrandController;
 use App\Http\Controllers\CRUD\Product\CarController;
 use App\Http\Controllers\CRUD\Data\PartnerController;
+use App\Http\Controllers\CRUD\CMS\EventController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -23,6 +24,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/shuttle-bus', fn() => Inertia::render('Admin/Dashboard'))->name('product.shuttlebus');
         Route::get('/travel', fn() => Inertia::render('Admin/Dashboard'))->name('product.travel');
         Route::get('/delivery', fn() => Inertia::render('Admin/Dashboard'))->name('product.delivery');
+
         Route::resource('cars', CarController::class)->names([
             'index' => 'product.cars',
             'create' => 'product.cars.create',
@@ -54,7 +56,14 @@ Route::middleware('auth')->group(function () {
     
     Route::prefix('cms')->group(function () { 
         Route::get('/tags', fn() => Inertia::render('Admin/Dashboard'))->name('product.tags');
-        Route::get('/promo', fn() => Inertia::render('Admin/Dashboard'))->name('product.promo');
+        Route::resource('events', EventController::class)->names([
+            'index' => 'product.events',
+            'create' => 'product.events.create',
+            'store' => 'product.events.store',
+            'show' => 'product.events.show',
+            'update' => 'product.events.update',
+            'destroy' => 'product.events.destroy',
+        ]);
         Route::get('/post', fn() => Inertia::render('Admin/Dashboard'))->name('product.post');
     });
 

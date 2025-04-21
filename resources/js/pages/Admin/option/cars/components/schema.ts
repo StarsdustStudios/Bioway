@@ -28,15 +28,15 @@ const brandSchema = z.object({
 export const carPostSchema = z.object({
   model: z.string().min(1, 'Model wajib diisi'),
   brand_id: z.coerce.number().min(1, "Brand is required"),
-  car_image: z
+  car_image:z
   .union([
     z
       .instanceof(File)
       .refine((file) => file.size <= 2 * 1024 * 1024, 'Maksimal 2MB')
       .refine(
         (file) =>
-          ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'].includes(file.type),
-        'Format tidak valid (jpeg, png, jpg, gif, svg saja)'
+          ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml', 'image/webp'].includes(file.type),
+        'Format tidak valid (jpeg, png, jpg, gif, svg, webp saja)'
       ),
     z.null(),
     z.undefined(),

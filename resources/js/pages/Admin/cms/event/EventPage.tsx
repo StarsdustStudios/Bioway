@@ -11,9 +11,10 @@ import { DataTableColumnHeader } from '@/components/tables/data-table-column-hea
 import { DataTablePagination } from '@/components/tables/data-table-pagination'
 import { DataTableViewOptions } from '@/components/tables/data-table-view-options'
 import ItemDataProvider, { useItemData } from '@/context/item-data-context'
-import { itemDatas } from '@/components/data/item-data'
+import { cmsData } from '@/components/data/cms-data'
 import { IconEdit, IconTrash, IconUserPlus } from '@tabler/icons-react'
 import { Cross2Icon, DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { EventGetData, eventGetSchema } from './components/schema'
 import { ItemDataActionDialog } from './components/add-item-data-dialog'
 import { UsersDeleteDialog } from './components/delete-item-data-dialog'
 import {
@@ -33,22 +34,12 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { CarGetData, brandListSchema, carListSchema, carSchema } from './components/schema'
-import { BrandGetData } from '../brand/components/schema'
-
-let brandList: BrandGetData[] | undefined = undefined
-
-const getBrandImage = (brandId : number) => {
-  if (brandList != undefined) {
-  return brandList.find((brand: BrandGetData) => brand.id === brandId)?.brand_logo;
-  }
-};
 
 
+export default function EventPage({ index, data }: { index: number; data: any }) {
+  // Parse user list
+  const userList = eventGetSchema.parse(data.event)
 
-export default function CarsPage({ index, data }: { index: number; data: any }) {
-  const userList = carListSchema.parse(data.cars)
-  brandList= brandListSchema.parse(data.brands)
   return (
     <ItemDataProvider>
       <Header fixed>
@@ -61,15 +52,15 @@ export default function CarsPage({ index, data }: { index: number; data: any }) 
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>{itemDatas[index].optionName}</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{cmsData[index].cmsName}</h2>
             <p className='text-muted-foreground'>
-              Atur layanan {itemDatas[index].optionName} anda disini
+              Atur layanan {cmsData[index].cmsName} anda disini
             </p>
           </div>
           <ItemDataPrimaryButton/>
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <CarGetDataTable data={userList} columns={getColumns({index})}/>
+          <EventGetDataTable data={userList} columns={getColumns({index})} type={index}/>
         </div>
       </Main>
         <ItemDataDialogs type={index}/>
@@ -131,46 +122,43 @@ function ItemDataPrimaryButton() {
   )
 }
 
-function getColumns({ index }: { index: number }): ColumnDef<CarGetData>[] {
-  const dynamicColumns = itemDatas[index].optionColumns.map((key, colIndex) => ({
-    accessorKey: itemDatas[index].optionColDataset[colIndex],
+function getColumns({ index }: { index: number }): ColumnDef<EventGetData>[] {
+
+  const dynamicColumns = cmsData[index].cmsColumns.map((key, colIndex) => ({
+    accessorKey: cmsData[index].cmsColDataset[colIndex],
     header: ({ column }: { column: any }) => (
       <DataTableColumnHeader column={column} title={key} />
     ),
-    cell: ({ row }: { row: any }) => (
-      <div className="w-fit text-nowrap">
-        {
-          // Handle car_image column
-          itemDatas[index].optionColDataset[colIndex] === "car_image" ? (
+    cell: ({ row }: { row: any }) => {
+      const value = row.getValue(cmsData[index].cmsColDataset[colIndex]);
+    
+      return (
+        <div className="w-fit text-nowrap">
+          {cmsData[index].cmsColDataset[colIndex] === "poster_img" ? (
             <img
-              src={"/storage/" + row.getValue(itemDatas[index].optionColDataset[colIndex])}
-              alt="Car Image"
+              src={"/storage/" + value}
+              alt="Logo"
               className="w-16 h-9 rounded-lg"
             />
-          ) : itemDatas[index].optionColDataset[colIndex] === "brand_id" ? (
-            // Handle brand_id column
-            <img
-              src={"/storage/" + getBrandImage(row.getValue(itemDatas[index].optionColDataset[colIndex]))}
-              alt="Brand Logo"
-              className="w-16 h-16 rounded-lg"
-            />
+          ) : value instanceof Date ? (
+            value.toLocaleDateString() // or use date-fns: format(value, "PPP")
           ) : (
-            // Default behavior for other columns
-            row.getValue(itemDatas[index].optionColDataset[colIndex])
-          )
-        }
-      </div>
-    ),
-    enableSorting: itemDatas[index].optionColDataset[colIndex] === "model" ? true : false,
+            String(value)
+          )}
+        </div>
+      );
+    }
+    ,
+    enableSorting: cmsData[index].cmsColDataset[colIndex] === "name" ? true : false,
   }));
 
   return [
     ...dynamicColumns,
     {
       accessorKey: 'id',
-      header: '',
+      header: 'ID',
       enableSorting: false,
-      enableHiding: false, // cannot be toggled
+      enableHiding: true, // cannot be toggled
     },
     {
       id: 'actions',
@@ -182,9 +170,8 @@ function getColumns({ index }: { index: number }): ColumnDef<CarGetData>[] {
 
 
 
-
 interface DataTableRowActionsProps {
-  row: Row<CarGetData>
+  row: Row<EventGetData>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
@@ -240,14 +227,15 @@ declare module '@tanstack/react-table' {
 }
 
 interface DataTableProps {
-  columns: ColumnDef<CarGetData>[]
-  data: CarGetData[]
+  columns: ColumnDef<EventGetData>[]
+  data: EventGetData[]
+  type: number
 }
 
-function CarGetDataTable({columns, data}: DataTableProps) {
+function EventGetDataTable({ columns, data, type }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    id: false,
+    id: false, // 👈 Hide the 'id' column by default
   })
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
@@ -356,10 +344,10 @@ export function DataTableToolbar<TData>({
         <Input
           placeholder='Filter...'
           value={
-            (table.getColumn('model')?.getFilterValue() as string) ?? ''
+            (table.getColumn('name')?.getFilterValue() as string) ?? ''
           }
           onChange={(event) =>
-            table.getColumn('model')?.setFilterValue(event.target.value)
+            table.getColumn('name')?.setFilterValue(event.target.value)
           }
           className='h-8 w-[150px] lg:w-[250px]'
         />
