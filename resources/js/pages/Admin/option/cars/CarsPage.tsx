@@ -145,7 +145,7 @@ function getColumns({ index }: { index: number }): ColumnDef<CarGetData>[] {
             <img
               src={"/storage/" + row.getValue(itemDatas[index].optionColDataset[colIndex])}
               alt="Car Image"
-              className="w-16 h-16 rounded-lg"
+              className="w-16 h-9 rounded-lg"
             />
           ) : itemDatas[index].optionColDataset[colIndex] === "brand_id" ? (
             // Handle brand_id column

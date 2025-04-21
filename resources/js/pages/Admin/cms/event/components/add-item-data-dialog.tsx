@@ -47,19 +47,18 @@ interface Props {
   onOpenChange: (open: boolean) => void
   type: number
 }
-const [date, setDate] = React.useState<Date>()
 
 const isAspectRatio16by9 = (file: File): Promise<boolean> => {
   return new Promise((resolve) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
-    
+
 
     img.onload = () => {
       const ratio = img.width / img.height;
       URL.revokeObjectURL(url); // Clean up
       console.log(`Image dimensions: ${img.width}x${img.height}, ratio: ${ratio}`);
-      resolve(Math.abs(ratio - 1) < 0.01); // 1% tolerance
+      resolve(Math.abs(ratio - 16/9) < 0.1); // 1% tolerance
     };
 
     img.onerror = () => {
@@ -67,7 +66,6 @@ const isAspectRatio16by9 = (file: File): Promise<boolean> => {
       console.error('Image failed to load');
       resolve(false);
     };
-
     img.src = url;
   });
 };
@@ -95,6 +93,8 @@ export function ItemDataActionDialog({
     const formData = new FormData();
 
     formData.append('name', data.name);
+    formData.append('start_at', format(data.start_at, 'yyyy-MM-dd'));
+    formData.append('end_at', format(data.end_at, 'yyyy-MM-dd'));
 
     if (data.poster_img != null) {
       const isValid = await isAspectRatio16by9(data.poster_img);
@@ -136,6 +136,8 @@ export function ItemDataActionDialog({
   ): string | undefined {
     return (errors as Record<string, { message?: string }>)[field]?.message
   }
+
+  const [date, setDate] = React.useState<Date>()
 
   return (
     <Dialog
@@ -200,29 +202,38 @@ export function ItemDataActionDialog({
                               />
                             </div>
                           ) : fieldName === 'start_at' || fieldName === 'end_at' ? (
-                            <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={cn(
-            "w-[240px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
-          )}
-        >
-          <CalendarIcon />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
-
+                            <FormItem className="flex flex-col">
+                              <FormLabel>Date of birth</FormLabel>
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <FormControl>
+                                    <Button
+                                      variant={"outline"}
+                                      className={cn(
+                                        "w-[240px] pl-3 text-left font-normal",
+                                        !field.value && "text-muted-foreground"
+                                      )}
+                                    >
+                                      {field.value ? (
+                                        format(field.value, "PPP")
+                                      ) : (
+                                        <span>Pick a date</span>
+                                      )}
+                                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                    </Button>
+                                  </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                  <Calendar
+                                    mode="single"
+                                    selected={field.value}
+                                    onSelect={field.onChange}
+                                    initialFocus
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                              <FormMessage />
+                            </FormItem>
                           ) : (
                             <Input
                               placeholder={'Enter ' + column + '...'}
@@ -232,12 +243,10 @@ export function ItemDataActionDialog({
                             />
                           )}
                         </FormControl>
-
                         <FormMessage className='col-span-4 col-start-3'>
                           {getErrorMessage(form.formState.errors, fieldName)}
                         </FormMessage>
                       </FormItem>
-
                     )}
                   />
                 )

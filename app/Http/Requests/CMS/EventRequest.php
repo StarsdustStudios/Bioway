@@ -22,7 +22,7 @@ class EventRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('brands')->ignore($this->brand)],
+            'name' => ['required', 'string', 'max:255'],
             'poster_img' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
             'start_at' => ['required', 'date'],
             'end_at' => ['required', 'date', 'after:start_at'],

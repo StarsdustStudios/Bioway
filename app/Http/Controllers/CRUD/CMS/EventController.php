@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\CRUD\CMS;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\EventRequest;
+use App\Http\Requests\CMS\EventRequest;
 use App\Models\Event;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;

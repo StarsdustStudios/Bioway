@@ -129,18 +129,26 @@ function getColumns({ index }: { index: number }): ColumnDef<EventGetData>[] {
     header: ({ column }: { column: any }) => (
       <DataTableColumnHeader column={column} title={key} />
     ),
-    cell: ({ row }: { row: any }) => (
-      <div className="w-fit text-nowrap">
-          {
-          cmsData[index].cmsColDataset[colIndex] === "event_logo" ? (
-            <img src={"/storage/"+row.getValue(cmsData[index].cmsColDataset[colIndex])
-            } alt="Logo" className="w-16 h-16 rounded-lg" />
+    cell: ({ row }: { row: any }) => {
+      const value = row.getValue(cmsData[index].cmsColDataset[colIndex]);
+    
+      return (
+        <div className="w-fit text-nowrap">
+          {cmsData[index].cmsColDataset[colIndex] === "poster_img" ? (
+            <img
+              src={"/storage/" + value}
+              alt="Logo"
+              className="w-16 h-9 rounded-lg"
+            />
+          ) : value instanceof Date ? (
+            value.toLocaleDateString() // or use date-fns: format(value, "PPP")
           ) : (
-            row.getValue(cmsData[index].cmsColDataset[colIndex])
-          )
-          }
+            String(value)
+          )}
         </div>
-    ),
+      );
+    }
+    ,
     enableSorting: cmsData[index].cmsColDataset[colIndex] === "name" ? true : false,
   }));
 

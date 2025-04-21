@@ -15,7 +15,6 @@ const getSchema = z.object({
   end_at: z.coerce.date(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
-  cars: z.array(z.any()),
 });
 
 export const eventPostSchema = z.object({
