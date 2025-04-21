@@ -12,6 +12,7 @@ const ProductPage = lazy(() => import('./product/ProductPage'))
 const BrandPage = lazy(() => import('./option/brand/BrandPage'))
 const CarsPage = lazy(() => import('./option/cars/CarsPage'))
 const PatnerPage = lazy(() => import('./option/patner/PatnerPage'))
+const EventPage = lazy(() => import('./cms/event/EventPage'))
 interface Brand {
   id: number;
   name: string;
@@ -61,8 +62,8 @@ export default function Dashboard(data: {data: DashboardData}) {
       switch (url) {
         case '/cms/tags':
           return <CmsPage index={0} />
-        case '/cms/promo':
-          return <CmsPage index={1} />
+        case '/cms/events':
+          return <EventPage index={1} data={data}/>
         case '/cms/post':
           return <CmsPage index={3} />
         default:

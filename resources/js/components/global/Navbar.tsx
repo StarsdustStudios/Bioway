@@ -36,9 +36,9 @@ export function DesktopNavBar() {
   const { url } = usePage()
 
   return (
-    <div className="bg-blue-500 top-0 left-0 right-0 py-2 px-56 h-fit flex">
+    <div className="bg-blue-400 top-0 left-0 right-0 py-2 px-56 h-fit flex">
       <div className="w-fit flex items-center">
-          <img className="max-h-20" src="/img/Bioway_Logo.png" alt="Bioway Logo" />
+        <h1 className="text-white text-xl text-bold">Bioway Logo</h1>
       </div>
       <NavigationMenu className="ml-auto">
         <NavigationMenuList>
@@ -57,7 +57,7 @@ export function MobileNavBar() {
   const { url } = usePage()
 
   return (
-    <div className="bg-blue-500 fixed bottom-0 w-full p-2 flex items-center justify-center h-fit rounded-t-4xl">
+    <div className="bg-blue-400 fixed bottom-0 w-full p-2 flex items-center justify-center h-fit rounded-t-4xl">
       <NavigationMenu>
         <NavigationMenuList className="flex items-center gap-5 justify-center">
           {menuItems.map((item) => (

@@ -68,7 +68,7 @@ const isAspectRatio16by9 = (file: File): Promise<boolean> => {
     const img = new Image();
     img.onload = () => {
       const ratio = img.width / img.height;
-      resolve(Math.abs(ratio - 16 / 9) < 0.01); // 1% tolerance
+      resolve(Math.abs(ratio - 16 / 9) < 0.1); // 1% tolerance
     };
     img.onerror = () => resolve(false);
     img.src = URL.createObjectURL(file);
