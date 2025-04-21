@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Location extends Model
 {
     protected $fillable = [
-        'name',
-        'location_image',
+        'city_name',
     ];
 
     public function rentals()
