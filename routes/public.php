@@ -2,10 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\Public\HomeController;
 
-Route::get('/', function () {
-    return Inertia::render('Main/Home');
-})->name('Home');
+
+//Home Controller route
+route::get('/', [HomeController::class, 'index'])->name('Home');
+
+
+// Route::get('/', function () {
+//     return Inertia::render('Main/Home');
+// })->name('Home');
 
 Route::prefix('produk')->group(function () { 
     Route::get('/rental', fn() => Inertia::render('Main/Product/Rent'))->name('product.rental');
