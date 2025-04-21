@@ -108,7 +108,7 @@ export function ItemDataActionDialog({
     if (isEdit && currentRow?.id) {
       formData.append('id', currentRow.id.toString());
       formData.append('_method', 'PUT');
-      router.post(route('product.events.update', currentRow.id), formData, {
+      router.post(route('cms.events.update', currentRow.id), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -118,7 +118,7 @@ export function ItemDataActionDialog({
         }
       });
     } else {
-      router.post(route('product.events.store'), formData, {
+      router.post(route('cms.events.store'), formData, {
         forceFormData: true,
         onSuccess: () => {
           toast({ title: 'Uploaded!' });

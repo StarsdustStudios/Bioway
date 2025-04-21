@@ -57,12 +57,12 @@ Route::middleware('auth')->group(function () {
     Route::prefix('cms')->group(function () { 
         Route::get('/tags', fn() => Inertia::render('Admin/Dashboard'))->name('product.tags');
         Route::resource('events', EventController::class)->names([
-            'index' => 'product.events',
-            'create' => 'product.events.create',
-            'store' => 'product.events.store',
-            'show' => 'product.events.show',
-            'update' => 'product.events.update',
-            'destroy' => 'product.events.destroy',
+            'index' => 'cms.events',
+            'create' => 'cms.events.create',
+            'store' => 'cms.events.store',
+            'show' => 'cms.events.show',
+            'update' => 'cms.events.update',
+            'destroy' => 'cms.events.destroy',
         ]);
         Route::get('/post', fn() => Inertia::render('Admin/Dashboard'))->name('product.post');
     });
