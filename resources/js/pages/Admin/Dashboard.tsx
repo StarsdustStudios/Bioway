@@ -13,6 +13,7 @@ const BrandPage = lazy(() => import('./option/brand/BrandPage'))
 const CarsPage = lazy(() => import('./option/cars/CarsPage'))
 const PatnerPage = lazy(() => import('./option/patner/PatnerPage'))
 const EventPage = lazy(() => import('./cms/event/EventPage'))
+const LocationPage = lazy(() => import('./option/location/LocationPage'))
 interface Brand {
   id: number;
   name: string;
@@ -51,8 +52,10 @@ export default function Dashboard(data: {data: DashboardData}) {
           return <BrandPage index={0} data={data} />
         case "/product/cars":
           return <CarsPage index={1} data={data} />
+        case "/product/locations":
+          return <LocationPage index={2} data={data} />
         case "/product/partners":
-          return <PatnerPage index={2} data={data} />
+          return <PatnerPage index={3} data={data} />
           default:
             <NotFoundError/>
       }

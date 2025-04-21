@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CRUD\Product\BrandController;
 use App\Http\Controllers\CRUD\Product\CarController;
 use App\Http\Controllers\CRUD\Data\PartnerController;
+use App\Http\Controllers\CRUD\Data\LocationController;
 use App\Http\Controllers\CRUD\CMS\EventController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -50,6 +51,15 @@ Route::middleware('auth')->group(function () {
             'show' => 'product.partners.show',
             'update' => 'product.partners.update',
             'destroy' => 'product.partners.destroy',
+        ]);
+
+        Route::resource('locations', LocationController::class)->names([
+            'index' => 'product.locations',
+            'create' => 'product.locations.create',
+            'store' => 'product.locations.store',
+            'show' => 'product.locations.show',
+            'update' => 'product.locations.update',
+            'destroy' => 'product.locations.destroy',
         ]);
 
     });

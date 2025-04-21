@@ -14,6 +14,12 @@ export const itemDatas : OptionData[] = [
         optionStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"],
     },
     {
+        optionName: "Lokasi",
+        optionColumns: ["Lokasi"],
+        optionColDataset: ["city_name"],
+        optionStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"],
+    },
+    {
         optionName: "Mitra",
         optionColumns: ["Nama", "Logo"],
         optionColDataset: ["name", "logo"],
