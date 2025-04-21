@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use Inertia\Inertia;
+use App\Models\Partner;
+use App\Models\Event;
 
 class HomeController extends Controller
 {
@@ -17,11 +19,23 @@ class HomeController extends Controller
             'Discover new destinations with our car rental service!',
             'Rent a car and make your travel dreams come true!',
         ];
-        
-        
+
+        $events = Event::where('start_at', '<=', now())
+            ->where('end_at', '>=', now())
+            ->get();
+
+        $partners = Partner::all()->map(function ($partner) {
+            $partner->logo = asset('storage/' . $partner->logo); // or just asset($partner->logo) if you're not using storage:link
+            return $partner;
+        });
+
+        // dd($partners);
+
+
         return Inertia::render('Main/Home', [
             'title' => 'Home',
             'description' => $descriptions[array_rand($descriptions)],
+            'partners' => $partners,
         ]);
     }
 }

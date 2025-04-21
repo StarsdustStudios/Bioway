@@ -11,7 +11,14 @@ import {
 } from "@/components/ui/carousel"
 import useEmblaCarousel from "embla-carousel-react"
 
-export function PartnerCarousel() {
+export interface Partner {
+    name: string
+    logo: string 
+}
+
+
+
+export function PartnerCarousel({ partners }: { partners: Partner[] }) {
     const plugin = React.useRef(
         Autoplay({ delay: 3000, stopOnInteraction: false })
     )
@@ -25,14 +32,14 @@ export function PartnerCarousel() {
             onMouseLeave={plugin.current.reset}
         >
             <CarouselContent className="">
-                {Array.from({ length: 9 }).map((_, index) => (
+                {partners.map((partner, index) => (
                     <CarouselItem key={index} className="basis-1/4 py-5 md:p-10">
                         <Card className="w-full aspect-square my-0 !py-0">
                             <CardContent className="!w-full !h-full !p-0 flex my-0 !py-0">
                                 <img
-                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRprmgsRPmS5njdk_m64aTCp-ksmWrano3JSg&s"
-                                    alt="Partner"
-                                    className="!w-full !h-full object-cover"
+                                    src={partner.logo}
+                                    alt={partner.name}
+                                    className="!w-full !h-full object-contain"
                                 />
                             </CardContent>
                         </Card>
