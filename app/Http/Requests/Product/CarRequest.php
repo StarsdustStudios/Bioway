@@ -24,7 +24,7 @@ class CarRequest extends FormRequest
         return [
             'model' => ['required', 'string', 'max:255'],
             'brand_id' => ['required', 'exists:brands,id'],
-            'car_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'car_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg,webp', 'max:2048'],
         ];
     }
 }

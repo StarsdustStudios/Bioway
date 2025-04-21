@@ -107,9 +107,9 @@ export const sidebarData: SidebarData = {
                 url: '/cms/tags',
               },
               {
-                title: 'Promo',
+                title: 'Event',
                 icon: IconTicket,
-                url: '/cms/promo',
+                url: '/cms/events',
               },
               {
                 title: 'Post',

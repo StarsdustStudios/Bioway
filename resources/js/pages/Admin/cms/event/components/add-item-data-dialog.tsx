@@ -1,6 +1,6 @@
 'use client'
 import { z } from 'zod'
-import { FieldErrors, useForm } from 'react-hook-form'
+import { Controller, FieldErrors, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
@@ -22,13 +22,19 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { itemDatas } from '@/components/data/item-data'
-import { BrandGetData, brandPostSchema, brandPutSchema } from './schema'
+import { cmsData } from '@/components/data/cms-data'
+import { EventGetData, eventPostSchema, eventPutSchema } from './schema'
 import { router } from '@inertiajs/react'
+import { format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { cn } from '@/lib/utils'
+import React from 'react'
 
 
-const postFormSchema = brandPostSchema;
-const putFormSchema = brandPutSchema;
+const postFormSchema = eventPostSchema;
+const putFormSchema = eventPutSchema;
 type PostDataForm = z.infer<typeof postFormSchema>
 type PutDataForm = z.infer<typeof putFormSchema>
 
@@ -36,22 +42,24 @@ type FormType = PostDataForm | PutDataForm
 type FormField = keyof FormType
 
 interface Props {
-  currentRow?: BrandGetData
+  currentRow?: EventGetData
   open: boolean
   onOpenChange: (open: boolean) => void
   type: number
 }
+const [date, setDate] = React.useState<Date>()
 
-const isAspectRatio1by1 = (file: File): Promise<boolean> => {
+const isAspectRatio16by9 = (file: File): Promise<boolean> => {
   return new Promise((resolve) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
+    
 
     img.onload = () => {
       const ratio = img.width / img.height;
       URL.revokeObjectURL(url); // Clean up
       console.log(`Image dimensions: ${img.width}x${img.height}, ratio: ${ratio}`);
-      resolve(Math.abs(ratio - 1) < 0.1); // 1% tolerance
+      resolve(Math.abs(ratio - 1) < 0.01); // 1% tolerance
     };
 
     img.onerror = () => {
@@ -72,11 +80,11 @@ export function ItemDataActionDialog({
   type,
 }: Props) {
   const isEdit = !!currentRow
-  const itemData = itemDatas[type]
+  const cmsDatas = cmsData[type]
 
   const defaultValues = isEdit
-    ? { ...currentRow, isEdit, brand_logo: null }
-    : { name: '', brand_logo: null }
+    ? { ...currentRow, isEdit, poster_img: null }
+    : { name: '', poster_img: null }
 
   const form = useForm<PutDataForm | PostDataForm>({
     resolver: zodResolver(isEdit ? postFormSchema : putFormSchema),
@@ -85,22 +93,22 @@ export function ItemDataActionDialog({
 
   const onSubmit = async (data: PutDataForm | PostDataForm) => {
     const formData = new FormData();
-  
+
     formData.append('name', data.name);
-  
-    if (data.brand_logo != null) {
-      const isValid = await isAspectRatio1by1(data.brand_logo);
+
+    if (data.poster_img != null) {
+      const isValid = await isAspectRatio16by9(data.poster_img);
       if (!isValid) {
         toast({ title: 'Image must be 1:1 aspect ratio.' });
         return;
       }
-      formData.append('brand_logo', data.brand_logo);
+      formData.append('poster_img', data.poster_img);
     }
-  
+
     if (isEdit && currentRow?.id) {
       formData.append('id', currentRow.id.toString());
       formData.append('_method', 'PUT');
-      router.post(route('product.brands.update', currentRow.id), formData, {
+      router.post(route('product.events.update', currentRow.id), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -110,7 +118,7 @@ export function ItemDataActionDialog({
         }
       });
     } else {
-      router.post(route('product.brands.store'), formData, {
+      router.post(route('product.events.store'), formData, {
         forceFormData: true,
         onSuccess: () => {
           toast({ title: 'Uploaded!' });
@@ -120,7 +128,7 @@ export function ItemDataActionDialog({
       });
     }
   };
-  
+
 
   function getErrorMessage(
     errors: FieldErrors<FormType>,
@@ -140,12 +148,12 @@ export function ItemDataActionDialog({
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-left'>
           <DialogTitle>
-            {isEdit ? 'Edit ' + itemData.optionName : 'Add ' + itemData.optionName}
+            {isEdit ? 'Edit ' + cmsDatas.cmsName : 'Add ' + cmsDatas.cmsName}
           </DialogTitle>
           <DialogDescription>
             {isEdit
-              ? 'Update the ' + itemData.optionName + ' here.'
-              : 'Add new ' + itemData.optionName + ' here.'}
+              ? 'Update the ' + cmsDatas.cmsName + ' here.'
+              : 'Add new ' + cmsDatas.cmsName + ' here.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -153,11 +161,11 @@ export function ItemDataActionDialog({
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              id='itemData-form'
+              id='cmsDatas-form'
               className='space-y-4 p-0.5'
             >
-              {itemData.optionColumns.map((column, index) => {
-                const fieldName = itemData.optionColDataset[index]
+              {cmsDatas.cmsColumns.map((column, index) => {
+                const fieldName = cmsDatas.cmsColDataset[index]
                 const isRequired =
                   column !== 'destination' && column !== 'imgUrl'
 
@@ -172,25 +180,49 @@ export function ItemDataActionDialog({
                           {column}
                         </FormLabel>
                         <FormControl className='col-span-4'>
-                          {fieldName === 'brand_logo' ? (
-                            <div className="flex flex-col items-center space-y-2">
-                              {/* Display image preview if there is a brand_logo */}
-                              {(isEdit && currentRow?.brand_logo) || form.watch('brand_logo') ? (
+                          {fieldName === 'poster_img' ? (
+                            <div className="flex flex-col items-center space-y-2 w-60">
+                              {/* Display image preview if there is a poster_img */}
+                              {(isEdit && currentRow?.poster_img) || form.watch('poster_img') ? (
                                 <img
-                                  src={"/storage/"+currentRow?.brand_logo} 
-                                  alt="Brand logo"
+                                  src={"/storage/" + currentRow?.poster_img}
+                                  alt="Event logo"
                                   className="w-16 h-16 object-cover mb-2"
                                 />
                               ) : null}
 
                               <Input
-                                type='file'
-                                accept='image/*'
+                                type="file"
+                                accept="image/*"
                                 onChange={(e) => {
-                                  form.setValue('brand_logo', e.target.files?.[0]) // Update form value with the file
+                                  form.setValue('poster_img', e.target.files?.[0])
                                 }}
                               />
                             </div>
+                          ) : fieldName === 'start_at' || fieldName === 'end_at' ? (
+                            <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "w-[240px] justify-start text-left font-normal",
+            !date && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon />
+          {date ? format(date, "PPP") : <span>Pick a date</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <Calendar
+          mode="single"
+          selected={date}
+          onSelect={setDate}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
+
                           ) : (
                             <Input
                               placeholder={'Enter ' + column + '...'}
@@ -200,6 +232,7 @@ export function ItemDataActionDialog({
                             />
                           )}
                         </FormControl>
+
                         <FormMessage className='col-span-4 col-start-3'>
                           {getErrorMessage(form.formState.errors, fieldName)}
                         </FormMessage>
@@ -214,7 +247,7 @@ export function ItemDataActionDialog({
         </ScrollArea>
 
         <DialogFooter>
-          <Button type='submit' form='itemData-form'>
+          <Button type='submit' form='cmsDatas-form'>
             Save
           </Button>
         </DialogFooter>
