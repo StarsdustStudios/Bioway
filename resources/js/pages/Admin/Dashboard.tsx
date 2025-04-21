@@ -11,7 +11,7 @@ const CmsPage = lazy(() => import('./cms/CmsPage'))
 const ProductPage = lazy(() => import('./product/ProductPage'))
 const BrandPage = lazy(() => import('./option/brand/BrandPage'))
 const CarsPage = lazy(() => import('./option/cars/CarsPage'))
-
+const PatnerPage = lazy(() => import('./option/patner/PatnerPage'))
 interface Brand {
   id: number;
   name: string;
@@ -46,16 +46,14 @@ export default function Dashboard(data: {data: DashboardData}) {
           return <ProductPage index={3} />
         case '/product/delivery':
           return <ProductPage index={4} />
+        case "/product/brands":
+          return <BrandPage index={0} data={data} />
+        case "/product/cars":
+          return <CarsPage index={1} data={data} />
+        case "/product/partners":
+          return <PatnerPage index={2} data={data} />
           default:
-            if (url.startsWith('/product/brands')) {
-              return <BrandPage index={0} data={data} />
-            }
-            if (url === '/product/cars') {
-              return <CarsPage index={1} data={data}/>
-            }
-            else if (url.startsWith('/product/cars')) {
-              window.location.replace('/product/cars')
-            }
+            <NotFoundError/>
       }
     }
 
@@ -71,8 +69,6 @@ export default function Dashboard(data: {data: DashboardData}) {
           return <NotFoundError/>
       }
     }
-
-
     return <div>Welcome to Dashboard</div>
   }
 

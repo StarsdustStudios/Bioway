@@ -3,6 +3,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CRUD\Product\BrandController;
 use App\Http\Controllers\CRUD\Product\CarController;
+use App\Http\Controllers\CRUD\Data\PartnerController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -40,6 +41,14 @@ Route::middleware('auth')->group(function () {
             'destroy' => 'product.brands.destroy',
         ]);
         // ->except(['show']);
+        Route::resource('partners', PartnerController::class)->names([
+            'index' => 'product.partners',
+            'create' => 'product.partners.create',
+            'store' => 'product.partners.store',
+            'show' => 'product.partners.show',
+            'update' => 'product.partners.update',
+            'destroy' => 'product.partners.destroy',
+        ]);
 
     });
     

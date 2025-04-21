@@ -13,4 +13,10 @@ export const itemDatas : OptionData[] = [
         optionColDataset: ["model", "brand_id", "car_image"],
         optionStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"],
     },
+    {
+        optionName: "Mitra",
+        optionColumns: ["Nama", "Logo"],
+        optionColDataset: ["name", "logo"],
+        optionStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"],
+    },
 ]
