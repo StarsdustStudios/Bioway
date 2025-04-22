@@ -75,9 +75,9 @@ export function ItemDataActionDialog({
           form.reset();
         }
       });
-      
-    }  
-     else {
+
+    }
+    else {
       router.post(route('product.locations.store'), formData, {
         forceFormData: true,
         onSuccess: () => {
@@ -139,12 +139,12 @@ export function ItemDataActionDialog({
                           {column}
                         </FormLabel>
                         <FormControl className='col-span-4'>
-                            <Input
-                              placeholder={'Enter ' + column + '...'}
-                              {...field}
-                              autoComplete='off'
-                              required={isRequired}
-                            />
+                          <Input
+                            placeholder={'Enter ' + column + '...'}
+                            {...field}
+                            autoComplete='off'
+                            required={isRequired}
+                          />
                         </FormControl>
                         <FormMessage className='col-span-4 col-start-3'>
                           {getErrorMessage(form.formState.errors, fieldName)}
@@ -160,7 +160,7 @@ export function ItemDataActionDialog({
         </ScrollArea>
 
         <DialogFooter>
-          <Button type='submit' form='itemData-form'>
+          <Button type='submit' form='itemData-form' disabled={!form.formState.isValid}>
             Save
           </Button>
         </DialogFooter>

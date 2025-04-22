@@ -162,6 +162,8 @@ function getColumns({ index }: { index: number }): ColumnDef<CarGetData>[] {
       </div>
     ),
     enableSorting: itemDatas[index].optionColDataset[colIndex] === "model" ? true : false,
+    enableHiding: false,
+
   }));
 
   return [

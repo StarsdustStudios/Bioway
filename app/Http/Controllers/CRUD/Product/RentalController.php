@@ -1,87 +1,103 @@
 <?php
+
 namespace App\Http\Controllers\CRUD\Product;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Product\CarRequest;
-use App\Models\Car;
+use App\Http\Requests\Product\RentalRequest;
 use App\Models\Location;
+use App\Models\Car;
 use App\Models\Brand;
-use  Illuminate\Support\Facades\Storage;
+use App\Models\Rental;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class RentalController extends Controller
 {
-
     public function index()
     {
-        $cars = Car::with('brand')->get();
-        $location = Location::with("cars")->get();
+        $cars = Car::with('rentals')->get()->map(function ($car) {
+            $car->car_image = asset('storage/' . ltrim($car->car_image, '/storage/'));
+            return $car;
+        });
+        
+        $locations = Location::with('rentals')->get();
+        
+        $rentals = Rental::get();
+
         return Inertia::render('Admin/Dashboard', [
             'cars' => $cars,
-            'brands' => $brands,
+            'rental' => $rentals,
+            'locations' => $locations,
         ]);
     }
 
-    public function store(CarRequest $request)
+    public function store(RentalRequest $request)
     {
-        $car = new Car();
-        $car->model = $request->model;
-        $car->brand_id = $request->brand_id;
-        $imagePath = '/storage/brands/placeholder.png';
+        $rental = new Rental();
+        $rental->car_id = $request->car_id;
+        $rental->location_id = $request->location_id;
+        $rental->price = $request->price;
+        $rental->driver_fee = $request->driver_fee;
 
-        if ($request->has('car_image') && $request->car_image != null) {
-            $imagePath = $request->file('car_image')->store('brands', 'public');
-            $car->car_image = $imagePath;
-        }
-        $car->car_image = $imagePath;
+        $rental->save();
 
-        $car->save();
         return redirect()->back()->with('success', 'Car created successfully!');
     }
 
-    public function edit(Car $car)
+    public function edit(Car $rental)
     {
-        $brands = Brand::all();
+        $cars = Car::with('rentals')->get()->map(function ($car) {
+            $car->car_image = asset('storage/' . ltrim($car->car_image, '/storage/'));
+            return $car;
+        });
+        
+        $locations = Location::with('rentals')->get();
+        
+        $rentals = Rental::get();
+
         return Inertia::render('Admin/Dashboard', [
-            'cars' => $car,
-            'brands' => $brands,
+            'cars' => $cars,
+            'rental' => $rentals,
+            'locations' => $locations,
         ]);
     }
-    
-    public function update(CarRequest $request)
-{
-    $car = Car::find($request->id);
 
-    if (!$car) {
-        return redirect()->back()->withErrors(['Car not found']);
-    }
-
-    $car->model = $request->model;
-    $car->brand_id = $request->brand_id;
-
-    if ($request->hasFile('car_image') && $request->file('car_image') != null) {
-        $imagePath = $request->file('car_image')->store('cars', 'public');
-        $car->car_image = $imagePath;
-    }
-
-    $car->save();
-
-    return redirect()->back()->with('success', 'Car updated successfully!');
-}
-
-
-    public function destroy(Car $car)
+    public function update(RentalRequest $request)
     {
-        $path = str_replace('/storage/', '', $car->car_image);
-        Storage::disk('public')->delete($path);
-        $car->delete();
+        $rental = Rental::find($request->id);
 
-        $brands = Brand::with('cars')->get();
-        $cars = Car::with('brand')->get();
+        if (!$rental) {
+            return redirect()->back()->withErrors(['Rental not found']);
+        }
+
+        $rental->car_id = $request->car_id;
+        $rental->location_id = $request->location_id;
+        $rental->price = $request->price;
+        $rental->driver_fee = $request->driver_fee;
+
+        $rental->save();
+
+        return redirect()->back()->with('success', 'Car updated successfully!');
+    }
+
+    public function destroy(Rental $rental)
+    {
+        $rental->delete();
+
+        $cars = Car::with('rentals')->get()->map(function ($car) {
+            $car->car_image = asset('storage/' . ltrim($car->car_image, '/storage/'));
+            return $car;
+        });
+        
+        $locations = Location::with('rentals')->get();
+        
+        $rentals = Rental::get();
+
         return Inertia::render('Admin/Dashboard', [
             'message' => 'Car deleted successfully!',
-            'brands' => $brands,
             'cars' => $cars,
+            'rental' => $rentals,
+            'locations' => $locations,
         ]);
     }
 }

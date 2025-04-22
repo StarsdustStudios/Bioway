@@ -142,6 +142,7 @@ function getColumns({ index }: { index: number }): ColumnDef<PartnerGetData>[] {
         </div>
     ),
     enableSorting: itemDatas[index].optionColDataset[colIndex] === "name" ? true : false,
+    enableHiding: false,
   }));
 
   return [

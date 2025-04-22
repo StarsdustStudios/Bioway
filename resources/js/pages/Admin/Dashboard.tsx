@@ -9,11 +9,16 @@ import { ThemeProvider } from '@/context/theme-context'
 const NotFoundError = lazy(() => import('../errors/not-found-error'))
 const CmsPage = lazy(() => import('./cms/CmsPage'))
 const ProductPage = lazy(() => import('./product/ProductPage'))
+const RentalPage = lazy(() => import('./product/rental/RentalPage'))
+
+
+const EventPage = lazy(() => import('./cms/event/EventPage'))
+
+
+const LocationPage = lazy(() => import('./option/location/LocationPage'))
 const BrandPage = lazy(() => import('./option/brand/BrandPage'))
 const CarsPage = lazy(() => import('./option/cars/CarsPage'))
 const PatnerPage = lazy(() => import('./option/patner/PatnerPage'))
-const EventPage = lazy(() => import('./cms/event/EventPage'))
-const LocationPage = lazy(() => import('./option/location/LocationPage'))
 interface Brand {
   id: number;
   name: string;
@@ -39,7 +44,7 @@ export default function Dashboard(data: {data: DashboardData}) {
     if (url.startsWith('/product')) {
       switch (url) {
         case '/product/rental':
-          return <ProductPage index={0} />
+          return <RentalPage index={0} data={data} />
         case '/product/carter':
           return <ProductPage index={1} />
         case '/product/shuttle-bus':

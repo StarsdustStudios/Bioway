@@ -48,7 +48,7 @@ class EventController extends Controller
 
     public function edit(Event $event)
 {
-    $event->poster_img = asset('storage/' . ltrim($event->poster_img, '/storage/'));
+    $event->poster_img = asset('storage/' . $event->poster_img);
 
     return Inertia::render('Admin/Dashboard', [
         'event' => $event,

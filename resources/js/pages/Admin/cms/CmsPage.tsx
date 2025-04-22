@@ -1,7 +1,6 @@
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/ui/profile-dropdown'
-import { Search } from '@/components/ui/search'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { getColumns } from './components/table-columns'
 import { CmsDialogs } from './components/static/dialogs'

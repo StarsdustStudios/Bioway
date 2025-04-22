@@ -135,6 +135,7 @@ function getColumns({ index }: { index: number }): ColumnDef<LocationGetData>[] 
         </div>
     ),
     enableSorting: itemDatas[index].optionColDataset[colIndex] === "city_name" ? true : false,
+    enableHiding: false,
   }));
 
   return [

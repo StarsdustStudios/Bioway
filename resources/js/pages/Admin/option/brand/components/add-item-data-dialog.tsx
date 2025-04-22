@@ -85,9 +85,9 @@ export function ItemDataActionDialog({
 
   const onSubmit = async (data: PutDataForm | PostDataForm) => {
     const formData = new FormData();
-  
+
     formData.append('name', data.name);
-  
+
     if (data.brand_logo != null) {
       const isValid = await isAspectRatio1by1(data.brand_logo);
       if (!isValid) {
@@ -96,7 +96,7 @@ export function ItemDataActionDialog({
       }
       formData.append('brand_logo', data.brand_logo);
     }
-  
+
     if (isEdit && currentRow?.id) {
       formData.append('id', currentRow.id.toString());
       formData.append('_method', 'PUT');
@@ -120,7 +120,7 @@ export function ItemDataActionDialog({
       });
     }
   };
-  
+
 
   function getErrorMessage(
     errors: FieldErrors<FormType>,
@@ -177,7 +177,7 @@ export function ItemDataActionDialog({
                               {/* Display image preview if there is a brand_logo */}
                               {(isEdit && currentRow?.brand_logo) || form.watch('brand_logo') ? (
                                 <img
-                                  src={currentRow?.brand_logo} 
+                                  src={currentRow?.brand_logo}
                                   alt="Brand logo"
                                   className="w-16 h-16 object-cover mb-2"
                                 />
@@ -214,7 +214,7 @@ export function ItemDataActionDialog({
         </ScrollArea>
 
         <DialogFooter>
-          <Button type='submit' form='itemData-form'>
+          <Button type='submit' form='itemData-form' disabled={!form.formState.isValid}>
             Save
           </Button>
         </DialogFooter>

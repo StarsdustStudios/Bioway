@@ -149,6 +149,7 @@ function getColumns({ index }: { index: number }): ColumnDef<EventGetData>[] {
     }
     ,
     enableSorting: cmsData[index].cmsColDataset[colIndex] === "name" ? true : false,
+    enableHiding: false,
   }));
 
   return [

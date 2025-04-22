@@ -64,7 +64,7 @@ export function ItemDataActionDialog({
     const formData = new FormData();
 
     formData.append('name', data.name);
-    if(data.logo != null) {
+    if (data.logo != null) {
       formData.append('logo', data.logo);
     }
     if (isEdit && currentRow?.id) {
@@ -79,9 +79,9 @@ export function ItemDataActionDialog({
           form.reset();
         }
       });
-      
-    }  
-     else {
+
+    }
+    else {
       router.post(route('product.partners.store'), formData, {
         forceFormData: true,
         onSuccess: () => {
@@ -148,7 +148,7 @@ export function ItemDataActionDialog({
                               {/* Display image preview if there is a logo */}
                               {(isEdit && currentRow?.logo) || form.watch('logo') ? (
                                 <img
-                                  src={currentRow?.logo} 
+                                  src={currentRow?.logo}
                                   alt="Partner logo"
                                   className="w-16 h-16 object-cover mb-2"
                                 />
@@ -185,7 +185,7 @@ export function ItemDataActionDialog({
         </ScrollArea>
 
         <DialogFooter>
-          <Button type='submit' form='itemData-form'>
+          <Button type='submit' form='itemData-form' disabled={!form.formState.isValid}>
             Save
           </Button>
         </DialogFooter>
