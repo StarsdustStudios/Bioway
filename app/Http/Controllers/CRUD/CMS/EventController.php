@@ -11,13 +11,18 @@ use Inertia\Inertia;
 class EventController extends Controller
 {
     public function index()
-    {
-        $event = Event::get();
+{
+    
+    $event = Event::get()->map(function ($event) {
+        $event->poster_img = asset('storage/' . $event->poster_img);
+        return $event;
+    });
 
-        return Inertia::render('Admin/Dashboard', [
-            'event' => $event,
-        ]);
-    }
+    return Inertia::render('Admin/Dashboard', [
+        'event' => $event,
+    ]);
+}
+
 
 
     public function store(EventRequest $request)
@@ -42,11 +47,14 @@ class EventController extends Controller
     }
 
     public function edit(Event $event)
-    {
-        return Inertia::render('Admin/Dashboard', [
-            'event' => $event,
-        ]);
-    }
+{
+    $event->poster_img = asset('storage/' . $event->poster_img);
+
+    return Inertia::render('Admin/Dashboard', [
+        'event' => $event,
+    ]);
+}
+
 
     public function update(EventRequest $request)
     {

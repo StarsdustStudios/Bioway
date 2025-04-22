@@ -3,7 +3,10 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CRUD\Product\BrandController;
 use App\Http\Controllers\CRUD\Product\CarController;
+use App\Http\Controllers\CRUD\Product\RentalController;
+use App\Http\Controllers\CRUD\Product\CarterController;
 use App\Http\Controllers\CRUD\Data\PartnerController;
+use App\Http\Controllers\CRUD\Data\LocationController;
 use App\Http\Controllers\CRUD\CMS\EventController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -19,8 +22,24 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('product')->group(function () { 
-        Route::get('/rental', fn() => Inertia::render('Admin/Dashboard'))->name('product.rental');
-        Route::get('/carter', fn() => Inertia::render('Admin/Dashboard'))->name('product.carter');
+        Route::resource('rental', RentalController::class)->names([
+            'index' => 'product.rental',
+            'create' => 'product.rental.create',
+            'store' => 'product.rental.store',
+            'show' => 'product.rental.show',
+            'update' => 'product.rental.update',
+            'destroy' => 'product.rental.destroy',
+        ]);        
+        
+        Route::resource('carter', CarterController::class)->names([
+            'index' => 'product.carter',
+            'create' => 'product.carter.create',
+            'store' => 'product.carter.store',
+            'show' => 'product.carter.show',
+            'update' => 'product.carter.update',
+            'destroy' => 'product.carter.destroy',
+        ]);
+
         Route::get('/shuttle-bus', fn() => Inertia::render('Admin/Dashboard'))->name('product.shuttlebus');
         Route::get('/travel', fn() => Inertia::render('Admin/Dashboard'))->name('product.travel');
         Route::get('/delivery', fn() => Inertia::render('Admin/Dashboard'))->name('product.delivery');
@@ -50,6 +69,15 @@ Route::middleware('auth')->group(function () {
             'show' => 'product.partners.show',
             'update' => 'product.partners.update',
             'destroy' => 'product.partners.destroy',
+        ]);
+
+        Route::resource('locations', LocationController::class)->names([
+            'index' => 'product.locations',
+            'create' => 'product.locations.create',
+            'store' => 'product.locations.store',
+            'show' => 'product.locations.show',
+            'update' => 'product.locations.update',
+            'destroy' => 'product.locations.destroy',
         ]);
 
     });

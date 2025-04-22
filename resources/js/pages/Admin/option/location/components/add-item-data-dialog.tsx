@@ -23,12 +23,12 @@ import {
 import { Input } from '@/components/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { itemDatas } from '@/components/data/item-data'
-import { PartnerGetData, partnerPostSchema, partnerPutSchema } from './schema'
+import { LocationGetData, locationPostSchema, locationPutSchema } from './schema'
 import { router } from '@inertiajs/react'
 
 
-const postFormSchema = partnerPostSchema;
-const putFormSchema = partnerPutSchema;
+const postFormSchema = locationPostSchema;
+const putFormSchema = locationPutSchema;
 type PostDataForm = z.infer<typeof postFormSchema>
 type PutDataForm = z.infer<typeof putFormSchema>
 
@@ -36,7 +36,7 @@ type FormType = PostDataForm | PutDataForm
 type FormField = keyof FormType
 
 interface Props {
-  currentRow?: PartnerGetData
+  currentRow?: LocationGetData
   open: boolean
   onOpenChange: (open: boolean) => void
   type: number
@@ -56,21 +56,17 @@ export function ItemDataActionDialog({
     : { name: '', logo: null }
 
   const form = useForm<PutDataForm | PostDataForm>({
-    resolver: zodResolver(isEdit ? postFormSchema : putFormSchema),
-    defaultValues,
+    resolver: zodResolver(isEdit ? postFormSchema : putFormSchema)
   });
 
   const onSubmit = (data: PutDataForm | PostDataForm) => {
     const formData = new FormData();
 
-    formData.append('name', data.name);
-    if (data.logo != null) {
-      formData.append('logo', data.logo);
-    }
+    formData.append('city_name', data.city_name);
     if (isEdit && currentRow?.id) {
       formData.append('id', currentRow.id.toString());
       formData.append('_method', 'PUT');
-      router.post(route('product.partners.update', currentRow.id), formData, {
+      router.post(route('product.locations.update', currentRow.id), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -82,7 +78,7 @@ export function ItemDataActionDialog({
 
     }
     else {
-      router.post(route('product.partners.store'), formData, {
+      router.post(route('product.locations.store'), formData, {
         forceFormData: true,
         onSuccess: () => {
           toast({ title: 'Uploaded!' });
@@ -143,33 +139,12 @@ export function ItemDataActionDialog({
                           {column}
                         </FormLabel>
                         <FormControl className='col-span-4'>
-                          {fieldName === 'logo' ? (
-                            <div className="flex flex-col items-center space-y-2">
-                              {/* Display image preview if there is a logo */}
-                              {(isEdit && currentRow?.logo) || form.watch('logo') ? (
-                                <img
-                                  src={currentRow?.logo}
-                                  alt="Partner logo"
-                                  className="w-16 h-16 object-cover mb-2"
-                                />
-                              ) : null}
-
-                              <Input
-                                type='file'
-                                accept='image/*'
-                                onChange={(e) => {
-                                  form.setValue('logo', e.target.files?.[0]) // Update form value with the file
-                                }}
-                              />
-                            </div>
-                          ) : (
-                            <Input
-                              placeholder={'Enter ' + column + '...'}
-                              {...field}
-                              autoComplete='off'
-                              required={isRequired}
-                            />
-                          )}
+                          <Input
+                            placeholder={'Enter ' + column + '...'}
+                            {...field}
+                            autoComplete='off'
+                            required={isRequired}
+                          />
                         </FormControl>
                         <FormMessage className='col-span-4 col-start-3'>
                           {getErrorMessage(form.formState.errors, fieldName)}

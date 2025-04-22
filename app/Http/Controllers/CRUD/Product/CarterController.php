@@ -1,64 +1,100 @@
 <?php
-//Carter CRUD
+
 namespace App\Http\Controllers\CRUD\Product;
 
 use App\Http\Controllers\Controller;
-use App\Models\Carter; 
-use Illuminate\Http\Request;
+use App\Http\Requests\Product\CarterRequest;
+use App\Models\Location;
+use App\Models\Car;
+use App\Models\Carter;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
-
-//Class
 class CarterController extends Controller
 {
     public function index()
     {
-        $carters = Carter::with('car')->get();
+        $cars = Car::with('carters')->get()->map(function ($car) {
+            $car->car_image = asset('storage/' . ltrim($car->car_image, '/storage/'));
+            return $car;
+        });
+        
+        $locations = Location::with('carters')->get();
+        
+        $carters = Carter::get();
+
         return Inertia::render('Admin/Dashboard', [
-            'carters' => $carters,
+            'cars' => $cars,
+            'carter' => $carters,
+            'locations' => $locations,
         ]);
     }
-    // public function create()
-    // {
 
-    // }
-    public function store(Request $request)
+    public function store(CarterRequest $request)
     {
-        $validated = $request->validated();
+        $carter = new Carter();
+        $carter->car_id = $request->car_id;
+        $carter->location_id = $request->location_id;
+        $carter->price = $request->price;
 
-        $carters = new Carter();
-        $carters->car_id = $validated['car_id'];
-        $carters->location_id = $validated['location_id'];
-        $carters->price = $validated['price'];
-        $carters->save();
+        $carter->save();
 
-        $carters = Carter::with('car')->get();
+        return redirect()->back()->with('success', 'Car created successfully!');
+    }
+
+    public function edit(Car $carter)
+    {
+        $cars = Car::with('carters')->get()->map(function ($car) {
+            $car->car_image = asset('storage/' . ltrim($car->car_image, '/storage/'));
+            return $car;
+        });
+        
+        $locations = Location::with('carters')->get();
+        
+        $carters = Carter::get();
+
         return Inertia::render('Admin/Dashboard', [
-            'message' => 'Carter created successfully!',
-            'carters' => $carters,
+            'cars' => $cars,
+            'carter' => $carters,
+            'locations' => $locations,
         ]);
     }
-    // public function edit(Carter $carter)
-    // {
 
-    // }
-    public function update(Request $request, Carter $carter)
+    public function update(CarterRequest $request)
     {
-        return $this->saveCarter($request, $carter);
+        $carter = Carter::find($request->id);
+
+        if (!$carter) {
+            return redirect()->back()->withErrors(['Carter not found']);
+        }
+
+        $carter->car_id = $request->car_id;
+        $carter->location_id = $request->location_id;
+        $carter->price = $request->price;
+
+        $carter->save();
+
+        return redirect()->back()->with('success', 'Carter updated successfully!');
     }
+
     public function destroy(Carter $carter)
     {
         $carter->delete();
 
-        $carters = Carter::with('car')->get();
+        $cars = Car::with('carters')->get()->map(function ($car) {
+            $car->car_image = asset('storage/' . ltrim($car->car_image, '/storage/'));
+            return $car;
+        });
+        
+        $locations = Location::with('carters')->get();
+        
+        $carters = Carter::get();
+
         return Inertia::render('Admin/Dashboard', [
             'message' => 'Carter deleted successfully!',
-            'carters' => $carters,
+            'cars' => $cars,
+            'carter' => $carters,
+            'locations' => $locations,
         ]);
-    }
-    private function saveCarter($request, Carter $carter = null)
-    {
-
     }
 }

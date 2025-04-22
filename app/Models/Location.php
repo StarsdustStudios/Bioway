@@ -15,4 +15,9 @@ class Location extends Model
     {
         return $this->hasMany(Rental::class);
     }
+
+    public function carters()
+    {
+        return $this->hasMany(Carter::class);
+    }
 }

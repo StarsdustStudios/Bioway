@@ -143,14 +143,14 @@ function getColumns({ index }: { index: number }): ColumnDef<CarGetData>[] {
           // Handle car_image column
           itemDatas[index].optionColDataset[colIndex] === "car_image" ? (
             <img
-              src={"/storage/" + row.getValue(itemDatas[index].optionColDataset[colIndex])}
+              src={row.getValue(itemDatas[index].optionColDataset[colIndex])}
               alt="Car Image"
               className="w-16 h-9 rounded-lg"
             />
           ) : itemDatas[index].optionColDataset[colIndex] === "brand_id" ? (
             // Handle brand_id column
             <img
-              src={"/storage/" + getBrandImage(row.getValue(itemDatas[index].optionColDataset[colIndex]))}
+              src={getBrandImage(row.getValue(itemDatas[index].optionColDataset[colIndex]))}
               alt="Brand Logo"
               className="w-16 h-16 rounded-lg"
             />
@@ -162,6 +162,8 @@ function getColumns({ index }: { index: number }): ColumnDef<CarGetData>[] {
       </div>
     ),
     enableSorting: itemDatas[index].optionColDataset[colIndex] === "model" ? true : false,
+    enableHiding: false,
+
   }));
 
   return [

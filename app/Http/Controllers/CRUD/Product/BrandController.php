@@ -12,28 +12,28 @@ class BrandController extends Controller
 {
     public function index()
     {
-        $brands = Brand::with('cars')->get();
+        $brands = Brand::with('cars')->get()->map(function ($brand) {
+            $brand->brand_logo = asset('storage/' . ltrim($brand->brand_logo, '/storage/'));
+            return $brand;
+        });
 
         return Inertia::render('Admin/Dashboard', [
             'brands' => $brands,
         ]);
     }
 
-
     public function store(BrandRequest $request)
     {
         $brand = new Brand();
         $brand->name = $request->name;
 
-        $imagePath = '/storage/brands/placeholder.png';
+        $imagePath = 'brands/placeholder.png';
 
-        if ($request->has('brand_logo') && $request->brand_logo != null) {
+        if ($request->hasFile('brand_logo')) {
             $imagePath = $request->file('brand_logo')->store('brands', 'public');
-            $brand->brand_logo = $imagePath;
         }
 
         $brand->brand_logo = $imagePath;
-
         $brand->save();
 
         return redirect()->back()->with('success', 'Brand created successfully!');
@@ -41,6 +41,8 @@ class BrandController extends Controller
 
     public function edit(Brand $brand)
     {
+        $brand->brand_logo = asset('storage/' . ltrim($brand->brand_logo, '/storage/'));
+
         return Inertia::render('Admin/Dashboard', [
             'brand' => $brand,
         ]);
@@ -48,30 +50,29 @@ class BrandController extends Controller
 
     public function update(BrandRequest $request)
     {
-        $brand = Brand::where('id', $request->id)->first();
+        $brand = Brand::findOrFail($request->id);
         $brand->name = $request->name;
-        $imagePath = $brand->brand_logo;
-        if ($request->has('brand_logo') && $request->brand_logo != null) {
-            $imagePath = $request->file('brand_logo')->store('brands', 'public');
+
+        if ($request->hasFile('brand_logo')) {
+            $brand->brand_logo = $request->file('brand_logo')->store('brands', 'public');
         }
-        $brand->brand_logo = $imagePath;
 
-        $brand->update();
+        $brand->save();
 
-        return redirect()->back()->with('success', 'Brand created successfully!');
+        return redirect()->back()->with('success', 'Brand updated successfully!');
     }
-    
 
-
-
-    // udah fix gini
     public function destroy(Brand $brand)
     {
         $path = str_replace('/storage/', '', $brand->brand_logo);
         Storage::disk('public')->delete($path);
         $brand->delete();
 
-        $brands = Brand::with('cars')->get();
+        $brands = Brand::with('cars')->get()->map(function ($brand) {
+            $brand->brand_logo = asset('storage/' . ltrim($brand->brand_logo, '/storage/'));
+            return $brand;
+        });
+
         return Inertia::render('Admin/Dashboard', [
             'message' => 'Brand deleted successfully!',
             'brands' => $brands,

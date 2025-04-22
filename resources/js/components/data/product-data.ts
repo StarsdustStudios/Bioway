@@ -3,14 +3,14 @@ import { ProductData } from '../layout/types'
 export const productData: ProductData[] = [
     {
         productName: "Rental",
-        productColumns: ["Foto", "Brand", "Harga", "Driver Fee", "Lokasi", "Kap. Penumpang", "Kap. Bagasi"],
-        productColDataset: ["image", "brand", "price", "driverFee", "location", "passengerCapacity", "luggageCapacity"],
+        productColumns: ["Mobil", "Lokasi kota", "Harga", "Driver Fee"],
+        productColDataset: ["car_id", "location_id", "price", "driver_fee"],
         productStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"],
     },
     {
         productName: "Carter",
-        productColumns: ["Foto", "Brand", "Harga", "Driver Fee", "Lokasi", "Kap. Penumpang", "Kap. Bagasi"],
-        productColDataset: ["image", "brand", "price", "driverFee", "location", "passengerCapacity", "luggageCapacity"],
+        productColumns: ["Mobil", "Lokasi kota", "Harga"],
+        productColDataset: ["car_id", "location_id", "price"],
         productStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"]
     },
     {
