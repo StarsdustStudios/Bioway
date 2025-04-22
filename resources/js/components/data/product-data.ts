@@ -15,8 +15,8 @@ export const productData: ProductData[] = [
     },
     {
         productName: "Shuttle Bus",
-        productColumns: ["Foto", "Brand", "Harga", "Location", "Destination"],
-        productColDataset: ["image", "brand", "price", "driverFee", "location", "destination"],
+        productColumns: ["Bus", "Lokasi Awal", "Lokasi Tujuan", "Harga"],
+        productColDataset: ["car_id", "from", "to", "price"],
         productStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"]
     },
     {

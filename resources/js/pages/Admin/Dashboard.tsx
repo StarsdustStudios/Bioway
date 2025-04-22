@@ -12,6 +12,7 @@ const CmsPage = lazy(() => import('./cms/CmsPage'))
 const ProductPage = lazy(() => import('./product/ProductPage'))
 const RentalPage = lazy(() => import('./product/rental/RentalPage'))
 const CarterPage = lazy(() => import('./product/carter/CarterPage'))
+const ShuttleBusPage = lazy(() => import('./product/shuttlebus/ShuttleBusPage'))
 
 
 const EventPage = lazy(() => import('./cms/event/EventPage'))
@@ -20,7 +21,7 @@ const EventPage = lazy(() => import('./cms/event/EventPage'))
 const LocationPage = lazy(() => import('./option/location/LocationPage'))
 const BrandPage = lazy(() => import('./option/brand/BrandPage'))
 const CarsPage = lazy(() => import('./option/cars/CarsPage'))
-const PatnerPage = lazy(() => import('./option/patner/PatnerPage'))
+const PatnerPage = lazy(() => import('./option/partner/PartnerPage'))
 interface Brand {
   id: number;
   name: string;
@@ -50,7 +51,7 @@ export default function Dashboard(data: {data: DashboardData}) {
         case '/product/carter':
           return <CarterPage index={1} data={data}/>
         case '/product/shuttle-bus':
-          return <ProductPage index={2} />
+          return <ShuttleBusPage index={2} data={data}/>
         case '/product/travel':
           return <ProductPage index={3} />
         case '/product/delivery':
