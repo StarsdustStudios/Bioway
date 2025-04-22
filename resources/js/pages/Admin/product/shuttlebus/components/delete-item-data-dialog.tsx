@@ -22,8 +22,7 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
       })
       return
     }
-    
-    router.delete(route('product.shuttle-bus.destroy', currentRow.id), {
+    router.delete(route('product.shuttleBus.destroy', currentRow.id), {
       preserveScroll: true,
       onSuccess: () => {
         console.log('Deleted!')
