@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -11,10 +12,9 @@ import { DataTableColumnHeader } from '@/components/tables/data-table-column-hea
 import { DataTablePagination } from '@/components/tables/data-table-pagination'
 import { DataTableViewOptions } from '@/components/tables/data-table-view-options'
 import ItemDataProvider, { useItemData } from '@/context/item-data-context'
-import { itemDatas } from '@/components/data/item-data'
+import { productData } from '@/components/data/product-data'
 import { IconEdit, IconTrash, IconUserPlus } from '@tabler/icons-react'
 import { Cross2Icon, DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { PartnerGetData, partnerGetSchema } from './components/schema'
 import { ItemDataActionDialog } from './components/add-item-data-dialog'
 import { UsersDeleteDialog } from './components/delete-item-data-dialog'
 import {
@@ -34,12 +34,30 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { ShuttleBusGetData, carListSchema, shuttleBusListSchema } from './components/schema'
+import { CarGetData } from '../../option/cars/components/schema'
+import { LocationGetData, locationGetSchema } from '../../option/location/components/schema'
+
+let carList: CarGetData[] | undefined = undefined
+let locationList: LocationGetData[] | undefined = undefined
+
+const getCarImage = (carId : number) => {
+  if (carList != undefined) {
+  return carList.find((car: CarGetData) => car.id === carId)?.car_image;
+  }
+};
+
+const getLocation = (locationId : number) => {
+  if (locationList != undefined) {
+  return locationList.find((location: LocationGetData) => location.id === locationId)?.city_name;
+  }
+};
 
 
-export default function PatnerPage({ index, data }: { index: number; data: any }) {
-  // Parse user list
-  const userList = partnerGetSchema.parse(data.partner)
-
+export default function ShuttleBusPage({ index, data }: { index: number; data: any }) {
+  const userList = shuttleBusListSchema.parse(data.shuttle_bus)
+  carList= carListSchema.parse(data.cars)
+  locationList = locationGetSchema.parse(data.locations);
   return (
     <ItemDataProvider>
       <Header fixed>
@@ -48,19 +66,18 @@ export default function PatnerPage({ index, data }: { index: number; data: any }
           <ProfileDropdown />
         </div>
       </Header>
-
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>{itemDatas[index].optionName}</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{productData[index].productName}</h2>
             <p className='text-muted-foreground'>
-              Atur layanan {itemDatas[index].optionName} anda disini
+              Atur layanan {productData[index].productName} anda disini
             </p>
           </div>
           <ItemDataPrimaryButton/>
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <PartnerGetDataTable data={userList} columns={getColumns({index})} type={index}/>
+          <ShuttleBusGetDataTable data={userList} columns={getColumns({index})}/>
         </div>
       </Main>
         <ItemDataDialogs type={index}/>
@@ -122,35 +139,42 @@ function ItemDataPrimaryButton() {
   )
 }
 
-function getColumns({ index }: { index: number }): ColumnDef<PartnerGetData>[] {
-
-  const dynamicColumns = itemDatas[index].optionColumns.map((key, colIndex) => ({
-    accessorKey: itemDatas[index].optionColDataset[colIndex],
+function getColumns({ index }: { index: number }): ColumnDef<ShuttleBusGetData>[] {
+  const dynamicColumns = productData[index].productColumns.map((key, colIndex) => ({
+    accessorKey: productData[index].productColDataset[colIndex],
     header: ({ column }: { column: any }) => (
       <DataTableColumnHeader column={column} title={key} />
     ),
     cell: ({ row }: { row: any }) => (
       <div className="w-fit text-nowrap">
-          {
-          itemDatas[index].optionColDataset[colIndex] === "logo" ? (
-            <img src={"/storage/"+row.getValue(itemDatas[index].optionColDataset[colIndex])
-            } alt="Logo" className="w-16 h-16 rounded-lg" />
+        {
+          productData[index].productColDataset[colIndex] === "car_id" ? (
+            <img
+              src={getCarImage(row.getValue(productData[index].productColDataset[colIndex]))}
+              alt="Car Image"
+              className="w-16 h-9 rounded-lg"
+            />
+          ) : productData[index].productColDataset[colIndex] === "from" ? (
+            getLocation(row.getValue(productData[index].productColDataset[colIndex]))
+          ) : productData[index].productColDataset[colIndex] === "to" ? (
+            getLocation(row.getValue(productData[index].productColDataset[colIndex]))
           ) : (
-            row.getValue(itemDatas[index].optionColDataset[colIndex])
+            row.getValue(productData[index].productColDataset[colIndex])
           )
-          }
-        </div>
+        }
+      </div>
     ),
-    enableSorting: itemDatas[index].optionColDataset[colIndex] === "name" ? true : false,
+    enableSorting: ["price", "from", "to"].includes(productData[index].productColDataset[colIndex]),
+    enableHiding: false,
   }));
 
   return [
     ...dynamicColumns,
     {
       accessorKey: 'id',
-      header: 'ID',
+      header: '',
       enableSorting: false,
-      enableHiding: true, // cannot be toggled
+      enableHiding: false, // cannot be toggled
     },
     {
       id: 'actions',
@@ -162,8 +186,9 @@ function getColumns({ index }: { index: number }): ColumnDef<PartnerGetData>[] {
 
 
 
+
 interface DataTableRowActionsProps {
-  row: Row<PartnerGetData>
+  row: Row<ShuttleBusGetData>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
@@ -219,15 +244,14 @@ declare module '@tanstack/react-table' {
 }
 
 interface DataTableProps {
-  columns: ColumnDef<PartnerGetData>[]
-  data: PartnerGetData[]
-  type: number
+  columns: ColumnDef<ShuttleBusGetData>[]
+  data: ShuttleBusGetData[]
 }
 
-function PartnerGetDataTable({ columns, data, type }: DataTableProps) {
+function ShuttleBusGetDataTable({columns, data}: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    id: false, // 👈 Hide the 'id' column by default
+    id: false,
   })
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
@@ -336,10 +360,10 @@ export function DataTableToolbar<TData>({
         <Input
           placeholder='Filter...'
           value={
-            (table.getColumn('name')?.getFilterValue() as string) ?? ''
+            (table.getColumn('price')?.getFilterValue() as string) ?? ''
           }
           onChange={(event) =>
-            table.getColumn('name')?.setFilterValue(event.target.value)
+            table.getColumn('price')?.setFilterValue(event.target.value)
           }
           className='h-8 w-[150px] lg:w-[250px]'
         />

@@ -20,4 +20,15 @@ class Location extends Model
     {
         return $this->hasMany(Carter::class);
     }
+
+    public function departures(): HasMany
+    {
+        return $this->hasMany(ShuttleBus::class, 'from');
+    }
+
+    public function arrivals(): HasMany
+    {
+        return $this->hasMany(ShuttleBus::class, 'to');
+    }
+
 }

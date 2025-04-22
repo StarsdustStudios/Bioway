@@ -5,6 +5,9 @@ use App\Http\Controllers\CRUD\Product\BrandController;
 use App\Http\Controllers\CRUD\Product\CarController;
 use App\Http\Controllers\CRUD\Product\RentalController;
 use App\Http\Controllers\CRUD\Product\CarterController;
+use App\Http\Controllers\CRUD\Product\ShuttleBusController;
+// use App\Http\Controllers\CRUD\Product\TravelController;
+use App\Http\Controllers\CRUD\Product\DeliveryController;
 use App\Http\Controllers\CRUD\Data\PartnerController;
 use App\Http\Controllers\CRUD\Data\LocationController;
 use App\Http\Controllers\CRUD\CMS\EventController;
@@ -40,9 +43,32 @@ Route::middleware('auth')->group(function () {
             'destroy' => 'product.carter.destroy',
         ]);
 
-        Route::get('/shuttle-bus', fn() => Inertia::render('Admin/Dashboard'))->name('product.shuttlebus');
-        Route::get('/travel', fn() => Inertia::render('Admin/Dashboard'))->name('product.travel');
-        Route::get('/delivery', fn() => Inertia::render('Admin/Dashboard'))->name('product.delivery');
+        Route::resource('shuttle-bus', ShuttleBusController::class)->names([
+            'index' => 'product.shuttle-bus',
+            'create' => 'product.shuttle-bus.create',
+            'store' => 'product.shuttle-bus.store',
+            'show' => 'product.shuttle-bus.show',
+            'update' => 'product.shuttle-bus.update',
+            'destroy' => 'product.shuttle-bus.destroy',
+        ]);
+
+        // Route::resource('travel', TravelController::class)->names([
+        //     'index' => 'product.travel',
+        //     'create' => 'product.travel.create',
+        //     'store' => 'product.travel.store',
+        //     'show' => 'product.travel.show',
+        //     'update' => 'product.travel.update',
+        //     'destroy' => 'product.travel.destroy',
+        // ]);    
+            
+        Route::resource('delivery', DeliveryController::class)->names([
+            'index' => 'product.delivery',
+            'create' => 'product.delivery.create',
+            'store' => 'product.delivery.store',
+            'show' => 'product.delivery.show',
+            'update' => 'product.delivery.update',
+            'destroy' => 'product.delivery.destroy',
+        ]);  
 
         Route::resource('cars', CarController::class)->names([
             'index' => 'product.cars',
