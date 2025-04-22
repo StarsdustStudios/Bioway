@@ -8,8 +8,10 @@ import { ThemeProvider } from '@/context/theme-context'
 
 const NotFoundError = lazy(() => import('../errors/not-found-error'))
 const CmsPage = lazy(() => import('./cms/CmsPage'))
+
 const ProductPage = lazy(() => import('./product/ProductPage'))
 const RentalPage = lazy(() => import('./product/rental/RentalPage'))
+const CarterPage = lazy(() => import('./product/carter/CarterPage'))
 
 
 const EventPage = lazy(() => import('./cms/event/EventPage'))
@@ -46,7 +48,7 @@ export default function Dashboard(data: {data: DashboardData}) {
         case '/product/rental':
           return <RentalPage index={0} data={data} />
         case '/product/carter':
-          return <ProductPage index={1} />
+          return <CarterPage index={1} data={data}/>
         case '/product/shuttle-bus':
           return <ProductPage index={2} />
         case '/product/travel':

@@ -77,7 +77,7 @@ class RentalController extends Controller
 
         $rental->save();
 
-        return redirect()->back()->with('success', 'Car updated successfully!');
+        return redirect()->back()->with('success', 'Rental updated successfully!');
     }
 
     public function destroy(Rental $rental)

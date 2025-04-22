@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CRUD\Product\BrandController;
 use App\Http\Controllers\CRUD\Product\CarController;
 use App\Http\Controllers\CRUD\Product\RentalController;
+use App\Http\Controllers\CRUD\Product\CarterController;
 use App\Http\Controllers\CRUD\Data\PartnerController;
 use App\Http\Controllers\CRUD\Data\LocationController;
 use App\Http\Controllers\CRUD\CMS\EventController;
@@ -30,7 +31,15 @@ Route::middleware('auth')->group(function () {
             'destroy' => 'product.rental.destroy',
         ]);        
         
-        Route::get('/carter', fn() => Inertia::render('Admin/Dashboard'))->name('product.carter');
+        Route::resource('carter', CarterController::class)->names([
+            'index' => 'product.carter',
+            'create' => 'product.carter.create',
+            'store' => 'product.carter.store',
+            'show' => 'product.carter.show',
+            'update' => 'product.carter.update',
+            'destroy' => 'product.carter.destroy',
+        ]);
+
         Route::get('/shuttle-bus', fn() => Inertia::render('Admin/Dashboard'))->name('product.shuttlebus');
         Route::get('/travel', fn() => Inertia::render('Admin/Dashboard'))->name('product.travel');
         Route::get('/delivery', fn() => Inertia::render('Admin/Dashboard'))->name('product.delivery');
