@@ -22,10 +22,21 @@ class HomeController extends Controller
 
         $events = Event::where('start_at', '<=', now())
             ->where('end_at', '>=', now())
-            ->get();
+            ->get()->map(function ($event) {
+                $event->poster_img = asset('storage/' . $event->poster_img);
+                return $event;
+            });
+
+        if ($events->isEmpty()) {
+            $events = Event::orderByDesc('start_at')
+                ->limit(3)
+                ->get();
+        }
+
+        // dd($events);
 
         $partners = Partner::all()->map(function ($partner) {
-            $partner->logo = asset('storage/' . $partner->logo); // or just asset($partner->logo) if you're not using storage:link
+            $partner->logo = asset('storage/' . $partner->logo);
             return $partner;
         });
 
@@ -36,6 +47,7 @@ class HomeController extends Controller
             'title' => 'Home',
             'description' => $descriptions[array_rand($descriptions)],
             'partners' => $partners,
+            'events' => $events,
         ]);
     }
 }

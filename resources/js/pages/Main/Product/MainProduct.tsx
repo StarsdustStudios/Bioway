@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
 import { DesktopNavBar, MobileNavBar } from '@/components/global/Navbar'
 import { ProductNav } from '@/components/global/ProductNav'
+import { PromoCarousel } from '@/components/global/PromoCarousel'
 
-export default function MainProduct({ children }: { children: React.ReactNode }) {
+
+
+export default function MainProduct({ children}: { children: React.ReactNode }) {
     const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768)
 
     useEffect(() => {

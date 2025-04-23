@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Public\HomeController;
+use App\Http\Controllers\Public\PublicProductController;
+
 
 
 //Home Controller route
@@ -13,13 +15,22 @@ route::get('/', [HomeController::class, 'index'])->name('Home');
 //     return Inertia::render('Main/Home');
 // })->name('Home');
 
+//Product Controller route
 Route::prefix('produk')->group(function () { 
-    Route::get('/rental', fn() => Inertia::render('Main/Product/Rent'))->name('product.rental');
-    Route::get('/carter', fn() => Inertia::render('Main/Product/Carter'))->name('product.carter');
-    Route::get('/shuttle-bus', fn() => Inertia::render('Main/Product/ShuttleBus'))->name('product.shuttlebus');
-    Route::get('/travel', fn() => Inertia::render('Main/Product/Travel'))->name('product.travel');
-    Route::get('/delivery', fn() => Inertia::render('Main/Product/Delivery'))->name('product.delivery');
+    Route::get('/rental', [PublicProductController::class, 'rental'])->name('product.rental');
+    Route::get('/carter', [PublicProductController::class, 'carter'])->name('product.carter');
+    Route::get('/shuttle-bus', [PublicProductController::class, 'shuttleBus'])->name('product.shuttlebus');
+    Route::get('/tour', [PublicProductController::class, 'tour'])->name('product.travel');
+    Route::get('/delivery', [PublicProductController::class, 'delivery'])->name('product.delivery');
 });
+
+// Route::prefix('produk')->group(function () { 
+//     Route::get('/rental', fn() => Inertia::render('Main/Product/Rent'))->name('product.rental');
+//     Route::get('/carter', fn() => Inertia::render('Main/Product/Carter'))->name('product.carter');
+//     Route::get('/shuttle-bus', fn() => Inertia::render('Main/Product/ShuttleBus'))->name('product.shuttlebus');
+//     Route::get('/travel', fn() => Inertia::render('Main/Product/Travel'))->name('product.travel');
+//     Route::get('/delivery', fn() => Inertia::render('Main/Product/Delivery'))->name('product.delivery');
+// });
 
 Route::prefix('blog')->group(function () { 
     Route::get('/', fn() => Inertia::render('Main/Blog/Blog'))->name('blog.index');

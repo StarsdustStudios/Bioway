@@ -11,7 +11,13 @@ import {
 } from "@/components/ui/carousel"
 import useEmblaCarousel from "embla-carousel-react"
 
-export function PromoCarousel() {
+export interface Event {
+  id: number
+  name: string
+  poster_img: string
+}
+
+export function PromoCarousel({ events }: { events: Event[] }) {
   const plugin = React.useRef(
     Autoplay({ delay: 3000, stopOnInteraction: false })
   )
@@ -24,16 +30,16 @@ export function PromoCarousel() {
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
     >
-      <CarouselContent className="">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <CarouselItem key={index} className="basis">
-            <div className="">
-              <Card className="aspect-video py-0 w-full h-full">
-                <CardContent className="flex items-center justify-center p-0">
+      <CarouselContent>
+        {events.map((event) => (
+          <CarouselItem key={event.id} className="basis">
+            <div>
+              <Card className="aspect-video p-0 overflow-hidden w-full h-full">
+                <CardContent className="flex items-center p-0 !h-full">
                   <img
-                    src={`https://w0.peakpx.com/wallpaper/373/708/HD-wallpaper-midori-momoi-blue-archive.jpg`}
-                    alt="Random Unsplash"
-                    className="w-full h-full object-cover"
+                    src={event.poster_img}
+                    alt={event.name}
+                    className="!w-full !h-full object-contain"
                   />
                 </CardContent>
               </Card>
