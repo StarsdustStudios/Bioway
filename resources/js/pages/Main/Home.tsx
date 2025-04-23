@@ -11,19 +11,33 @@ export interface Partner {
     logo: string // full URL after mapping in controller
 }
 
+export interface Event {
+    id: number
+    name: string
+    poster_img: string
+}
+
 export interface HomeProps {
     title: string
     description: string
     partners: Partner[]
+    events: Event[]
 }
-function Home({ title, description, partners }: HomeProps) {
+function Home({ title, description, partners, events }: HomeProps) {
     return (
         <>
-            <PromoCarousel />
-            <Button className='my-7 p-8 text-xl bg-blue-500 hover:bg-blue-300'>Pesan Cepat Sekarang</Button>
+            <PromoCarousel events={events} />
+            <Button className='my-7 p-8 text-xl bg-blue-500 hover:scale-110 hover:bg-blue-500'>Pesan Cepat Sekarang</Button>
             <h1 className="text-4xl font-bold my-5">Mitra Kami</h1>
             <PartnerCarousel partners={partners} />
+
+            <h1 className='text-4xl font-bold my-5'>Lineup Jasa</h1>
             <ProductNav />
+
+            <div>
+                <h1 className='text-4xl font-bold my-15'>Artikel Terbaru</h1>
+            </div>
+
             <div className='md:mb-0 mb-20'>
 
             </div>
