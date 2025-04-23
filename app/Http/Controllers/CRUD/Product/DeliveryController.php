@@ -1,67 +1,83 @@
 <?php
-//Delivery CRUD
+
 namespace App\Http\Controllers\CRUD\Product;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\DeliveryRequest;
+use App\Models\Location;
+use App\Models\Car;
 use App\Models\Delivery;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use Inertia\Response;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
 
-//Class
 class DeliveryController extends Controller
 {
     public function index()
-    {
-        $deliveries = Delivery::with('car')->get();
+    {   
+        $locations = Location::with('deliveries')->get();
+        
+        $delivery = Delivery::get();
+
         return Inertia::render('Admin/Dashboard', [
-            'deliveries' => $deliveries,
+            'delivery' => $delivery,
+            'locations' => $locations,
         ]);
     }
-    // public function create()
-    // {
 
-    // }
-    public function store(Request $request)
+    public function store(DeliveryRequest $request)
     {
-        $validated = $request->validated();
+        $delivery = new Delivery();
+        $delivery->location_id = $request->location_id;
+        $delivery->price = $request->price;
+        $delivery->size = $request->size;
+        $delivery->save();
 
-        $deliveries = new Delivery();
-        $deliveries->location_id = $validated['location_id'];
-        $deliveries->size = $validated['size'];
-        $deliveries->price = $validated['price'];
-        $deliveries->save();
+        return redirect()->back()->with('success', 'Car created successfully!');
+    }
 
-        $deliveries = Delivery::with('car')->get();
+    public function edit(Car $delivery)
+    {        
+        $locations = Location::with('delivery')->get();
+        
+        $delivery = Delivery::get();
+
         return Inertia::render('Admin/Dashboard', [
-            'message' => 'Delivery created successfully!',
-            'deliveries' => $deliveries,
+            
+            'delivery' => $delivery,
+            'locations' => $locations,
         ]);
     }
-    // public function edit(Delivery $delivery)
-    // {
 
-    // }
-    public function update(Request $request, Delivery $delivery)
+    public function update(DeliveryRequest $request)
     {
-        return $this->saveDelivery($request, $delivery);
+        $delivery = Delivery::find($request->id);
+
+        if (!$delivery) {
+            return redirect()->back()->withErrors(['Delivery not found']);
+        }
+
+        $delivery->location_id = $request->location_id;
+        $delivery->price = $request->price;
+        $delivery->size = $request->size;
+
+        $delivery->save();
+
+        return redirect()->back()->with('success', 'Delivery updated successfully!');
     }
+
     public function destroy(Delivery $delivery)
     {
         $delivery->delete();
+        
+        $locations = Location::with('deliveries')->get();
+        
+        $delivery = Delivery::get();
 
-        $deliveries = Delivery::with('car')->get();
         return Inertia::render('Admin/Dashboard', [
             'message' => 'Delivery deleted successfully!',
-            'deliveries' => $deliveries,
+            
+            'delivery' => $delivery,
+            'locations' => $locations,
         ]);
     }
-    // private function saveDelivery($request, Delivery $delivery = null)
-    // {
-
-    // }
 }

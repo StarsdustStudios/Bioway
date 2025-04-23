@@ -5,12 +5,12 @@ import { toast } from '@/hooks/use-toast'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { router } from '@inertiajs/react'
-import { ShuttleBusGetData } from './schema'
+import { DeliveryGetData } from './schema'
 
 interface Props {
   open: boolean
   onOpenChange: (open: boolean) => void
-  currentRow: ShuttleBusGetData
+  currentRow: DeliveryGetData
 }
 
 export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
@@ -22,11 +22,12 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
       })
       return
     }
-    router.delete(route('product.shuttleBus.destroy', currentRow.id), {
+
+    router.delete(route('product.delivery.destroy', currentRow.id), {
       preserveScroll: true,
       onSuccess: () => {
         console.log('Deleted!')
-        window.location.replace('/product/shuttle-bus')
+        window.location.replace('/product/delivery')
       },
     })
   }

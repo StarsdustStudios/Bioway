@@ -27,8 +27,8 @@ export const productData: ProductData[] = [
     },
     {
         productName: "Delivery",
-        productColumns: ["Foto", "Brand", "Harga", "Kapasitas", "Driver Fee", "Lokasi"],
-        productColDataset: ["image", "brand", "price", "luggageCapacity", "driverFee", "location"],
+        productColumns: ["Lokasi", "Kapasitas", "Harga"],
+        productColDataset: ["location_id", "size", "price"],
         productStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"]
     }
 ]

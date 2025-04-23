@@ -79,23 +79,25 @@ class ShuttleBusController extends Controller
         return redirect()->back()->with('success', 'ShuttleBus updated successfully!');
     }
 
-    public function destroy(ShuttleBus $shuttle_bus)
-    {
-        $shuttle_bus->delete();
+    public function destroy($id)
+{
+    $shuttle_bus = ShuttleBus::findOrFail($id);
+    $shuttle_bus->delete();
 
-        
-        $cars = Car::with('shuttleBuses')->get()->map(function ($car) {
-            $car->car_image = asset('storage/' . ltrim($car->car_image, '/storage/'));
-            return $car;
-        });
-        $locations = Location::with(['departures', 'arrivals'])->get();
-        $shuttle_bus = ShuttleBus::get();
+    $cars = Car::with('shuttleBuses')->get()->map(function ($car) {
+        $car->car_image = asset('storage/' . ltrim($car->car_image, '/storage/'));
+        return $car;
+    });
 
-        return Inertia::render('Admin/Dashboard', [
-            'message' => 'ShuttleBus deleted successfully!',
-            'cars' => $cars,
-            'shuttle_bus' => $shuttle_bus,
-            'locations' => $locations,
-        ]);
-    }
+    $locations = Location::with(['departures', 'arrivals'])->get();
+    $shuttle_bus = ShuttleBus::get();
+
+    return Inertia::render('Admin/Dashboard', [
+        'message' => 'ShuttleBus deleted successfully!',
+        'cars' => $cars,
+        'shuttle_bus' => $shuttle_bus,
+        'locations' => $locations,
+    ]);
+}
+
 }

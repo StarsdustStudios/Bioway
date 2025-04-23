@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
             'store' => 'product.shuttle-bus.store',
             'show' => 'product.shuttle-bus.show',
             'update' => 'product.shuttle-bus.update',
-            'destroy' => 'product.shuttle-bus.destroy',
+            'destroy' => 'product.shuttleBus.destroy',
         ]);
 
         // Route::resource('travel', TravelController::class)->names([

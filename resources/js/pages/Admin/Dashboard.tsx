@@ -13,6 +13,7 @@ const ProductPage = lazy(() => import('./product/ProductPage'))
 const RentalPage = lazy(() => import('./product/rental/RentalPage'))
 const CarterPage = lazy(() => import('./product/carter/CarterPage'))
 const ShuttleBusPage = lazy(() => import('./product/shuttlebus/ShuttleBusPage'))
+const DeliveryPage = lazy(() => import('./product/delivery/DeliveryPage'))
 
 
 const EventPage = lazy(() => import('./cms/event/EventPage'))
@@ -55,7 +56,7 @@ export default function Dashboard(data: {data: DashboardData}) {
         case '/product/travel':
           return <ProductPage index={3} />
         case '/product/delivery':
-          return <ProductPage index={4} />
+          return <DeliveryPage index={4} data={data}/>
         case "/product/brands":
           return <BrandPage index={0} data={data} />
         case "/product/cars":
