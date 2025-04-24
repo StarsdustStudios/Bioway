@@ -42,7 +42,8 @@ function Rent({ events, rentals }: RentProps) {
   const [page, setPage] = useState(1);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [useDriver, setUseDriver] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState<'all' | number>('all');
+  const firstLocationId = rentals[0]?.location.id ?? 'all';
+  const [selectedLocation, setSelectedLocation] = useState<'all' | number>(firstLocationId);
 
   const itemsPerPage = 9;
 
@@ -98,15 +99,12 @@ function Rent({ events, rentals }: RentProps) {
     setSelectedLocation(e.target.value === 'all' ? 'all' : parseInt(e.target.value))
   }
 >
-  <option value="all">{locations[0]?.city_name}</option>
-  {locations.slice(1).map((loc) => (
+  {locations.map((loc) => (
     <option key={loc!.id} value={loc!.id}>
       {loc!.city_name}
     </option>
   ))}
 </select>
-
-
 
       </div>
 

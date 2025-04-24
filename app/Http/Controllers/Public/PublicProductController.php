@@ -12,6 +12,8 @@ use App\Models\ShuttleBus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
+
 
 class PublicProductController extends Controller 
 {
@@ -39,10 +41,8 @@ class PublicProductController extends Controller
 
         $rentals = Rental::with(['car', 'location'])->get()->map(function ($rental) {
             $rental->car->car_image = asset('storage/' . ltrim($rental->car->car_image, '/storage/'));
-            
             return $rental;
         });
-        // dd($rentals);
 
         return Inertia::render('Main/Product/Rent', [
             'title' => 'Rental',
@@ -53,11 +53,23 @@ class PublicProductController extends Controller
     }
 
     public function carter()
-    {
-        return Inertia::render('Main/Product/Carter', [
-            'title' => 'Carter',
-        ]);
-    }
+{
+    $events = $this->getEvents();
+
+    $carters = Carter::with(['car', 'location'])->get()->map(function ($carter) {
+        if ($carter->car && $carter->car->car_image && !Str::startsWith($carter->car->car_image, ['http://', 'https://'])) {
+            $carter->car->car_image = asset('storage/' . ltrim($carter->car->car_image, '/'));
+        }
+        return $carter;
+    });
+
+    return Inertia::render('Main/Product/Carter', [
+        'title' => 'Carter',
+        'events' => $events,
+        'carters' => $carters,
+    ]);
+}
+
 
     public function shuttleBus()
     {
