@@ -40,14 +40,35 @@ interface RentProps {
 
 function Rent({ events, rentals }: RentProps) {
   const [page, setPage] = useState(1);
-  const itemsPerPage = 9;
-  const totalItems = rentals.length; // Get the total number of rentals
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [useDriver, setUseDriver] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<'all' | number>('all');
 
-  const getVisibleIndexes = () => {
-    const start = (page - 1) * itemsPerPage;
-    return rentals.slice(start, start + itemsPerPage);
-  };
+  const itemsPerPage = 9;
+
+  // Get unique locations for the dropdown
+  const locations = Array.from(new Set(rentals.map((r) => r.location.id)))
+    .map((id) => {
+      const match = rentals.find((r) => r.location.id === id);
+      return match?.location;
+    })
+    .filter(Boolean);
+
+  // Filter by location
+  const filteredRentals =
+    selectedLocation === 'all'
+      ? rentals
+      : rentals.filter((r) => r.location.id === selectedLocation);
+
+  // Sort
+  const sortedRentals = [...filteredRentals].sort((a, b) =>
+    sortDirection === 'asc' ? a.price - b.price : b.price - a.price
+  );
+
+  // Pagination
+  const totalItems = sortedRentals.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const visibleRentals = sortedRentals.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
   return (
     <>
@@ -55,15 +76,49 @@ function Rent({ events, rentals }: RentProps) {
       <PromoCarousel events={events} />
 
       <h1 className="text-4xl font-bold my-7 text-center">Rental Mobil Balikpapan</h1>
+
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <Button onClick={() => setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))}>
+          Sort by Price ({sortDirection === 'asc' ? 'Asc' : 'Desc'})
+        </Button>
+
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={useDriver}
+            onChange={(e) => setUseDriver(e.target.checked)}
+          />
+          Use Driver
+        </label>
+
+        <select
+  className="border rounded px-3 py-1"
+  value={selectedLocation}
+  onChange={(e) =>
+    setSelectedLocation(e.target.value === 'all' ? 'all' : parseInt(e.target.value))
+  }
+>
+  <option value="all">{locations[0]?.city_name}</option>
+  {locations.slice(1).map((loc) => (
+    <option key={loc!.id} value={loc!.id}>
+      {loc!.city_name}
+    </option>
+  ))}
+</select>
+
+
+
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-        {getVisibleIndexes().map((rental) => (
+        {visibleRentals.map((rental) => (
           <RentalCard
             key={rental.id}
             carName={rental.car.model}
             carImage={rental.car.car_image}
             seatCount={rental.car.seat}
             luggageCount={rental.car.luggage}
-            price={rental.price}
+            price={useDriver ? rental.price + rental.driver_fee : rental.price}
           />
         ))}
       </div>
@@ -79,7 +134,8 @@ function Rent({ events, rentals }: RentProps) {
           Next
         </Button>
       </div>
-      <div className="mb-20"></div>
+
+      <div className="mb-20" />
     </>
   );
 }
