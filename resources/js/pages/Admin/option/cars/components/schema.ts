@@ -12,6 +12,8 @@ export const carSchema = z.object({
   model: z.string(),
   brand_id: z.coerce.number(),
   car_image: z.string(),
+  luggage: z.coerce.number(),
+  seat: z.coerce.number(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 });
@@ -41,6 +43,8 @@ export const carPostSchema = z.object({
     z.null(),
     z.undefined(),
   ]),
+  luggage: z.coerce.number(),
+  seat: z.coerce.number(),
 });
 
 export type CarGetData = z.infer<typeof carSchema>;

@@ -111,6 +111,8 @@ export function ItemDataActionDialog({
       formData.append('car_image', data.car_image);
     }
     formData.append('brand_id', String(Number(data.brand_id)));
+    formData.append('seat', String(Number(data.seat)));
+    formData.append('luggage', String(Number(data.luggage)));
 
     if (isEdit && currentRow?.id) {
       formData.append('id', String(currentRow.id));
@@ -146,6 +148,8 @@ export function ItemDataActionDialog({
         model: currentRow.model,
         brand_id: String(currentRow.brand_id),
         car_image: null, // Do not preload image
+        seat: currentRow.seat,
+        luggage: currentRow.luggage,
       });
     }
   }, [currentRow, form]);
@@ -229,6 +233,16 @@ export function ItemDataActionDialog({
                                 </DropdownMenuRadioGroup>
                               </DropdownMenuContent>
                             </DropdownMenu>
+                          ) : (fieldName === 'seat' || fieldName === 'luggage') ?(
+                            <Input
+                              type="number"
+                              placeholder={'Enter ' + column + '...'}
+                              {...field}
+                              value={field.value ?? ''}
+                              onChange={field.onChange}
+                              autoComplete="off"
+                              required
+                            />
 
                           ) : (
                             <Input
@@ -243,7 +257,6 @@ export function ItemDataActionDialog({
                       </FormItem>
                     )}
                   />
-
                 )
               })}
             </form>

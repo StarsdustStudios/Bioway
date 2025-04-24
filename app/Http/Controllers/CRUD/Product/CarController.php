@@ -34,6 +34,8 @@ class CarController extends Controller
         $car = new Car();
         $car->model = $request->model;
         $car->brand_id = $request->brand_id;
+        $car->seat = $request->seat;
+        $car->luggage = $request->luggage;
 
         $imagePath = 'cars/placeholder.png';
 
@@ -72,6 +74,8 @@ class CarController extends Controller
 
         $car->model = $request->model;
         $car->brand_id = $request->brand_id;
+        $car->seat = $request->seat;
+        $car->luggage = $request->luggage;
 
         if ($request->hasFile('car_image')) {
             $car->car_image = $request->file('car_image')->store('cars', 'public');
