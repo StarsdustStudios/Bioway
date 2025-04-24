@@ -27,7 +27,7 @@ function Rent({ events }: { events: Event[] }) {
             <h1 className="text-4xl font-bold my-7">Promo Hari Ini</h1>
             <PromoCarousel events={events} />
 
-            <h1 className='text-4xl font-bold my-7'>Rental Mobil Balikpapan</h1>
+            <h1 className='text-4xl font-bold my-7 text-center'>Rental Mobil Balikpapan</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
                 {getVisibleIndexes().map((i) => (
                     <RentalCard key={i} />
@@ -44,6 +44,10 @@ function Rent({ events }: { events: Event[] }) {
                 <Button onClick={() => setPage(p => p + 1)} disabled={page === totalPages}>
                     Next
                 </Button>
+            </div>
+
+            <div className='mb-20'>
+
             </div>
         </>
     );
