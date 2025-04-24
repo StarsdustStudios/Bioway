@@ -42,7 +42,7 @@ export const partnerPutSchema = z.object({
       .refine((file) => file.size <= 2 * 1024 * 1024, 'Maksimal 2MB')
       .refine(
         (file) =>
-          ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'].includes(file.type),
+        ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml', 'image/webp'].includes(file.type),
         'Format tidak valid (jpeg, png, jpg, gif, svg saja)'
       ),
     z.null(),
