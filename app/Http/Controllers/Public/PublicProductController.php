@@ -37,9 +37,11 @@ class PublicProductController extends Controller
     {
         $events = $this->getEvents();
 
-        $rentals = Rental::all();
-
-
+        $rentals = Rental::with(['car', 'location'])->get()->map(function ($rental) {
+            $rental->car->car_image = asset('storage/' . ltrim($rental->car->car_image, '/storage/'));
+            
+            return $rental;
+        });
         // dd($rentals);
 
         return Inertia::render('Main/Product/Rent', [
@@ -47,6 +49,7 @@ class PublicProductController extends Controller
             'events' => $events,
             'rentals' => $rentals,
         ]);
+        
     }
 
     public function carter()
