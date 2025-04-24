@@ -9,8 +9,8 @@ export const itemDatas : OptionData[] = [
     },
     {
         optionName: "Mobil",
-        optionColumns: ["Model", "Brand", "Foto"],
-        optionColDataset: ["model", "brand_id", "car_image"],
+        optionColumns: ["Model", "Brand", "Foto", "Penumpang", "Bagasi"],
+        optionColDataset: ["model", "brand_id", "car_image", "seat", "luggage"],
         optionStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"],
     },
     {
