@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IconBriefcase2, IconArmchair } from "@tabler/icons-react";
 
-interface CarterCardProps {
+interface ShuttleBusCardProps {
   carName: string;
   carImage: string;
   seatCount: number;
@@ -10,13 +10,13 @@ interface CarterCardProps {
   price: number;
 }
 
-export function CarterCard({
+export function ShuttleBusCard({
   carName,
   carImage,
   seatCount,
   luggageCount,
   price,
-}: CarterCardProps) {
+}: ShuttleBusCardProps) {
   return (
     <Card className="flex p-4 gap-4 rounded-2xl shadow-md border-blue-300">
       <div className="flex items-center gap-4 py-0">
