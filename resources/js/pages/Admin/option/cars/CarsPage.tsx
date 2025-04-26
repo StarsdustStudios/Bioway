@@ -35,6 +35,8 @@ import {
 } from '@tanstack/react-table'
 import { CarGetData, brandListSchema, carListSchema, carSchema } from './components/schema'
 import { BrandGetData } from '../brand/components/schema'
+import { ItemDataPrimaryButton } from '@/components/layout/Admin/ItemDataPrimaryButton'
+import { languageData } from '@/components/data/strings'
 
 let brandList: BrandGetData[] | undefined = undefined
 
@@ -49,6 +51,7 @@ const getBrandImage = (brandId : number) => {
 export default function CarsPage({ index, data }: { index: number; data: any }) {
   const userList = carListSchema.parse(data.cars)
   brandList= brandListSchema.parse(data.brands)
+  const strings = languageData.languageTexts;
   return (
     <ItemDataProvider>
       <Header fixed>
@@ -63,7 +66,7 @@ export default function CarsPage({ index, data }: { index: number; data: any }) 
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>{itemDatas[index].optionName}</h2>
             <p className='text-muted-foreground'>
-              Atur layanan {itemDatas[index].optionName} anda disini
+            {strings.setService} {itemDatas[index].optionName} {strings.setService2}
             </p>
           </div>
           <ItemDataPrimaryButton/>
@@ -120,16 +123,6 @@ function ItemDataDialogs({ type }: { type: number }) {
   )
 }
 
-function ItemDataPrimaryButton() {
-  const { setOpen } = useItemData()
-  return (
-    <div className='flex gap-2'>
-      <Button className='space-x-1' onClick={() => setOpen('add')}>
-        <span>Tambahkan</span> <IconUserPlus size={18} />
-      </Button>
-    </div>
-  )
-}
 
 function getColumns({ index }: { index: number }): ColumnDef<CarGetData>[] {
   const dynamicColumns = itemDatas[index].optionColumns.map((key, colIndex) => ({

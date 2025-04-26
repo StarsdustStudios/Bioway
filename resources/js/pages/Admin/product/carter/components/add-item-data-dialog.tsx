@@ -209,7 +209,6 @@ export function ItemDataActionDialog({
                               autoComplete="off"
                               required
                             />
-
                           )}
                         </FormControl>
                         <FormMessage className="col-span-4 col-start-3" />
