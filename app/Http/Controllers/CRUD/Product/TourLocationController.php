@@ -13,7 +13,7 @@ class TourLocationController extends Controller
 {
     public function index()
     {                
-        $tour_location = TourLocation::with(["tour_location", "locations"])->get();
+        $tour_location = TourLocation::with(["tour", "tour.start", "locations"])->get();
 
         return Inertia::render('Admin/Dashboard', [
             'tour_location' => $tour_location,
@@ -52,7 +52,7 @@ class TourLocationController extends Controller
         $tour_location = Tour::findOrFail($id);
         $tour_location->delete();
 
-        $tour_location = TourLocation::with(["tour_location", "locations"])->get();
+        $tour_location = TourLocation::with(["tour", "tour.start", "locations"])->get();
 
         return Inertia::render('Admin/Dashboard', [
             'tour_location' => $tour_location,

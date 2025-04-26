@@ -22,6 +22,7 @@ import {
     IconNotification,
     IconPalette,
     IconPin,
+    IconRoute,
     IconServerOff,
     IconSettings,
     IconShoppingCart,
@@ -143,6 +144,11 @@ export const sidebarData: SidebarData = {
                 title: 'Lokasi',
                 icon: IconMapPin,
                 url: '/product/locations',
+              },
+              {
+                title: 'Lokasi Tour',
+                icon: IconRoute,
+                url: '/product/tour-locations',
               },
               {
                 title: 'Mitra',

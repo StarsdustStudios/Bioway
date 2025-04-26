@@ -25,4 +25,10 @@ export const itemDatas : OptionData[] = [
         optionColDataset: ["name", "logo"],
         optionStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"],
     },
+    {
+        optionName: "Lokasi Tour",
+        optionColumns: ["Tour", "Lokasi"],
+        optionColDataset: ["tour_id", "logo"],
+        optionStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"],
+    },
 ]

@@ -5,6 +5,7 @@ import { type SharedData } from '@/types'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import AppSidebar from '@/components/app-sidebar'
 import { ThemeProvider } from '@/context/theme-context'
+import TourLocationPage from './option/tour_location/TourLocationPage'
 
 const NotFoundError = lazy(() => import('../errors/not-found-error'))
 const CmsPage = lazy(() => import('./cms/CmsPage'))
@@ -65,6 +66,8 @@ export default function Dashboard(data: {data: DashboardData}) {
           return <LocationPage index={2} data={data} />
         case "/product/partners":
           return <PatnerPage index={3} data={data} />
+          case "/product/tour-locations":
+            return <TourLocationPage index={4} data={data} />
           default:
             <NotFoundError/>
       }
