@@ -96,9 +96,6 @@ public function shuttleBus()
         return $shuttleBus;
     });
 
-    // return response()->json([
-
-    // ]);
     return Inertia::render('Main/Product/ShuttleBus', [
         'title' => 'Shuttle Bus',
         'events' => $events,
@@ -121,13 +118,23 @@ public function shuttleBus()
     {
         $events = $this->getEvents();
 
-        // $deliveries = Delivery::all();
-
+        $deliveries = Delivery::with('location')->get()->map(function ($delivery) {
+            if ($delivery->location && $delivery->location->city_name) {
+                $delivery->location_name = $delivery->location->city_name;
+            }
+            return $delivery;
+        });
         return Inertia::render('Main/Product/Delivery', [
             'title' => 'Delivery',
             'events' => $events,
-            // 'deliveries' => $deliveries,
+            'deliveries' => $deliveries,
         ]);
+
+    //         return response()->json([
+    //             'title' => 'Delivery',
+    //             'events' => $events,
+    //             'deliveries' => $deliveries,
+    // ]);
     }
 
     
