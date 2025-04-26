@@ -75,8 +75,11 @@ class PublicProductController extends Controller
     {
         $events = $this->getEvents();
 
-        $shuttleBuses = ShuttleBus::all();
-
+        $shuttleBuses = ShuttleBus::with(['car', 'location'])->get()->map(function ($shuttleBus) {
+            $shuttleBus->car->car_image = asset('storage/' . ltrim($shuttleBus->car->car_image, '/storage/'));
+            return $shuttleBus;
+        });
+        
         return Inertia::render('Main/Product/ShuttleBus', [
             'title' => 'Shuttle Bus',
             'events' => $events,
