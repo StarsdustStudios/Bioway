@@ -44,7 +44,7 @@ function Carter({ events, carters }: CarterProps) {
   const [useDriver, setUseDriver] = useState(false);
   const firstLocationId = carters[0]?.location.id ?? 'all';
   const [selectedLocation, setSelectedLocation] = useState<'all' | number>(firstLocationId);
-  
+
   const itemsPerPage = 9;
 
   const locations = Array.from(new Set(carters.map((r) => r.location.id)))
@@ -72,30 +72,30 @@ function Carter({ events, carters }: CarterProps) {
   return (
     <>
       <h1 className="text-4xl font-bold my-7">Promo Hari Ini</h1>
-      <PromoCarousel events={events} />
+      <div>
+        <PromoCarousel events={events} />
+      </div>
+      
+      <h1 className="text-4xl font-bold my-7 mt-20 text-center">Carter Mobil Balikpapan</h1>
 
-      <h1 className="text-4xl font-bold my-7 text-center">Carter Mobil Balikpapan</h1>
-
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <Button onClick={() => setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))}>
+      <div className="md:flex grid grid-cols-2 justify-between md:w-4/5 items-center gap-4 mb-12">
+        <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))}>
           Sort by Price ({sortDirection === 'asc' ? 'Asc' : 'Desc'})
         </Button>
 
         <select
-  className="border rounded px-3 py-1"
-  value={selectedLocation}
-  onChange={(e) =>
-    setSelectedLocation(e.target.value === 'all' ? 'all' : parseInt(e.target.value))
-  }
->
-  {locations.map((loc) => (
-    <option key={loc!.id} value={loc!.id}>
-      {loc!.city_name}
-    </option>
-  ))}
-</select>
-
-
+          className="border rounded ml-auto px-3 py-1"
+          value={selectedLocation}
+          onChange={(e) =>
+            setSelectedLocation(e.target.value === 'all' ? 'all' : parseInt(e.target.value))
+          }
+        >
+          {locations.map((loc) => (
+            <option key={loc!.id} value={loc!.id}>
+              {loc!.city_name}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">

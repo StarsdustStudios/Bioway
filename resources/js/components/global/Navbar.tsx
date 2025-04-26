@@ -57,7 +57,7 @@ export function MobileNavBar() {
   const { url } = usePage()
 
   return (
-    <div className="bg-blue-500 fixed bottom-0 w-full p-2 flex items-center justify-center h-fit rounded-t-4xl">
+    <div className="bg-blue-500 fixed bottom-0 w-full p-2 flex items-center justify-center h-fit rounded-t-4xl z-10">
       <NavigationMenu>
         <NavigationMenuList className="flex items-center gap-5 justify-center">
           {menuItems.map((item) => (
