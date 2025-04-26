@@ -39,7 +39,7 @@ class PublicProductController extends Controller
     {
         $events = $this->getEvents();
 
-        $rentals = Rental::with(['car', 'location'])->get()->map(function ($rental) {
+        $rentals = Rental::with(['car', 'location', 'car.brand'])->get()->map(function ($rental) {
             $rental->car->car_image = asset('storage/' . ltrim($rental->car->car_image, '/storage/'));
             return $rental;
         });

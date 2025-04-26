@@ -20,9 +20,9 @@ export const productData: ProductData[] = [
         productStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"]
     },
     {
-        productName: "Travel",
-        productColumns: ["Foto", "Brand", "Harga", "Location", "Destination"],
-        productColDataset: ["image", "brand", "price", "location", "destination"],
+        productName: "Tour",
+        productColumns: ["Lokasi awal", "Deksripsi", "Harga"],
+        productColDataset: ["start", "desc", "price"],
         productStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"]
     },
     {

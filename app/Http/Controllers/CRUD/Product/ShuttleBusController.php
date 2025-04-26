@@ -43,24 +43,6 @@ class ShuttleBusController extends Controller
         return redirect()->back()->with('success', 'Car created successfully!');
     }
 
-    public function edit(Car $shuttle_bus)
-    {
-        $cars = Car::with('shuttleBuses')->get()->map(function ($car) {
-            $car->car_image = asset('storage/' . ltrim($car->car_image, '/storage/'));
-            return $car;
-        });
-        
-        $locations = Location::with(['departures', 'arrivals'])->get();
-        
-        $shuttle_bus = ShuttleBus::get();
-
-        return Inertia::render('Admin/Dashboard', [
-            'cars' => $cars,
-            'shuttle_bus' => $shuttle_bus,
-            'locations' => $locations,
-        ]);
-    }
-
     public function update(ShuttleBusRequest $request)
     {
         $shuttle_bus = ShuttleBus::find($request->id);

@@ -88,9 +88,9 @@ export const sidebarData: SidebarData = {
                 url: '/product/shuttle-bus',
               },
               {
-                title: 'Travel',
+                title: 'Tour',
                 icon: IconCamper,
-                url: '/product/travel',
+                url: '/product/tour',
               },
               {
                 title: 'Delivery',
@@ -120,11 +120,6 @@ export const sidebarData: SidebarData = {
               },
             ],
           },
-          // {
-          //   title: 'Users',
-          //   url: '/users',
-          //   icon: IconUsers,
-          // },
         ],
       },
       {
