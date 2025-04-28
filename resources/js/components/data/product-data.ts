@@ -21,8 +21,8 @@ export const productData: ProductData[] = [
     },
     {
         productName: "Tour",
-        productColumns: ["Lokasi awal", "Deksripsi", "Harga"],
-        productColDataset: ["start", "desc", "price"],
+        productColumns: ["Foto", "Judul", "Lokasi Awal", "Deskripsi", "Harga", "Penumpang", "Bagasi", "Rute"],
+        productColDataset: ["tour_image", "title", "start", "desc", "price", "passenger", "luggage", "pivots"],
         productStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"]
     },
     {

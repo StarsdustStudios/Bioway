@@ -2,7 +2,6 @@
 namespace App\Http\Requests\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class TourRequest extends FormRequest
 {
@@ -22,9 +21,15 @@ class TourRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start' => ['required', 'exists:locations,id'],
+            'start' => ['required', 'integer', 'exists:locations,id'],  // Ensure 'start' is a valid location ID
+            'title' => ['required', 'string', 'max:255'],
             'desc' => ['required', 'string', 'max:255'],
             'price' => ['required', 'integer', 'min:0'],
+            'tour_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'passenger' => ['required', 'integer', 'min:1'],
+            'luggage' => ['required', 'integer', 'min:0'],
+            'location_id' => ['nullable', 'array'],  // Ensure it's an array of location IDs
+          
         ];
     }
 }

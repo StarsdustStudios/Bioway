@@ -36,4 +36,10 @@ class Location extends Model
         return $this->hasMany(ShuttleBus::class, 'to');
     }
 
+    public function tours()
+    {
+        return $this->belongsToMany(Tour::class, 'tour_locations', 'location_id', 'tour_id');
+    }
+
+
 }
