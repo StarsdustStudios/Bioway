@@ -26,7 +26,7 @@ import { Input } from '@/components/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { productData } from '@/components/data/product-data'
 import { TourGetData, tourPostSchema } from './schema'
-import { router, usePage } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import React from 'react'
 
@@ -39,25 +39,39 @@ type PutDataForm = z.infer<typeof putFormSchema>
 type FormType = PostDataForm | PutDataForm
 type FormField = keyof FormType
 
+interface Locations {
+  id: number,
+  city_name: string,
+  created_at: string,
+  updated_at: string,
+}
 interface Props {
   currentRow?: TourGetData
   open: boolean
   onOpenChange: (open: boolean) => void
   type: number
+  locations: Locations[]
 }
 
-interface Location {
-  id: number;
-  city_name: string;
-  created_at: string;
-  updated_at: string;
-}
+const isAspectRatio16by9 = (file: File): Promise<boolean> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const ratio = img.width / img.height;
+      resolve(Math.abs(ratio - 16 / 9) < 0.1); // 1% tolerance
+    };
+    img.onerror = () => resolve(false);
+    img.src = URL.createObjectURL(file);
+  });
+};
+
 
 export function ItemDataActionDialog({
   currentRow,
   open,
   onOpenChange,
   type,
+  locations
 }: Props) {
   const isEdit = !!currentRow
   const itemData = productData[type]
@@ -68,9 +82,24 @@ export function ItemDataActionDialog({
 
   const onSubmit = async (data: PutDataForm | PostDataForm) => {
     const formData = new FormData();
+
+    if (data.tour_image instanceof File) {
+      const is16by9 = await isAspectRatio16by9(data.tour_image);
+      if (!is16by9) {
+        form.setError('tour_image', {
+          type: 'manual',
+          message: 'Gambar harus berasio 16:9',
+        });
+        return;
+      }
+    }
+
     formData.append('start', String(Number(data.start)));
     formData.append('desc', data.desc);
     formData.append('price', String(Number(data.price)));
+    formData.append('passenger', String(Number(data.passenger)));
+    formData.append('luggage', String(Number(data.luggage)));
+    formData.append('tour_image', data.tour_image)
 
     if (isEdit && currentRow?.id) {
       formData.append('id', String(currentRow.id));
@@ -101,13 +130,15 @@ export function ItemDataActionDialog({
     if (currentRow) {
       form.reset({
         start: String(currentRow.start),
+        title: currentRow.title,
         desc: currentRow.desc,
         price: currentRow.price,
+        passenger: currentRow.passenger,
+        luggage: currentRow.luggage,
       });
     }
   }, [currentRow, form]);
 
-  const { locations } = usePage<{ locations: Location[] }>().props
 
 
   return (
@@ -148,27 +179,34 @@ export function ItemDataActionDialog({
                       <FormItem className="grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0">
                         <FormLabel className="col-span-2 text-right">{column}</FormLabel>
                         <FormControl className="col-span-4">
-                          {fieldName === 'start' ? (
+                          { fieldName === 'start' ? (
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button variant="outline" className="w-full col-span-4 justify-between">
-                                  {locations.find((c) => c.id.toString() === field.value)?.city_name || 'Pilih Lokasi'}
+                                   {Array.isArray(locations) && locations.length > 0
+                                    ? locations.find((c) => c.id.toString() === field.value)?.city_name || 'Pilih Lokasi'
+                                    : 'No Locations Available'} 
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent className="col-span-4 w-full max-w-lg">
                                 <DropdownMenuLabel>Pilih</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuRadioGroup value={field.value} onValueChange={field.onChange}>
-                                  {locations.map((c) => (
-                                    <DropdownMenuRadioItem key={c.id} value={c.id.toString()}>
-                                      {c.city_name}
+                                   {Array.isArray(locations) && locations.length > 0 ? (
+                                    locations.map((c) => (
+                                      <DropdownMenuRadioItem key={c.id} value={c.id.toString()}>
+                                        {c.city_name}
+                                      </DropdownMenuRadioItem>
+                                    )) 
+                                  ) : (
+                                    <DropdownMenuRadioItem disabled value="no-location">
+                                      No locations available
                                     </DropdownMenuRadioItem>
-                                  ))}
+                                  )}
                                 </DropdownMenuRadioGroup>
                               </DropdownMenuContent>
                             </DropdownMenu>
-
-                          ) : fieldName === 'desc' ? (
+                          ) : fieldName === 'desc' || fieldName === 'title' ? (
                             <Input
                               placeholder={'Enter ' + column + '...'}
                               {...field}
@@ -177,6 +215,23 @@ export function ItemDataActionDialog({
                               autoComplete="off"
                               required
                             />
+                          ) : fieldName === 'tour_image' ? (
+                            <div className="flex flex-col items-center space-y-2">
+                              {(isEdit && currentRow?.tour_image) || form.watch('tour_image') ? (
+                                <img
+                                  src={currentRow?.tour_image}
+                                  alt="Tour Image"
+                                  className="w-16 h-16 object-cover mb-2"
+                                />
+                              ) : null}
+                              <Input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                  form.setValue('tour_image', e.target.files?.[0]);
+                                }}
+                              />
+                            </div>
                           ) : (
                             <Input
                               type="number"
@@ -193,6 +248,7 @@ export function ItemDataActionDialog({
                       </FormItem>
                     )}
                   />
+
 
                 )
               })}

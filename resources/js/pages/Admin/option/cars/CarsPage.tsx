@@ -133,7 +133,6 @@ function getColumns({ index }: { index: number }): ColumnDef<CarGetData>[] {
     cell: ({ row }: { row: any }) => (
       <div className="w-fit text-nowrap">
         {
-          // Handle car_image column
           itemDatas[index].optionColDataset[colIndex] === "car_image" ? (
             <img
               src={row.getValue(itemDatas[index].optionColDataset[colIndex])}

@@ -1,5 +1,6 @@
-import React from 'react'
-import { useState } from 'react'
+'use client'
+
+import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/input'
@@ -13,9 +14,14 @@ import { DataTablePagination } from '@/components/tables/data-table-pagination'
 import { DataTableViewOptions } from '@/components/tables/data-table-view-options'
 import ItemDataProvider, { useItemData } from '@/context/item-data-context'
 import { productData } from '@/components/data/product-data'
-import { IconEdit, IconTrash, IconUserPlus } from '@tabler/icons-react'
+import { IconEdit, IconTrash } from '@tabler/icons-react'
 import { Cross2Icon, DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { ItemDataActionDialog } from './components/add-item-data-dialog'
+import { TourGetData, tourListSchema } from './components/schema'
+import { LocationGetData, locationGetSchema } from '../../option/location/components/schema'
+import { UsersDeleteDialog } from './components/delete-item-data-dialog'
+import { ItemDataPrimaryButton } from '@/components/layout/Admin/ItemDataPrimaryButton'
+import { languageData } from '@/components/data/strings'
 import {
   ColumnDef,
   Row,
@@ -33,86 +39,142 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { TourGetData, tourListSchema } from './components/schema'
-import { LocationGetData, locationGetSchema } from '../../option/location/components/schema'
-import { UsersDeleteDialog } from './components/delete-item-data-dialog'
-import { ItemDataPrimaryButton } from '@/components/layout/Admin/ItemDataPrimaryButton'
-import { languageData } from '@/components/data/strings'
 
-let locationList: LocationGetData[] | undefined = undefined
+interface TourPageProps {
+  index: number
+  data: { tours: any[]; locations: any[] }
+}
 
+export default function TourPage({ index, data }: TourPageProps) {
+  const tours = tourListSchema.parse(data.tours)
+  const strings = languageData.languageTexts
 
-const getLocation = (locationId : number) => {
-  if (locationList != undefined) {
-  return locationList.find((location: LocationGetData) => location.id === locationId)?.city_name;
-  }
-};
-
-export default function TourPage({ index, data }: { index: number; data: any }) {
-  const userList = tourListSchema.parse(data.tour)
-  locationList = locationGetSchema.parse(data.locations);
-  const strings = languageData.languageTexts;
   return (
     <ItemDataProvider>
       <Header fixed>
-        <div className='ml-auto flex items-center space-x-4'>
+        <div className="ml-auto flex items-center space-x-4">
           <ThemeSwitch />
           <ProfileDropdown />
         </div>
       </Header>
       <Main>
-        <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
+        <div className="mb-2 flex flex-wrap items-center justify-between space-y-2">
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>{productData[index].productName}</h2>
-            <p className='text-muted-foreground'>
-            {strings.setService} {productData[index].productName} {strings.setService2}
+            <h2 className="text-2xl font-bold tracking-tight">{productData[index].productName}</h2>
+            <p className="text-muted-foreground">
+              {strings.setService} {productData[index].productName} {strings.setService2}
             </p>
           </div>
-          <ItemDataPrimaryButton/>
+          <ItemDataPrimaryButton />
         </div>
-        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <TourGetDataTable data={userList} columns={getColumns({index})}/>
+        <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
+        <TourGetDataTable
+          data={tours}
+          columns={getColumns(index)}
+        />
         </div>
       </Main>
-        <ItemDataDialogs type={index}/>
+      <ItemDataDialogs type={index} locations={data.tours}/>
     </ItemDataProvider>
   )
 }
 
-function ItemDataDialogs({ type }: { type: number }) {
+function getColumns(index: number): ColumnDef<TourGetData>[] {
+  const dynamicColumns: ColumnDef<TourGetData>[] = productData[index].productColumns.map((title, colIndex) => {
+    const key = productData[index].productColDataset[colIndex]
+
+    return {
+      accessorKey: key,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title={title} />
+      ),
+      cell: ({ row }) => {
+        if (key === 'start') {
+          const location = row.original.locations.find(loc => loc.id === row.getValue('start'))
+          return <div>{location?.city_name ?? '-'}</div>
+        }
+        if (key === 'tour_image') {
+          return (
+            <img
+              src={row.getValue(key)}
+              alt="Tour"
+              className="h-9 w-16 rounded-lg object-cover"
+            />
+          )
+        }
+        if (key === 'pivots') {
+          const locations = row.original.locations
+          const cityNames = locations.map(loc => loc.city_name).join(' - ')
+          return <div>{cityNames}</div>
+        }
+        
+        return <div>{row.getValue(key)}</div>
+      },
+      enableSorting: ['price', 'title'].includes(key),
+      enableHiding: false,
+    }
+  })
+
+  return [
+    ...dynamicColumns,
+    {
+      accessorKey: 'id',
+      header: '',
+      enableSorting: false,
+      enableHiding: true,
+    },
+    {
+      id: 'actions',
+      header: 'Action',
+      cell: DataTableRowActions,
+    },
+  ]
+}
+
+interface Locations {
+  id: number,
+  city_name: string,
+  created_at: string,
+  updated_at: string,
+}
+interface ItemDataDialogsProps {
+  type: number,
+  locations: Locations[]
+}
+function ItemDataDialogs({ type, locations}: ItemDataDialogsProps) {
   const { open, setOpen, currentRow, setCurrentRow } = useItemData()
+
   return (
     <>
       <ItemDataActionDialog
-        key='user-add'
+        key="user-add"
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
-        type = {type}
-      />
+        type={type}
+        // locations={locations}
+        locations={[{ id: 1, city_name: "City Name", created_at: 's', updated_at: 's' },
+        { id: 2, city_name: "Ciy Name", created_at: 's', updated_at: 's' }]}  // example
 
+      />
       {currentRow && (
         <>
           <ItemDataActionDialog
-            key={`user-edit-${currentRow.title}`}
+            key={`user-edit-${currentRow.id}`}
             open={open === 'edit'}
             onOpenChange={() => {
               setOpen('edit')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
+              setTimeout(() => setCurrentRow(null), 500)
             }}
             currentRow={currentRow}
-            type = {type}
+            type={type}
+            locations={locations}
           />
-
           <UsersDeleteDialog
-            key={`user-delete-${currentRow.title}`}
+            key={`user-delete-${currentRow.id}`}
             open={open === 'delete'}
             onOpenChange={() => {
               setOpen('delete')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
+              setTimeout(() => setCurrentRow(null), 500)
             }}
             currentRow={currentRow}
           />
@@ -122,112 +184,14 @@ function ItemDataDialogs({ type }: { type: number }) {
   )
 }
 
-function getColumns({ index }: { index: number }): ColumnDef<TourGetData>[] {
-  const dynamicColumns = productData[index].productColumns.map((key, colIndex) => ({
-    accessorKey: productData[index].productColDataset[colIndex],
-    header: ({ column }: { column: any }) => (
-      <DataTableColumnHeader column={column} title={key} />
-    ),
-    cell: ({ row }: { row: any }) => (
-      <div className="w-fit text-nowrap">
-        {
-          productData[index].productColDataset[colIndex] === "start" ? (
-            getLocation(row.getValue(productData[index].productColDataset[colIndex]))
-          ) : (
-            row.getValue(productData[index].productColDataset[colIndex])
-          )
-        }
-      </div>
-    ),
-    enableSorting: ["price", "start"].includes(productData[index].productColDataset[colIndex]),
-    enableHiding: false,
-  }));
-
-  return [
-    ...dynamicColumns,
-    {
-      accessorKey: 'id',
-      header: '',
-      enableSorting: false,
-      enableHiding: false, // cannot be toggled
-    },
-    {
-      id: 'actions',
-      header: 'Action',
-      cell: DataTableRowActions,
-    },
-  ];
-}
-
-
-
-
-interface DataTableRowActionsProps {
-  row: Row<TourGetData>
-}
-
-export function DataTableRowActions({ row }: DataTableRowActionsProps) {
-  const { setOpen, setCurrentRow } = useItemData()
-  return (
-    <>
-      <DropdownMenu modal={false}>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant='ghost'
-            className='flex h-8 w-8 p-0 data-[state=open]:bg-muted'
-          >
-            <DotsHorizontalIcon className='h-4 w-4' />
-            <span className='sr-only'>Menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align='end' className='w-[160px]'>
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('edit')
-            }}
-          >
-            Edit
-            <DropdownMenuShortcut>
-              <IconEdit size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setCurrentRow(row.original)
-              setOpen('delete')
-            }}
-            className='!text-red-500'
-          >
-            Delete
-            <DropdownMenuShortcut>
-              <IconTrash size={16} />
-            </DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </>
-  )
-}
-
-
-declare module '@tanstack/react-table' {
-  interface ColumnMeta<TData extends RowData, TValue> {
-    className: string
-  }
-}
-
 interface DataTableProps {
   columns: ColumnDef<TourGetData>[]
   data: TourGetData[]
 }
 
-function TourGetDataTable({columns, data}: DataTableProps) {
+function TourGetDataTable({ columns, data }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    id: false,
-  })
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ id: false })
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
 
@@ -254,59 +218,35 @@ function TourGetDataTable({columns, data}: DataTableProps) {
   })
 
   return (
-    <div className='space-y-4'>
+    <div className="space-y-4">
       <DataTableToolbar table={table} />
-      <div className='rounded-md border'>
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className='group/row'>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      className={header.column.columnDef.meta?.className ?? ''}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  )
-                })}
+            {table.getHeaderGroups().map(headerGroup => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                  className='group/row'
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={cell.column.columnDef.meta?.className ?? ''}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map(row => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map(cell => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className='h-24 text-center'
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -319,39 +259,61 @@ function TourGetDataTable({columns, data}: DataTableProps) {
   )
 }
 
+function DataTableRowActions({ row }: { row: Row<TourGetData> }) {
+  const { setOpen, setCurrentRow } = useItemData()
 
-interface DataTableToolbarProps<TData> {
-  table: ReactTable<TData>
+  return (
+    <DropdownMenu modal={false}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
+          <DotsHorizontalIcon className="h-4 w-4" />
+          <span className="sr-only">Menu</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-[160px]">
+        <DropdownMenuItem onClick={() => {
+          setCurrentRow(row.original)
+          setOpen('edit')
+        }}>
+          Edit
+          <DropdownMenuShortcut><IconEdit size={16} /></DropdownMenuShortcut>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => {
+            setCurrentRow(row.original)
+            setOpen('delete')
+          }}
+          className="!text-red-500"
+        >
+          Delete
+          <DropdownMenuShortcut><IconTrash size={16} /></DropdownMenuShortcut>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
 }
 
-export function DataTableToolbar<TData>({
-  table,
-}: DataTableToolbarProps<TData>) {
+function DataTableToolbar<TData>({ table }: { table: ReactTable<TData> }) {
   const isFiltered = table.getState().columnFilters.length > 0
 
   return (
-    <div className='flex items-center justify-between'>
-      <div className='flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2'>
+    <div className="flex items-center justify-between">
+      <div className="flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2">
         <Input
-          placeholder='Filter...'
-          value={
-            (table.getColumn('price')?.getFilterValue() as string) ?? ''
-          }
-          onChange={(event) =>
-            table.getColumn('price')?.setFilterValue(event.target.value)
-          }
-          className='h-8 w-[150px] lg:w-[250px]'
+          placeholder="Filter..."
+          value={(table.getColumn('price')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('price')?.setFilterValue(event.target.value)}
+          className="h-8 w-[150px] lg:w-[250px]"
         />
-        <div className='flex gap-x-2'>
-        </div>
         {isFiltered && (
           <Button
-            variant='ghost'
+            variant="ghost"
             onClick={() => table.resetColumnFilters()}
-            className='h-8 px-2 lg:px-3'
+            className="h-8 px-2 lg:px-3"
           >
             Reset
-            <Cross2Icon className='ml-2 h-4 w-4' />
+            <Cross2Icon className="ml-2 h-4 w-4" />
           </Button>
         )}
       </div>

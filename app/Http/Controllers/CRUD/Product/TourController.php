@@ -4,34 +4,50 @@ namespace App\Http\Controllers\CRUD\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\TourRequest;
-use App\Models\Location;
+use App\Models\TourLocation;
 use App\Models\Tour;
+use App\Models\Location; // <-- Add this
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class TourController extends Controller
 {
     public function index()
-    {                
-        $tour = Tour::get();
-        $locations = Location::get();
+    {
+        $tours = Tour::with('locations')->get()->map(function ($tour) {
+            $tour->tour_image = asset('storage/' . ltrim($tour->tour_image, '/'));
+            return $tour;
+        });
+
 
         return Inertia::render('Admin/Dashboard', [
-            'tour' => $tour,
-            'locations' => $locations,
+            'tours' => $tours,
         ]);
     }
 
     public function store(TourRequest $request)
     {
-        $tour = new Tour();
-        $tour->start = $request->start;
-        $tour->desc = $request->desc;
-        $tour->price = $request->price;
+        $imagePath = 'tours/placeholder.png';
 
-        $tour->save();
+        if ($request->hasFile('tour_image')) {
+            $imagePath = $request->file('tour_image')->store('tours', 'public');
+        }
 
-        return redirect()->back()->with('success', 'Car created successfully!');
+        $tour = Tour::create([
+            'start' => $request->start,
+            'title' => $request->title,
+            'desc' => $request->desc,
+            'price' => $request->price,
+            'passenger' => $request->passenger,
+            'luggage' => $request->luggage,
+            'tour_image' => $imagePath,
+        ]);
+
+        if ($request->location_id) {
+            $tour->locations()->attach($request->location_id);
+        }
+
+        return redirect()->back()->with('success', 'Tour created successfully!');
     }
 
     public function update(TourRequest $request)
@@ -42,11 +58,23 @@ class TourController extends Controller
             return redirect()->back()->withErrors(['Tour not found']);
         }
 
-        $tour->start = $request->start;
-        $tour->desc = $request->desc;
-        $tour->price = $request->price;
+        if ($request->hasFile('tour_image')) {
+            $imagePath = $request->file('tour_image')->store('tours', 'public');
+            $tour->tour_image = $imagePath;
+        }
 
-        $tour->save();
+        $tour->update([
+            'start' => $request->start,
+            'title' => $request->title,
+            'desc' => $request->desc,
+            'price' => $request->price,
+            'passenger' => $request->passenger,
+            'luggage' => $request->luggage,
+        ]);
+
+        if ($request->location_id) {
+            $tour->locations()->sync($request->location_id);
+        }
 
         return redirect()->back()->with('success', 'Tour updated successfully!');
     }
@@ -54,15 +82,20 @@ class TourController extends Controller
     public function destroy($id)
     {
         $tour = Tour::findOrFail($id);
+
+        $tour->locations()->detach();
         $tour->delete();
 
-        $tour = Tour::get();
-        $locations = Location::get();
+        $tours = Tour::with('locations')->get()->map(function ($tour) {
+            $tour->tour_image = asset('storage/' . ltrim($tour->tour_image, '/'));
+            return $tour;
+        });
+
+        $locations = Location::all();
 
         return Inertia::render('Admin/Dashboard', [
-            'tour' => $tour,
+            'tours' => $tours,
             'locations' => $locations,
         ]);
     }
-
 }
