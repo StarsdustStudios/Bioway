@@ -12,6 +12,7 @@ import { DataTablePagination } from '@/components/tables/data-table-pagination'
 import { DataTableViewOptions } from '@/components/tables/data-table-view-options'
 import ItemDataProvider, { useItemData } from '@/context/item-data-context'
 import { cmsData } from '@/components/data/cms-data'
+import { languageData } from '@/components/data/strings'
 import { IconEdit, IconTrash, IconUserPlus } from '@tabler/icons-react'
 import { Cross2Icon, DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { EventGetData, eventGetSchema } from './components/schema'
@@ -34,12 +35,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { ItemDataPrimaryButton } from '@/components/layout/Admin/ItemDataPrimaryButton'
 
 
 export default function EventPage({ index, data }: { index: number; data: any }) {
   // Parse user list
   const userList = eventGetSchema.parse(data.event)
-
+  const strings = languageData.languageTexts;
   return (
     <ItemDataProvider>
       <Header fixed>
@@ -54,7 +56,7 @@ export default function EventPage({ index, data }: { index: number; data: any })
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>{cmsData[index].cmsName}</h2>
             <p className='text-muted-foreground'>
-              Atur layanan {cmsData[index].cmsName} anda disini
+              {strings.setService} {cmsData[index].cmsName} {strings.setService2}
             </p>
           </div>
           <ItemDataPrimaryButton/>
@@ -111,17 +113,6 @@ function ItemDataDialogs({ type }: { type: number }) {
   )
 }
 
-function ItemDataPrimaryButton() {
-  const { setOpen } = useItemData()
-  return (
-    <div className='flex gap-2'>
-      <Button className='space-x-1' onClick={() => setOpen('add')}>
-        <span>Tambahkan</span> <IconUserPlus size={18} />
-      </Button>
-    </div>
-  )
-}
-
 function getColumns({ index }: { index: number }): ColumnDef<EventGetData>[] {
 
   const dynamicColumns = cmsData[index].cmsColumns.map((key, colIndex) => ({
@@ -140,7 +131,7 @@ function getColumns({ index }: { index: number }): ColumnDef<EventGetData>[] {
               className="w-16 h-9 rounded-lg"
             />
           ) : value instanceof Date ? (
-            value.toLocaleDateString() // or use date-fns: format(value, "PPP")
+            value.toLocaleDateString()
           ) : (
             String(value)
           )}
@@ -232,7 +223,7 @@ interface DataTableProps {
   type: number
 }
 
-function EventGetDataTable({ columns, data, type }: DataTableProps) {
+function EventGetDataTable({ columns, data }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     id: false, // 👈 Hide the 'id' column by default

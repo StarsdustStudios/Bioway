@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { EventGetData } from './schema'
 import { router } from '@inertiajs/react'
+import { languageData } from '@/components/data/strings'
 
 interface Props {
   open: boolean
@@ -18,7 +19,7 @@ interface Props {
 
 export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
   const [value, setValue] = useState('')
-
+  const string = languageData.languageTexts;
     
   const handleDelete = () => {
     if (!currentRow || !currentRow.id) {
@@ -58,36 +59,36 @@ export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
             className='mr-1 inline-block stroke-destructive'
             size={18}
           />
-          Delete User
+          {string.delTitle}
         </span>
       }
       desc={
         <div className='space-y-4'>
           <p className='mb-2'>
-            Are you sure you want to delete{' '}
+            {string.delConfirm} {' '}
             <span className='font-bold'>{currentRow.name}</span>?
             <br />
-            This action will permanently remove this event from the system. This cannot be undone.
+            {string.delConfirm2}
           </p>
 
           <Label className='my-2'>
-            Confirm by typing <span className='font-bold'>{currentRow.name}</span>
+          {string.delConfirm3} <span className='font-bold'>{currentRow.name}</span>
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              placeholder='Enter Event Name to confirm deletion.'
             />
           </Label>
 
           <Alert variant='destructive'>
-            <AlertTitle>Warning!</AlertTitle>
+            <AlertTitle>{string.delWarn}</AlertTitle>
             <AlertDescription>
-              Please be careful, this operation cannot be rolled back.
+            {string.delWarn2}
             </AlertDescription>
           </Alert>
         </div>
       }
-      confirmText='Delete'
+      cancelBtnText= {string.cancelText}
+      confirmText={String(string.delText)}
       destructive
     />
   )

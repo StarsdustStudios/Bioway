@@ -4,7 +4,7 @@ namespace App\Http\Requests\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class TravelRequest extends FormRequest
+class TourLocationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,8 @@ class TravelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'location_1' => ['required', 'exists:locations,id'],
-            'location_2' => ['required', 'exists:locations,id'],
-            'price' => ['required', 'integer', 'min:0'],
+            'tour_id' => ['required', 'exists: tours,id'],
+            'location_id' => ['required', 'exists: locations,id'],
         ];
     }
 }

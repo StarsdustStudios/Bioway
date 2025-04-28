@@ -37,6 +37,8 @@ import {
 import { DeliveryGetData, deliveryListSchema } from './components/schema'
 import { CarGetData } from '../../option/cars/components/schema'
 import { LocationGetData, locationGetSchema } from '../../option/location/components/schema'
+import { ItemDataPrimaryButton } from '@/components/layout/Admin/ItemDataPrimaryButton'
+import { languageData } from '@/components/data/strings'
 
 let carList: CarGetData[] | undefined = undefined
 let locationList: LocationGetData[] | undefined = undefined
@@ -51,6 +53,7 @@ const getLocation = (locationId : number) => {
 export default function DeliveryPage({ index, data }: { index: number; data: any }) {
   const userList = deliveryListSchema.parse(data.delivery)
   locationList = locationGetSchema.parse(data.locations);
+  const strings = languageData.languageTexts;
   return (
     <ItemDataProvider>
       <Header fixed>
@@ -64,7 +67,7 @@ export default function DeliveryPage({ index, data }: { index: number; data: any
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>{productData[index].productName}</h2>
             <p className='text-muted-foreground'>
-              Atur layanan {productData[index].productName} anda disini
+            {strings.setService} {productData[index].productName} {strings.setService2}
             </p>
           </div>
           <ItemDataPrimaryButton/>
@@ -118,17 +121,6 @@ function ItemDataDialogs({ type }: { type: number }) {
         </>
       )}
     </>
-  )
-}
-
-function ItemDataPrimaryButton() {
-  const { setOpen } = useItemData()
-  return (
-    <div className='flex gap-2'>
-      <Button className='space-x-1' onClick={() => setOpen('add')}>
-        <span>Tambahkan</span> <IconUserPlus size={18} />
-      </Button>
-    </div>
   )
 }
 

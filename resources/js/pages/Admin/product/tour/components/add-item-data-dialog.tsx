@@ -25,13 +25,13 @@ import {
 import { Input } from '@/components/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { productData } from '@/components/data/product-data'
-import { CarterGetData, carterPostSchema } from './schema'
+import { TourGetData, tourPostSchema } from './schema'
 import { router, usePage } from '@inertiajs/react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import React from 'react'
 
-const postFormSchema = carterPostSchema;
-const putFormSchema = carterPostSchema;
+const postFormSchema = tourPostSchema;
+const putFormSchema = tourPostSchema;
 
 type PostDataForm = z.infer<typeof postFormSchema>
 type PutDataForm = z.infer<typeof putFormSchema>
@@ -40,19 +40,10 @@ type FormType = PostDataForm | PutDataForm
 type FormField = keyof FormType
 
 interface Props {
-  currentRow?: CarterGetData
+  currentRow?: TourGetData
   open: boolean
   onOpenChange: (open: boolean) => void
   type: number
-}
-
-interface Cars {
-  id: number;
-  model: string;
-  brand_id: number;
-  car_image: string;
-  created_at: string;
-  updated_at: string;
 }
 
 interface Location {
@@ -75,25 +66,24 @@ export function ItemDataActionDialog({
     resolver: zodResolver(isEdit ? postFormSchema : putFormSchema)
   });
 
-  // ✅ Submit handler
   const onSubmit = async (data: PutDataForm | PostDataForm) => {
     const formData = new FormData();
-    formData.append('car_id', String(Number(data.car_id)));
-    formData.append('location_id', String(Number(data.location_id)));
+    formData.append('start', String(Number(data.start)));
+    formData.append('desc', data.desc);
     formData.append('price', String(Number(data.price)));
 
     if (isEdit && currentRow?.id) {
       formData.append('id', String(currentRow.id));
       formData.append('_method', 'PUT');
       console.log('Submit data:', form.getValues());
-      router.post(route('product.carter.update', currentRow.id), formData, {
+      router.post(route('product.tour.update', currentRow.id), formData, {
         onSuccess: () => {
           onOpenChange(false);
           form.reset();
         },
       });
     } else {
-      router.post(route('product.carter.store'), formData, {
+      router.post(route('product.tour.store'), formData, {
         forceFormData: true,
         onSuccess: () => {
           toast({ title: 'Uploaded!' });
@@ -110,14 +100,13 @@ export function ItemDataActionDialog({
   React.useEffect(() => {
     if (currentRow) {
       form.reset({
-        car_id: String(currentRow.car_id),
-        location_id: String(currentRow.location_id),
+        start: String(currentRow.start),
+        desc: currentRow.desc,
         price: currentRow.price,
       });
     }
   }, [currentRow, form]);
 
-  const { cars } = usePage<{ cars: Cars[] }>().props
   const { locations } = usePage<{ locations: Location[] }>().props
 
 
@@ -159,7 +148,7 @@ export function ItemDataActionDialog({
                       <FormItem className="grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0">
                         <FormLabel className="col-span-2 text-right">{column}</FormLabel>
                         <FormControl className="col-span-4">
-                          {fieldName === 'location_id' ? (
+                          {fieldName === 'start' ? (
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button variant="outline" className="w-full col-span-4 justify-between">
@@ -179,26 +168,15 @@ export function ItemDataActionDialog({
                               </DropdownMenuContent>
                             </DropdownMenu>
 
-                          ) : fieldName === 'car_id' ? (
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="outline" className="w-full col-span-4 justify-between">
-                                  {cars.find((c) => c.id.toString() === field.value)?.model || 'Pilih Mobil'}
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent className="col-span-4 w-full max-w-lg">
-                                <DropdownMenuLabel>Pilih</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuRadioGroup value={field.value} onValueChange={field.onChange}>
-                                  {cars.map((c) => (
-                                    <DropdownMenuRadioItem key={c.id} value={c.id.toString()}>
-                                      {c.model}
-                                    </DropdownMenuRadioItem>
-                                  ))}
-                                </DropdownMenuRadioGroup>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-
+                          ) : fieldName === 'desc' ? (
+                            <Input
+                              placeholder={'Enter ' + column + '...'}
+                              {...field}
+                              value={field.value ?? ''}
+                              onChange={field.onChange}
+                              autoComplete="off"
+                              required
+                            />
                           ) : (
                             <Input
                               type="number"

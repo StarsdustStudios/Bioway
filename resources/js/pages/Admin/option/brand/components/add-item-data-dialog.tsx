@@ -214,7 +214,7 @@ export function ItemDataActionDialog({
         </ScrollArea>
 
         <DialogFooter>
-          <Button type='submit' form='itemData-form' disabled={!form.formState.isValid}>
+        <Button type='submit' form='itemData-form' disabled={!form.formState.isValid}>
             Save
           </Button>
         </DialogFooter>

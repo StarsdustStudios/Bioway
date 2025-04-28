@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -11,12 +12,10 @@ import { DataTableColumnHeader } from '@/components/tables/data-table-column-hea
 import { DataTablePagination } from '@/components/tables/data-table-pagination'
 import { DataTableViewOptions } from '@/components/tables/data-table-view-options'
 import ItemDataProvider, { useItemData } from '@/context/item-data-context'
-import { itemDatas } from '@/components/data/item-data'
+import { productData } from '@/components/data/product-data'
 import { IconEdit, IconTrash, IconUserPlus } from '@tabler/icons-react'
 import { Cross2Icon, DotsHorizontalIcon } from '@radix-ui/react-icons'
-import { BrandGetData, brandGetSchema } from '../brand/components/schema'
-import { ItemDataActionDialog } from '../brand/components/add-item-data-dialog'
-import { UsersDeleteDialog } from '../brand/components/delete-item-data-dialog'
+import { ItemDataActionDialog } from './components/add-item-data-dialog'
 import {
   ColumnDef,
   Row,
@@ -34,14 +33,25 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { TourGetData, tourListSchema } from './components/schema'
+import { LocationGetData, locationGetSchema } from '../../option/location/components/schema'
+import { UsersDeleteDialog } from './components/delete-item-data-dialog'
 import { ItemDataPrimaryButton } from '@/components/layout/Admin/ItemDataPrimaryButton'
 import { languageData } from '@/components/data/strings'
 
+let locationList: LocationGetData[] | undefined = undefined
 
-export default function BrandPage({ index, data }: { index: number; data: any }) {
-  // Parse user list
-  const userList = brandGetSchema.parse(data.brands)
-  const strings = languageData.languageTexts
+
+const getLocation = (locationId : number) => {
+  if (locationList != undefined) {
+  return locationList.find((location: LocationGetData) => location.id === locationId)?.city_name;
+  }
+};
+
+export default function TourPage({ index, data }: { index: number; data: any }) {
+  const userList = tourListSchema.parse(data.tour)
+  locationList = locationGetSchema.parse(data.locations);
+  const strings = languageData.languageTexts;
   return (
     <ItemDataProvider>
       <Header fixed>
@@ -50,19 +60,18 @@ export default function BrandPage({ index, data }: { index: number; data: any })
           <ProfileDropdown />
         </div>
       </Header>
-
       <Main>
         <div className='mb-2 flex flex-wrap items-center justify-between space-y-2'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>{itemDatas[index].optionName}</h2>
+            <h2 className='text-2xl font-bold tracking-tight'>{productData[index].productName}</h2>
             <p className='text-muted-foreground'>
-            {strings.setService} {itemDatas[index].optionName} {strings.setService2}
+            {strings.setService} {productData[index].productName} {strings.setService2}
             </p>
           </div>
           <ItemDataPrimaryButton/>
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0'>
-          <BrandGetDataTable data={userList} columns={getColumns({index})} type={index}/>
+          <TourGetDataTable data={userList} columns={getColumns({index})}/>
         </div>
       </Main>
         <ItemDataDialogs type={index}/>
@@ -113,26 +122,24 @@ function ItemDataDialogs({ type }: { type: number }) {
   )
 }
 
-function getColumns({ index }: { index: number }): ColumnDef<BrandGetData>[] {
-
-  const dynamicColumns = itemDatas[index].optionColumns.map((key, colIndex) => ({
-    accessorKey: itemDatas[index].optionColDataset[colIndex],
+function getColumns({ index }: { index: number }): ColumnDef<TourGetData>[] {
+  const dynamicColumns = productData[index].productColumns.map((key, colIndex) => ({
+    accessorKey: productData[index].productColDataset[colIndex],
     header: ({ column }: { column: any }) => (
       <DataTableColumnHeader column={column} title={key} />
     ),
     cell: ({ row }: { row: any }) => (
       <div className="w-fit text-nowrap">
-          {
-          itemDatas[index].optionColDataset[colIndex] === "brand_logo" ? (
-            <img src={row.getValue(itemDatas[index].optionColDataset[colIndex])
-            } alt="Logo" className="w-16 h-16 rounded-lg" />
+        {
+          productData[index].productColDataset[colIndex] === "start" ? (
+            getLocation(row.getValue(productData[index].productColDataset[colIndex]))
           ) : (
-            row.getValue(itemDatas[index].optionColDataset[colIndex])
+            row.getValue(productData[index].productColDataset[colIndex])
           )
-          }
-        </div>
+        }
+      </div>
     ),
-    enableSorting: itemDatas[index].optionColDataset[colIndex] === "name" ? true : false,
+    enableSorting: ["price", "start"].includes(productData[index].productColDataset[colIndex]),
     enableHiding: false,
   }));
 
@@ -140,9 +147,9 @@ function getColumns({ index }: { index: number }): ColumnDef<BrandGetData>[] {
     ...dynamicColumns,
     {
       accessorKey: 'id',
-      header: 'ID',
+      header: '',
       enableSorting: false,
-      enableHiding: true, // cannot be toggled
+      enableHiding: false, // cannot be toggled
     },
     {
       id: 'actions',
@@ -154,8 +161,9 @@ function getColumns({ index }: { index: number }): ColumnDef<BrandGetData>[] {
 
 
 
+
 interface DataTableRowActionsProps {
-  row: Row<BrandGetData>
+  row: Row<TourGetData>
 }
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
@@ -211,15 +219,14 @@ declare module '@tanstack/react-table' {
 }
 
 interface DataTableProps {
-  columns: ColumnDef<BrandGetData>[]
-  data: BrandGetData[]
-  type: number
+  columns: ColumnDef<TourGetData>[]
+  data: TourGetData[]
 }
 
-function BrandGetDataTable({ columns, data, type }: DataTableProps) {
+function TourGetDataTable({columns, data}: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    id: false, // 👈 Hide the 'id' column by default
+    id: false,
   })
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
@@ -328,10 +335,10 @@ export function DataTableToolbar<TData>({
         <Input
           placeholder='Filter...'
           value={
-            (table.getColumn('name')?.getFilterValue() as string) ?? ''
+            (table.getColumn('price')?.getFilterValue() as string) ?? ''
           }
           onChange={(event) =>
-            table.getColumn('name')?.setFilterValue(event.target.value)
+            table.getColumn('price')?.setFilterValue(event.target.value)
           }
           className='h-8 w-[150px] lg:w-[250px]'
         />

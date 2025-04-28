@@ -6,7 +6,8 @@ use App\Http\Controllers\CRUD\Product\CarController;
 use App\Http\Controllers\CRUD\Product\RentalController;
 use App\Http\Controllers\CRUD\Product\CarterController;
 use App\Http\Controllers\CRUD\Product\ShuttleBusController;
-// use App\Http\Controllers\CRUD\Product\TravelController;
+use App\Http\Controllers\CRUD\Product\TourController;
+use App\Http\Controllers\CRUD\Product\TourLocationController;
 use App\Http\Controllers\CRUD\Product\DeliveryController;
 use App\Http\Controllers\CRUD\Data\PartnerController;
 use App\Http\Controllers\CRUD\Data\LocationController;
@@ -52,14 +53,14 @@ Route::middleware('auth')->group(function () {
             'destroy' => 'product.shuttleBus.destroy',
         ]);
 
-        // Route::resource('travel', TravelController::class)->names([
-        //     'index' => 'product.travel',
-        //     'create' => 'product.travel.create',
-        //     'store' => 'product.travel.store',
-        //     'show' => 'product.travel.show',
-        //     'update' => 'product.travel.update',
-        //     'destroy' => 'product.travel.destroy',
-        // ]);    
+        Route::resource('tour', TourController::class)->names([
+            'index' => 'product.tour',
+            'create' => 'product.tour.create',
+            'store' => 'product.tour.store',
+            'show' => 'product.tour.show',
+            'update' => 'product.tour.update',
+            'destroy' => 'product.tour.destroy',
+        ]);    
             
         Route::resource('delivery', DeliveryController::class)->names([
             'index' => 'product.delivery',
@@ -104,6 +105,15 @@ Route::middleware('auth')->group(function () {
             'show' => 'product.locations.show',
             'update' => 'product.locations.update',
             'destroy' => 'product.locations.destroy',
+        ]);
+
+        Route::resource('tour-locations', TourLocationController::class)->names([
+            'index' => 'product.tourlocations',
+            'create' => 'product.tourlocations.create',
+            'store' => 'product.tourlocations.store',
+            'show' => 'product.tourlocations.show',
+            'update' => 'product.tourlocations.update',
+            'destroy' => 'product.tourlocations.destroy',
         ]);
 
     });

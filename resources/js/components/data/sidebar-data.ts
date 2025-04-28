@@ -22,6 +22,7 @@ import {
     IconNotification,
     IconPalette,
     IconPin,
+    IconRoute,
     IconServerOff,
     IconSettings,
     IconShoppingCart,
@@ -88,9 +89,9 @@ export const sidebarData: SidebarData = {
                 url: '/product/shuttle-bus',
               },
               {
-                title: 'Travel',
+                title: 'Tour',
                 icon: IconCamper,
-                url: '/product/travel',
+                url: '/product/tour',
               },
               {
                 title: 'Delivery',
@@ -120,11 +121,6 @@ export const sidebarData: SidebarData = {
               },
             ],
           },
-          // {
-          //   title: 'Users',
-          //   url: '/users',
-          //   icon: IconUsers,
-          // },
         ],
       },
       {
@@ -148,6 +144,11 @@ export const sidebarData: SidebarData = {
                 title: 'Lokasi',
                 icon: IconMapPin,
                 url: '/product/locations',
+              },
+              {
+                title: 'Lokasi Tour',
+                icon: IconRoute,
+                url: '/product/tour-locations',
               },
               {
                 title: 'Mitra',

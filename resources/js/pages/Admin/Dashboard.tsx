@@ -5,11 +5,11 @@ import { type SharedData } from '@/types'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import AppSidebar from '@/components/app-sidebar'
 import { ThemeProvider } from '@/context/theme-context'
+import TourLocationPage from './option/tour_location/TourLocationPage'
 
 const NotFoundError = lazy(() => import('../errors/not-found-error'))
 const CmsPage = lazy(() => import('./cms/CmsPage'))
 
-const ProductPage = lazy(() => import('./product/ProductPage'))
 const RentalPage = lazy(() => import('./product/rental/RentalPage'))
 const CarterPage = lazy(() => import('./product/carter/CarterPage'))
 const ShuttleBusPage = lazy(() => import('./product/shuttlebus/ShuttleBusPage'))
@@ -18,11 +18,12 @@ const DeliveryPage = lazy(() => import('./product/delivery/DeliveryPage'))
 
 const EventPage = lazy(() => import('./cms/event/EventPage'))
 
-
 const LocationPage = lazy(() => import('./option/location/LocationPage'))
 const BrandPage = lazy(() => import('./option/brand/BrandPage'))
 const CarsPage = lazy(() => import('./option/cars/CarsPage'))
 const PatnerPage = lazy(() => import('./option/partner/PartnerPage'))
+const TourPage = lazy(() => import('./product/tour/TourPage'))
+
 interface Brand {
   id: number;
   name: string;
@@ -53,8 +54,8 @@ export default function Dashboard(data: {data: DashboardData}) {
           return <CarterPage index={1} data={data}/>
         case '/product/shuttle-bus':
           return <ShuttleBusPage index={2} data={data}/>
-        case '/product/travel':
-          return <ProductPage index={3} />
+        case '/product/tour':
+          return <TourPage index={3} data={data} />
         case '/product/delivery':
           return <DeliveryPage index={4} data={data}/>
         case "/product/brands":
@@ -65,6 +66,8 @@ export default function Dashboard(data: {data: DashboardData}) {
           return <LocationPage index={2} data={data} />
         case "/product/partners":
           return <PatnerPage index={3} data={data} />
+          case "/product/tour-locations":
+            return <TourLocationPage index={4} data={data} />
           default:
             <NotFoundError/>
       }
