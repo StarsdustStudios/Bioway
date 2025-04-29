@@ -21,15 +21,15 @@ class TourRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start' => ['required', 'integer', 'exists:locations,id'],  // Ensure 'start' is a valid location ID
+            'start' => ['required', 'integer', 'exists:locations,id'],
             'title' => ['required', 'string', 'max:255'],
             'desc' => ['required', 'string', 'max:255'],
             'price' => ['required', 'integer', 'min:0'],
             'tour_image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'passenger' => ['required', 'integer', 'min:1'],
-            'luggage' => ['required', 'integer', 'min:0'],
-            'location_id' => ['nullable', 'array'],  // Ensure it's an array of location IDs
-          
-        ];
+            'luggage' => ['required', 'integer', 'min:1'],
+            // 'pivots' => ['nullable', 'array'],
+            // 'pivots.*' => ['integer', 'exists:locations,id'],
+        ];            
     }
 }
