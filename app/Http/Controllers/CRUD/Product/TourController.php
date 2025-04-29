@@ -22,33 +22,36 @@ class TourController extends Controller
 
         return Inertia::render('Admin/Dashboard', [
             'tours' => $tours,
+            'locations' => Location::all(),
         ]);
     }
 
     public function store(TourRequest $request)
-    {
-        $imagePath = 'tours/placeholder.png';
+{
 
-        if ($request->hasFile('tour_image')) {
-            $imagePath = $request->file('tour_image')->store('tours', 'public');
-        }
+    $imagePath = 'tours/placeholder.png';
 
-        $tour = Tour::create([
-            'start' => $request->start,
-            'title' => $request->title,
-            'desc' => $request->desc,
-            'price' => $request->price,
-            'passenger' => $request->passenger,
-            'luggage' => $request->luggage,
-            'tour_image' => $imagePath,
-        ]);
-
-        if ($request->location_id) {
-            $tour->locations()->attach($request->location_id);
-        }
-
-        return redirect()->back()->with('success', 'Tour created successfully!');
+    if ($request->hasFile('tour_image')) {
+        $imagePath = $request->file('tour_image')->store('tours', 'public');
     }
+    $tour = new Tour();
+    $tour->start = $request->start;
+    $tour->title = $request->title; 
+    $tour->desc = $request->desc;
+    $tour->price = $request->price;
+    $tour->passenger = $request->passenger;
+    $tour->luggage = $request->luggage; 
+    $tour->tour_image = $imagePath;
+
+    $tour->save();
+
+    if ($request->has('pivots') && is_array($request->pivots)) {
+        $tour->locations()->attach($request->pivots);
+    }
+
+    return redirect()->back()->with('success', 'Tour created successfully!');
+}
+
 
     public function update(TourRequest $request)
     {
@@ -72,8 +75,8 @@ class TourController extends Controller
             'luggage' => $request->luggage,
         ]);
 
-        if ($request->location_id) {
-            $tour->locations()->sync($request->location_id);
+        if ($request->has('pivots') && is_array($request->pivots)) {
+            $tour->locations()->attach($request->pivots);
         }
 
         return redirect()->back()->with('success', 'Tour updated successfully!');
@@ -91,11 +94,9 @@ class TourController extends Controller
             return $tour;
         });
 
-        $locations = Location::all();
-
         return Inertia::render('Admin/Dashboard', [
             'tours' => $tours,
-            'locations' => $locations,
+            'locations' => Location::all(),
         ]);
     }
 }

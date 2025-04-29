@@ -74,7 +74,7 @@ export default function TourPage({ index, data }: TourPageProps) {
         />
         </div>
       </Main>
-      <ItemDataDialogs type={index} locations={data.tours}/>
+      <ItemDataDialogs type={index}/>
     </ItemDataProvider>
   )
 }
@@ -130,18 +130,10 @@ function getColumns(index: number): ColumnDef<TourGetData>[] {
     },
   ]
 }
-
-interface Locations {
-  id: number,
-  city_name: string,
-  created_at: string,
-  updated_at: string,
-}
 interface ItemDataDialogsProps {
   type: number,
-  locations: Locations[]
 }
-function ItemDataDialogs({ type, locations}: ItemDataDialogsProps) {
+function ItemDataDialogs({ type}: ItemDataDialogsProps) {
   const { open, setOpen, currentRow, setCurrentRow } = useItemData()
 
   return (
@@ -151,9 +143,6 @@ function ItemDataDialogs({ type, locations}: ItemDataDialogsProps) {
         open={open === 'add'}
         onOpenChange={() => setOpen('add')}
         type={type}
-        // locations={locations}
-        locations={[{ id: 1, city_name: "City Name", created_at: 's', updated_at: 's' },
-        { id: 2, city_name: "Ciy Name", created_at: 's', updated_at: 's' }]}  // example
 
       />
       {currentRow && (
@@ -167,7 +156,6 @@ function ItemDataDialogs({ type, locations}: ItemDataDialogsProps) {
             }}
             currentRow={currentRow}
             type={type}
-            locations={locations}
           />
           <UsersDeleteDialog
             key={`user-delete-${currentRow.id}`}
