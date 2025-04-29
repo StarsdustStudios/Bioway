@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tourloc', function (Blueprint $table) {
+        Schema::table('tour_location', function (Blueprint $table) {
             //
         });
     }
