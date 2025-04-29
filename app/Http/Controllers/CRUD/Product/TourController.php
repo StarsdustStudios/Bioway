@@ -76,8 +76,9 @@ class TourController extends Controller
         ]);
 
         if ($request->has('pivots') && is_array($request->pivots)) {
-            $tour->locations()->attach($request->pivots);
+            $tour->locations()->sync($request->pivots);
         }
+        
 
         return redirect()->back()->with('success', 'Tour updated successfully!');
     }

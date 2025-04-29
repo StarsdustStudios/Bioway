@@ -27,7 +27,7 @@ return new class extends Migration
         Schema::table('tours', function (Blueprint $table) {
             $table->dropColumn('tour_image');
             $table->dropColumn('title');
-            $table->dropColumn('passanger');
+            $table->dropColumn('passenger');
             $table->dropColumn('luggage');
         });
     }
