@@ -23,8 +23,13 @@ export const tourSchema = z.object({
       city_name: z.string(),
       created_at: z.coerce.date(),
       updated_at: z.coerce.date(),
+      pivot: z.object({
+        tour_id: z.coerce.number(),
+        location_id: z.coerce.number(),
+        id: z.coerce.number(),
+      }),
     })
-  ),
+  ),  
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 })

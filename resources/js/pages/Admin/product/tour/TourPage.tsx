@@ -103,8 +103,11 @@ function getColumns(index: number): ColumnDef<TourGetData>[] {
           )
         }
         if (key === 'pivots') {
-          const locations = row.original.locations
+          const locations = [...row.original.locations].sort(
+            (a, b) => a.pivot.id - b.pivot.id
+          )
           const cityNames = locations.map(loc => loc.city_name).join(' - ')
+          
           return <div>{cityNames}</div>
         }
         

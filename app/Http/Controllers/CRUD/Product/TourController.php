@@ -24,6 +24,11 @@ class TourController extends Controller
             'tours' => $tours,
             'locations' => Location::all(),
         ]);
+
+        // return response()->json([
+        //     'tours' => $tours,
+        //     'locations' => Location::all(),
+        // ]);
     }
 
     public function store(TourRequest $request)
@@ -53,35 +58,38 @@ class TourController extends Controller
 }
 
 
-    public function update(TourRequest $request)
-    {
-        $tour = Tour::find($request->id);
+public function update(TourRequest $request)
+{
+    $tour = Tour::find($request->id);
 
-        if (!$tour) {
-            return redirect()->back()->withErrors(['Tour not found']);
-        }
-
-        if ($request->hasFile('tour_image')) {
-            $imagePath = $request->file('tour_image')->store('tours', 'public');
-            $tour->tour_image = $imagePath;
-        }
-
-        $tour->update([
-            'start' => $request->start,
-            'title' => $request->title,
-            'desc' => $request->desc,
-            'price' => $request->price,
-            'passenger' => $request->passenger,
-            'luggage' => $request->luggage,
-        ]);
-
-        if ($request->has('pivots') && is_array($request->pivots)) {
-            $tour->locations()->sync($request->pivots);
-        }
-        
-
-        return redirect()->back()->with('success', 'Tour updated successfully!');
+    if (!$tour) {
+        return redirect()->back()->withErrors(['Tour not found']);
     }
+
+    if ($request->hasFile('tour_image')) {
+        $imagePath = $request->file('tour_image')->store('tours', 'public');
+        $tour->tour_image = $imagePath;
+    }
+
+    $tour->update([
+        'start' => $request->start,
+        'title' => $request->title,
+        'desc' => $request->desc,
+        'price' => $request->price,
+        'passenger' => $request->passenger,
+        'luggage' => $request->luggage,
+    ]);
+
+    if ($request->has('pivots') && is_array($request->pivots)) {
+        $tour->locations()->detach();
+        foreach ($request->pivots as $pivotId) {
+            $tour->locations()->attach($pivotId);
+        }
+    }
+
+    return redirect()->back()->with('success', 'Tour updated successfully!');
+}
+
 
     public function destroy($id)
     {

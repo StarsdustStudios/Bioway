@@ -17,7 +17,9 @@ class Tour extends Model
     ];
 
     public function locations()
-    {
-        return $this->belongsToMany(Location::class, 'tour_locations', 'tour_id', 'location_id');
-    }
+{
+    return $this->belongsToMany(Location::class, 'tour_locations', 'tour_id', 'location_id')
+                ->withPivot('id'); // Add this line
+}
+
 }

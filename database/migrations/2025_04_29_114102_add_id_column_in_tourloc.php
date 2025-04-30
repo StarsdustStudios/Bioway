@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tour_location', function (Blueprint $table) {
-            $table->id()->after('tour_id')->nullable();
+        Schema::table('tour_locations', function (Blueprint $table) {
+            $table->id()->after('tour_id');
         });
     }
 
