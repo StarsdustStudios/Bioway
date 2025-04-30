@@ -145,7 +145,11 @@ export function ItemDataActionDialog({
         price: Number(currentRow.price),
         passenger: Number(currentRow.passenger),
         luggage: Number(currentRow.luggage),
-        pivots: currentRow.locations.map((loc) => String(loc.id)),
+        pivots: currentRow.locations
+          .slice()
+          .sort((a, b) => a.pivot.id - b.pivot.id)
+          .map((loc) => String(loc.id)),
+
         tour_image: null,
       })
     }

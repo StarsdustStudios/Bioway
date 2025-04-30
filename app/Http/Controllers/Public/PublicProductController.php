@@ -10,6 +10,7 @@ use App\Models\Car;
 use App\Models\Rental;
 use App\Models\ShuttleBus;
 use App\Models\Location;
+use App\Models\Tour;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -107,10 +108,16 @@ public function shuttleBus()
     public function tour()
     {
         $events = $this->getEvents();
+        $tours = Tour::with('locations')->get()->map(function ($tour) {
+            $tour->tour_image = asset('storage/' . ltrim($tour->tour_image, '/'));
+            return $tour;
+        });
 
         return Inertia::render('Main/Product/Tour', [
             'title' => 'Tour',
             'events' => $events,
+            'tours' => $tours,
+            'locations' => Location::all(),
         ]);
     }
 

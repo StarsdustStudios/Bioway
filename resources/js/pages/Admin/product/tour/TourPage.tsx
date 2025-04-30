@@ -39,14 +39,18 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { usePage } from '@inertiajs/react'
 
 interface TourPageProps {
   index: number
   data: { tours: any[]; locations: any[] }
 }
 
+let locations = null;
+
 export default function TourPage({ index, data }: TourPageProps) {
   const tours = tourListSchema.parse(data.tours)
+  locations = locationGetSchema.parse(data.locations);
   const strings = languageData.languageTexts
 
   return (
@@ -79,9 +83,11 @@ export default function TourPage({ index, data }: TourPageProps) {
   )
 }
 
+
 function getColumns(index: number): ColumnDef<TourGetData>[] {
   const dynamicColumns: ColumnDef<TourGetData>[] = productData[index].productColumns.map((title, colIndex) => {
     const key = productData[index].productColDataset[colIndex]
+
 
     return {
       accessorKey: key,
@@ -90,9 +96,13 @@ function getColumns(index: number): ColumnDef<TourGetData>[] {
       ),
       cell: ({ row }) => {
         if (key === 'start') {
-          const location = row.original.locations.find(loc => loc.id === row.getValue('start'))
-          return <div>{location?.city_name ?? '-'}</div>
+          const startId = row.getValue<number>('start');
+          if (!startId) return <div>-</div>;
+    
+          const location = locations.find(loc => loc.id === startId);
+          return <div>{location?.city_name ?? '-'}</div>;
         }
+        
         if (key === 'tour_image') {
           return (
             <img
