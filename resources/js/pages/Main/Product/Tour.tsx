@@ -25,7 +25,7 @@ export interface Location {
 
 export interface Tours {
   id: number;
-  start: number;  // start is still a number (location ID)
+  start: number; // start is a location ID
   title: string;
   desc: string;
   price: number;
@@ -46,30 +46,26 @@ interface TourProps {
 function Tour({ events, tours, locations }: TourProps) {
   const [page, setPage] = useState(1);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [useDriver, setUseDriver] = useState(false);
-  const firstLocationId = tours[0]?.locations[0].id ?? 'all'; // Fixed access to location
+
+  const firstLocationId = tours[0]?.start ?? 'all';
   const [selectedLocation, setSelectedLocation] = useState<'all' | number>(firstLocationId);
 
   const itemsPerPage = 9;
 
-  const locationsSet = Array.from(new Set(tours.flatMap((r) => r.locations.map((loc) => loc.id)))).map((id) => {
-    const match = tours.find((r) => r.locations.some((loc) => loc.id === id));
-    return match?.locations.find((loc) => loc.id === id);
-  }).filter(Boolean);
-
-  // Find the city name for the start location (location ID)
+  // Only use "start" location ids for the filter dropdown
+  const locationsSet = Array.from(new Set(tours.map((tour) => tour.start)))
+    .map((startId) => locations.find((loc) => loc.id === startId))
+    .filter(Boolean) as Location[];
 
   const filteredTours =
     selectedLocation === 'all'
       ? tours
-      : tours.filter((r) => r.locations.some((loc) => loc.id === selectedLocation));
+      : tours.filter((r) => r.start === selectedLocation);
 
-  // Sort
   const sortedTours = [...filteredTours].sort((a, b) =>
     sortDirection === 'asc' ? a.price - b.price : b.price - a.price
   );
 
-  // Pagination
   const totalItems = sortedTours.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const visibleTours = sortedTours.slice((page - 1) * itemsPerPage, page * itemsPerPage);
@@ -81,10 +77,18 @@ function Tour({ events, tours, locations }: TourProps) {
         <PromoCarousel events={events} />
       </div>
 
-      <h1 className="text-4xl font-bold my-7 mt-20 text-center">Tour Mobil Balikpapan</h1>
+      <h1 className="text-4xl font-bold my-7 mt-20 text-center">
+  Tour {selectedLocation === 'all'
+    ? 'Semua Lokasi'
+    : locations.find((loc) => loc.id === selectedLocation)?.city_name ?? 'Tidak Diketahui'}
+</h1>
+
 
       <div className="md:flex grid grid-cols-2 justify-between md:w-4/5 items-center gap-4 mb-12">
-        <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))}>
+        <Button
+          className="bg-blue-500 hover:bg-blue-400"
+          onClick={() => setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))}
+        >
           Sort by Price ({sortDirection === 'asc' ? 'Asc' : 'Desc'})
         </Button>
 
@@ -96,29 +100,28 @@ function Tour({ events, tours, locations }: TourProps) {
           }
         >
           <option value="all">All Locations</option>
-          {locationsSet?.map((loc) => (
-            <option key={loc!.id} value={loc!.id}>
-              {loc!.city_name}
+          {locationsSet.map((loc) => (
+            <option key={loc.id} value={loc.id}>
+              {loc.city_name}
             </option>
           ))}
         </select>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-      {visibleTours.map((tour) => (
-  <TourCard
-    key={tour.id}
-    startLocation={locations.find((loc) => loc.id === tour.start)?.city_name ?? 'Unknown Location'}
-    title={tour.title}
-    desc={tour.desc}
-    price={tour.price}
-    tour_image={tour.tour_image}
-    passenger={tour.passenger}
-    luggage={tour.luggage}
-    locations={tour.locations}
-  />
-))}
-
+        {visibleTours.map((tour) => (
+          <TourCard
+            key={tour.id}
+            startLocation={locations.find((loc) => loc.id === tour.start)?.city_name ?? 'Unknown Location'}
+            title={tour.title}
+            desc={tour.desc}
+            price={tour.price}
+            tour_image={tour.tour_image}
+            passenger={tour.passenger}
+            luggage={tour.luggage}
+            locations={tour.locations}
+          />
+        ))}
       </div>
 
       <div className="flex justify-center gap-4 mt-6">
