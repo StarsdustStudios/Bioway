@@ -8,7 +8,6 @@ use App\Models\Partner;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
-
 class PartnerController extends Controller
 {
     public function index()

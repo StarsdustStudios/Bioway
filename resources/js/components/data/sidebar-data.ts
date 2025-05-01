@@ -10,6 +10,8 @@ import {
     IconCarCrane,
     IconCarFanAuto,
     IconCarGarage,
+    IconCategory,
+    IconCategory2,
     IconDashboard,
     IconDashboardFilled,
     IconDatabase,
@@ -117,7 +119,12 @@ export const sidebarData: SidebarData = {
               {
                 title: 'Post',
                 icon: IconMessageReport,
-                url: '/cms/post',
+                url: '/cms/posts',
+              },
+              {
+                title: 'Category',
+                icon: IconCategory2,
+                url: '/cms/categories',
               },
             ],
           },

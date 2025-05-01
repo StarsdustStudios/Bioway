@@ -84,10 +84,6 @@ export function ItemDataActionDialog({
   const isEdit = !!currentRow
   const itemData = itemDatas[type]
 
-  const defaultValues = isEdit
-    ? { ...currentRow, isEdit, brand_logo: null }
-    : { name: '', brand_logo: null }
-
   const form = useForm<PutDataForm | PostDataForm>({
     resolver: zodResolver(isEdit ? postFormSchema : putFormSchema)
   });
