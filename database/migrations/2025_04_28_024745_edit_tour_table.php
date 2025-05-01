@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::table('tours', function (Blueprint $table) {
             $table->string('tour_image')->nullable()->after('price');
             $table->string('title')->nullable()->after('start');
-            $table->int('passanger')->nullable()->after('tour_image');
-            $table->int('luggage')->nullable()->after('passanger');
+            $table->integer('passenger')->nullable()->after('tour_image');
+            $table->integer('luggage')->nullable()->after('passenger');
         });
     }
 
@@ -27,7 +27,7 @@ return new class extends Migration
         Schema::table('tours', function (Blueprint $table) {
             $table->dropColumn('tour_image');
             $table->dropColumn('title');
-            $table->dropColumn('passanger');
+            $table->dropColumn('passenger');
             $table->dropColumn('luggage');
         });
     }
