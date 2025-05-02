@@ -16,6 +16,8 @@ const DeliveryPage = lazy(() => import('./product/delivery/DeliveryPage'))
 
 
 const EventPage = lazy(() => import('./cms/event/EventPage'))
+const CategoryPage = lazy(() => import('./cms/category/CategoryPage'))
+const PostPage = lazy(() => import('./cms/post/PostPage'))
 
 const LocationPage = lazy(() => import('./option/location/LocationPage'))
 const BrandPage = lazy(() => import('./option/brand/BrandPage'))
@@ -76,8 +78,10 @@ export default function Dashboard(data: {data: DashboardData}) {
           return <CmsPage index={0} />
         case '/cms/events':
           return <EventPage index={1} data={data}/>
-        case '/cms/post':
-          return <CmsPage index={3} />
+        case '/cms/posts':
+          return <PostPage index={2} data={data}/>
+        case '/cms/categories':
+          return <CategoryPage index={3} data={data}/>
         default:
           return <NotFoundError/>
       }

@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
+
 use App\Http\Controllers\CRUD\Product\BrandController;
 use App\Http\Controllers\CRUD\Product\CarController;
 use App\Http\Controllers\CRUD\Product\RentalController;
@@ -8,9 +9,14 @@ use App\Http\Controllers\CRUD\Product\CarterController;
 use App\Http\Controllers\CRUD\Product\ShuttleBusController;
 use App\Http\Controllers\CRUD\Product\TourController;
 use App\Http\Controllers\CRUD\Product\DeliveryController;
+
 use App\Http\Controllers\CRUD\Data\PartnerController;
 use App\Http\Controllers\CRUD\Data\LocationController;
+
 use App\Http\Controllers\CRUD\CMS\EventController;
+use App\Http\Controllers\CRUD\CMS\CategoryController;
+use App\Http\Controllers\CRUD\CMS\PostController;
+
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -78,7 +84,7 @@ Route::middleware('auth')->group(function () {
             'update' => 'product.cars.update',
             'destroy' => 'product.cars.destroy',
         ]);
-        // ->except(['show']);
+        
         Route::resource('brands', BrandController::class)->names([
             'index' => 'product.brands',
             'create' => 'product.brands.create',
@@ -87,7 +93,7 @@ Route::middleware('auth')->group(function () {
             'update' => 'product.brands.update',
             'destroy' => 'product.brands.destroy',
         ]);
-        // ->except(['show']);
+        
         Route::resource('partners', PartnerController::class)->names([
             'index' => 'product.partners',
             'create' => 'product.partners.create',
@@ -110,6 +116,16 @@ Route::middleware('auth')->group(function () {
     
     Route::prefix('cms')->group(function () { 
         Route::get('/tags', fn() => Inertia::render('Admin/Dashboard'))->name('product.tags');
+        
+        Route::resource('tags', EventController::class)->names([
+            'index' => 'cms.tags',
+            'create' => 'cms.tags.create',
+            'store' => 'cms.tags.store',
+            'show' => 'cms.tags.show',
+            'update' => 'cms.tags.update',
+            'destroy' => 'cms.tags.destroy',
+        ]);
+
         Route::resource('events', EventController::class)->names([
             'index' => 'cms.events',
             'create' => 'cms.events.create',
@@ -118,7 +134,24 @@ Route::middleware('auth')->group(function () {
             'update' => 'cms.events.update',
             'destroy' => 'cms.events.destroy',
         ]);
-        Route::get('/post', fn() => Inertia::render('Admin/Dashboard'))->name('product.post');
+
+        Route::resource('categories', CategoryController::class)->names([
+            'index' => 'cms.categories',
+            'create' => 'cms.categories.create',
+            'store' => 'cms.categories.store',
+            'show' => 'cms.categories.show',
+            'update' => 'cms.categories.update',
+            'destroy' => 'cms.categories.destroy',
+        ]);
+
+        Route::resource('posts', PostController::class)->names([
+            'index' => 'cms.posts',
+            'create' => 'cms.posts.create',
+            'store' => 'cms.posts.store',
+            'show' => 'cms.posts.show',
+            'update' => 'cms.posts.update',
+            'destroy' => 'cms.posts.destroy',
+        ]);
     });
 
     //Backend
