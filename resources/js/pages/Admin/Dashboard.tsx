@@ -7,7 +7,6 @@ import AppSidebar from '@/components/app-sidebar'
 import { ThemeProvider } from '@/context/theme-context'
 
 const NotFoundError = lazy(() => import('../errors/not-found-error'))
-const CmsPage = lazy(() => import('./cms/CmsPage'))
 
 const RentalPage = lazy(() => import('./product/rental/RentalPage'))
 const CarterPage = lazy(() => import('./product/carter/CarterPage'))
@@ -75,7 +74,8 @@ export default function Dashboard(data: {data: DashboardData}) {
     if (url.startsWith('/cms')) {
       switch (url) {
         case '/cms/tags':
-          return <CmsPage index={0} />
+          // return <CmsPage index={0} />
+          return <NotFoundError/>
         case '/cms/events':
           return <EventPage index={1} data={data}/>
         case '/cms/posts':
