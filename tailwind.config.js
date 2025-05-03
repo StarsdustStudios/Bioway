@@ -24,6 +24,7 @@ export default {
   },
   plugins: [
     require("tailwindcss-animate"),
+    typography,
     createThemes({
       light: {
         primary: "accent",

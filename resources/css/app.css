@@ -193,3 +193,76 @@
     @apply bg-background text-foreground;
     }
 }
+
+@layer components {
+    /* Headings */
+    .prose h1 {
+      @apply text-3xl font-bold;
+    }
+  
+    .prose h2 {
+      @apply text-2xl font-bold;
+    }
+  
+    .prose h3 {
+      @apply text-xl font-bold;
+    }
+  
+    /* Paragraphs */
+    .prose p {
+      @apply text-base leading-relaxed;
+    }
+  
+    /* Links */
+    .prose a {
+      @apply text-blue-500 hover:text-blue-700 underline;
+    }
+  
+    /* Lists */
+    .prose ul {
+      @apply list-disc pl-5;
+    }
+  
+    .prose ol {
+      @apply list-decimal pl-5;
+    }
+  
+    .prose li {
+      @apply mb-2;
+    }
+  
+    /* Blockquote */
+    .prose blockquote {
+      @apply border-l-4 pl-4 italic text-gray-700;
+    }
+  
+    /* Code */
+    .prose code {
+      @apply bg-gray-100 p-1 rounded;
+    }
+  
+    .prose pre {
+      @apply bg-gray-800 text-white p-4 rounded overflow-x-auto;
+    }
+  
+    /* Images */
+    .prose img {
+      @apply rounded-lg shadow-lg;
+    }
+  
+    /* Tables */
+    .prose table {
+      @apply w-full table-auto border-collapse mt-4;
+    }
+  
+    .prose th,
+    .prose td {
+      @apply px-4 py-2 border border-gray-300;
+    }
+  
+    .prose th {
+      @apply text-left bg-gray-200 font-semibold;
+    }
+  }
+  
+  
