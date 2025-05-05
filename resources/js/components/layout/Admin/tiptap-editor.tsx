@@ -71,7 +71,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
         <>
             {/* Preview */}
             <div
-                className="border rounded w-full col-span-4 p-2 min-h-[120px] cursor-pointer bg-white"
+                className="border rounded w-full col-span-4 p-2 min-h-[120px] cursor-pointer"
                 onClick={handleClick}
                 dangerouslySetInnerHTML={{ __html: value || '<p class="text-gray-400">Click to edit...</p>' }}
             />
@@ -79,16 +79,16 @@ export default function TiptapEditor({ value, onChange }: Props) {
             {/* Fullscreen Custom Dialog */}
             {open && (
                 <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white w-screen h-screen rounded-none shadow-lg">
+                    <div className="w-screen h-screen rounded-none shadow-lg">
                         <div className="flex justify-between items-center p-4 border-b">
                             <h2 className="text-lg font-semibold w-screen">Edit Content</h2>
                             <Button onClick={() => setOpen(false)} variant="outline">
-                                Close
+                                Save
                             </Button>
                         </div>
 
                         {/* Toolbar */}
-                        <div className="flex gap-2 p-2 border-b">
+                        <div className="bg-white dark:bg-black flex gap-2 p-2 border-b">
                             {/* Text Formatting */}
                             <Button
                                 type="button"
@@ -195,7 +195,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                         </div>
 
                         {/* Editor Content */}
-                        <div className="flex flex-col h-full">
+                        <div className="bg-white dark:bg-black flex flex-col h-full">
                             <div
                                 className="flex-1 overflow-y-auto p-2 min-h-[200px] h-[calc(100vh-180px)] prose"
                                 onClick={() => editor?.commands.focus()}
@@ -210,7 +210,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
             {/* Link Dialog */}
             {linkDialogOpen && (
                 <div className="fixed inset-0 z-5 flex justify-center items-center">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                    <div className="p-6 rounded-lg shadow-lg w-96">
                         <h2 className="text-lg font-semibold">Set Link</h2>
                         <div className="mt-4">
                             <label className="block text-sm">Link Text</label>
