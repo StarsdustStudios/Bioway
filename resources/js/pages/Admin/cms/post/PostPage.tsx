@@ -143,6 +143,15 @@ function getColumns({ index }: { index: number }): ColumnDef<PostGetData>[] {
             />
           ): cmsData[index].cmsColDataset[colIndex] === "category_id" ? (
             getCategory(row.getValue(cmsData[index].cmsColDataset[colIndex]))
+          ): cmsData[index].cmsColDataset[colIndex] === "slug" ? (
+            <a
+              href={`/${row.getValue("slug")}`}
+              className="text-blue-600 underline hover:text-blue-800"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {row.getValue("slug")}
+            </a>
           ) : value instanceof Date ? (
             value.toLocaleDateString()
           ) : (
@@ -239,7 +248,8 @@ interface DataTableProps {
 function PostGetDataTable({ columns, data }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    id: false, // 👈 Hide the 'id' column by default
+    id: false,
+    content: false,
   })
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<SortingState>([])
