@@ -92,15 +92,15 @@ export default function TiptapEditor({ value, onChange }: Props) {
         <>
             {/* Preview */}
             <div
-                className="border rounded w-full col-span-4 p-2 min-h-[120px] cursor-pointer bg-white"
+                className="border rounded w-full col-span-4 p-2 min-h-[120px] cursor-pointer bg-background"
                 onClick={handleClick}
                 dangerouslySetInnerHTML={{ __html: value || '<p class="text-gray-400">Click to edit...</p>' }}
             />
 
             {/* Fullscreen Custom Dialog */}
             {open && (
-                <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white w-screen h-screen rounded-none shadow-lg">
+                <div className="fixed inset-0 z-50 bg-backround bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-background w-screen h-screen rounded-none shadow-lg">
                         <div className="flex justify-between items-center p-4 border-b">
                             <h2 className="text-lg font-semibold w-screen">Edit Content</h2>
                             <div className="flex gap-2">
