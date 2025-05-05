@@ -13,13 +13,14 @@ class EventController extends Controller
     public function index()
 {
     
-    $event = Event::get()->map(function ($event) {
+    $events = Event::get()->map(function ($event) {
         $event->poster_img = asset('storage/' . $event->poster_img);
         return $event;
     });
+    
 
     return Inertia::render('Admin/Dashboard', [
-        'event' => $event,
+        'event' => $events,
     ]);
 }
 
@@ -84,7 +85,10 @@ class EventController extends Controller
         Storage::disk('public')->delete($path);
         $event->delete();
 
-        $event = Event::with('cars')->get();
+        $events = Event::get()->map(function ($event) {
+            $event->poster_img = asset('storage/' . $event->poster_img);
+            return $event;
+        });
         return Inertia::render('Admin/Dashboard', [
             'message' => 'Event deleted successfully!',
             'event' => $event,

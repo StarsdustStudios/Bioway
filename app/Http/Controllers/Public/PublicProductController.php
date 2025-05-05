@@ -39,7 +39,10 @@ class PublicProductController extends Controller
 
     public function rental()
     {
-        $events = $this->getEvents();
+        $events = Event::get()->map(function ($event) {
+        $event->poster_img = asset('storage/' . $event->poster_img);
+        return $event;
+    });
 
         $rentals = Rental::with(['car', 'location', 'car.brand'])->get()->map(function ($rental) {
             $rental->car->car_image = asset('storage/' . ltrim($rental->car->car_image, '/storage/'));
@@ -56,7 +59,10 @@ class PublicProductController extends Controller
 
     public function carter()
 {
-    $events = $this->getEvents();
+    $events = Event::get()->map(function ($event) {
+        $event->poster_img = asset('storage/' . $event->poster_img);
+        return $event;
+    });
 
     $carters = Carter::with(['car', 'location'])->get()->map(function ($carter) {
         if ($carter->car && $carter->car->car_image && !Str::startsWith($carter->car->car_image, ['http://', 'https://'])) {
@@ -74,7 +80,10 @@ class PublicProductController extends Controller
 
 public function shuttleBus()
 {
-    $events = $this->getEvents();
+    $events = Event::get()->map(function ($event) {
+        $event->poster_img = asset('storage/' . $event->poster_img);
+        return $event;
+    });
 
     $shuttleBuses = ShuttleBus::with(['car'])->get()->map(function ($shuttleBus) {
         // Ensure car image is correctly formatted
@@ -107,7 +116,10 @@ public function shuttleBus()
 
     public function tour()
     {
-        $events = $this->getEvents();
+        $events = Event::get()->map(function ($event) {
+        $event->poster_img = asset('storage/' . $event->poster_img);
+        return $event;
+    });
         $tours = Tour::with('locations')->get()->map(function ($tour) {
             $tour->tour_image = asset('storage/' . ltrim($tour->tour_image, '/'));
             return $tour;
@@ -123,7 +135,10 @@ public function shuttleBus()
 
     public function delivery()
     {
-        $events = $this->getEvents();
+        $events = Event::get()->map(function ($event) {
+        $event->poster_img = asset('storage/' . $event->poster_img);
+        return $event;
+    });
 
         $deliveries = Delivery::with('location')->get()->map(function ($delivery) {
             if ($delivery->location && $delivery->location->city_name) {
