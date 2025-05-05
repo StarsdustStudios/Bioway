@@ -12,7 +12,6 @@ import Image from '@tiptap/extension-image';
 import {
   IconBold,
   IconItalic,
-  IconCode,
   IconHighlight,
   IconList,
   IconListNumbers,
@@ -20,8 +19,6 @@ import {
   IconH2,
   IconH3,
   IconQuote,
-  IconArrowBackUp,
-  IconArrowForwardUp,
   IconLink,
   IconTextPlus,
   IconMinus,
@@ -74,12 +71,12 @@ export default function RichTextEditorDialog({text} : { text: string }) {
       <DialogTrigger asChild>
         <Button className="col-span-4 text-start" variant="outline">Open Rich Text Editor</Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader className="w-full">
-          <DialogTitle className="w-full">Edit Content</DialogTitle>
+      <DialogContent className="w-screen h-screen fixed z-50 flex flex-col bg-background p-4 overflow-auto">
+        <DialogHeader>
+          <DialogTitle>Edit Content</DialogTitle>
         </DialogHeader>
-        <div className="w-full rounded-xl border border-neutral-8flex-grow flex flex-col">
-          <div className="w-full flex flex-wrap items-center gap-1 px-4 py-2 border-b border-neutral-700">
+        <div className="rounded-xl border border-neutral-8flex-grow flex flex-col">
+          <div className="flex flex-wrap items-center gap-1 px-4 py-2 border-b border-neutral-700">
             <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}>
               <IconH1 size={16} />
             </Button>
@@ -166,7 +163,7 @@ export default function RichTextEditorDialog({text} : { text: string }) {
           </div>
 
           <div className="flex-grow overflow-auto">
-            <EditorContent editor={editor} className="prose prose-invert px-4 py-2 max-w-screen h-[400px]" />
+            <EditorContent editor={editor} className="prose prose-invert px-4 py-2 h-[400px]" />
           </div>
         </div>
 

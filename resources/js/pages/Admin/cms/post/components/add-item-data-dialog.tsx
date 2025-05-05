@@ -30,7 +30,7 @@ import { format } from "date-fns"
 import React from 'react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { CategoryGetData } from '../../category/components/schema'
-import TiptapEditor from '@/components/layout/Admin/tiptap-editor'
+import TipTapEditor from '@/components/layout/Admin/tiptap-editor2'
 
 
 const postFormSchema = postPostSchema;
@@ -257,9 +257,8 @@ export function ItemDataActionDialog({
                               autoComplete="off"
                             />
                           ) : fieldName === 'content' ? (
-                            <TiptapEditor
+                            <TipTapEditor
                               value={field.value}
-                              text={field.value}
                               onChange={field.onChange}
                             />
                             
