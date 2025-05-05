@@ -33,14 +33,10 @@ class HomeController extends Controller
                 ->get();
         }
 
-        // dd($events);
-
         $partners = Partner::all()->map(function ($partner) {
             $partner->logo = asset('storage/' . $partner->logo);
             return $partner;
         });
-
-        // dd($partners);
 
 
         return Inertia::render('Main/Home', [

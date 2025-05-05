@@ -183,7 +183,7 @@ export function ItemDataActionDialog({
                     render={({ field }) => (
                       <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
                         <FormLabel className='col-span-2 text-right'>
-                          {column}
+                          {fieldName !== 'published_at' ? column : null}
                         </FormLabel>
                         <FormControl className='col-span-4'>
                           {fieldName === 'hero_image' ? (
@@ -259,8 +259,12 @@ export function ItemDataActionDialog({
                           ) : fieldName === 'content' ? (
                             <TiptapEditor
                               value={field.value}
+                              text={field.value}
                               onChange={field.onChange}
                             />
+                            
+                          ) : fieldName === 'published_at' ? (
+                            null
                           ) : (
                             <Input
                               placeholder={'Enter ' + column + '...'}
