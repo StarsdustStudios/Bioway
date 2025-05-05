@@ -78,10 +78,10 @@ function Tour({ events, tours, locations }: TourProps) {
       </div>
 
       <h1 className="text-4xl font-bold my-7 mt-20 text-center">
-  Tour {selectedLocation === 'all'
-    ? 'Semua Lokasi'
-    : locations.find((loc) => loc.id === selectedLocation)?.city_name ?? 'Tidak Diketahui'}
-</h1>
+        Tour {selectedLocation === 'all'
+          ? 'Semua Lokasi'
+          : locations.find((loc) => loc.id === selectedLocation)?.city_name ?? 'Tidak Diketahui'}
+      </h1>
 
 
       <div className="md:flex grid grid-cols-2 justify-between md:w-4/5 items-center gap-4 mb-12">
