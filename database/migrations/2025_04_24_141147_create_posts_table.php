@@ -18,9 +18,10 @@ return new class extends Migration
             $table->string('title');
             $table->string('hero_image');
             $table->string('slug')->unique();
-            $table->text('content');
+            $table->mediumtext('content');
             $table->date('published_at');
             $table->timestamps();
+            
         });
     }
 

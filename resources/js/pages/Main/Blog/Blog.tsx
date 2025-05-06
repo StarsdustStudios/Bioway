@@ -1,27 +1,17 @@
-import { usePage } from '@inertiajs/react'
-import { type SharedData } from '@/types'
-import { useEffect } from 'react'
-import { DesktopNavBar, MobileNavBar } from '@/components/global/Navbar'
-import { BlogCard } from '@/components/global/BlogCard'
-import { PromoCarousel } from '@/components/global/PromoCarousel'
+import MainLayout from '../Main'
 
-export default function Blog() {
-    const { url } = usePage<SharedData>() // Get current URL
-
-    // Route handler
-    useEffect(() => {
-        if (url !== '/blog') {
-            window.location.href = '/blog'
-        }
-    }, [url])
-
-      const isDesktop = window.innerWidth > 768
-
+function Blog() {
     return (
-        <div className="h-screen bg-gray-100 flex flex-col justify-center items-center">
-            <PromoCarousel/>
-            <h1 className="text-4xl font-bold mb-4">Artikel dan Berita</h1>
-            <p className="text-lg mb-8">This is the home page.</p>
-        </div>
+        <>
+
+            <h1 className='text-4xl font-bold my-5'>Blog</h1>
+
+            <div className='md:mb-0 mb-20'>
+            </div>
+        </>
     )
 }
+
+Blog.layout = (page: React.ReactNode) => <MainLayout>{page}</MainLayout>
+
+export default Blog

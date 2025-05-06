@@ -39,16 +39,17 @@ export function TourCard({
 
   return (
     <Card className="flex p-4 gap-4 rounded-2xl shadow-md border-blue-300">
-      <div className="flex items-center gap-4 py-0">
-        <div className="aspect-video max-w-56">
+      <div className="items-center gap-4 py-0">
+        <h2 className="md:text-2xl mb-3 text-sm font-semibold text-center">{title}</h2>
+        <div className="aspect-video max-w-72 items-center mx-auto">
           <img
             src={tour_image} // Corrected from carImage to tour_image
             alt={title} // Corrected from carName to title
-            className="object-cover w-full h-full rounded-md"
+            className="object-cover w-full h-full rounded-md mx-auto"
           />
         </div>
         <div className="flex flex-col gap-2 flex-1">
-          <h2 className="md:text-md text-sm font-semibold">{title}</h2>
+
           <p className="text-xs text-gray-500">{desc}</p>
           <div className="flex items-center gap-4 text-xs font-bold">
             <span className="flex items-center gap-1">
@@ -63,13 +64,13 @@ export function TourCard({
           </p>
           <p className="text-xs text-gray-600">Lokasi Awal: {startLocation}</p>
           <p className="text-xs text-gray-600">
-  Rute: {locations
-    .slice()
-    .sort((a, b) => a.pivot.id - b.pivot.id)
-    .map((loc) => loc.city_name)
-    .join(' - ')}
-</p>
-          <Button className="w-fit mt-2 bg-blue-600 hover:bg-blue-700 text-white md:text-base text-xs">
+            Rute: {locations
+              .slice()
+              .sort((a, b) => a.pivot.id - b.pivot.id)
+              .map((loc) => loc.city_name)
+              .join(' - ')}
+          </p>
+          <Button className="w-fit mt-2 bg-blue-600 hover:bg-blue-700 text-white md:text-base text-xs mx-auto">
             ORDER SEKARANG
           </Button>
         </div>
