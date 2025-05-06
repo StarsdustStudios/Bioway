@@ -30,7 +30,7 @@ import { format } from "date-fns"
 import React from 'react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { CategoryGetData } from '../../category/components/schema'
-import TiptapEditor from '@/components/layout/Admin/tiptap-editor'
+import TipTapEditor from '@/components/layout/Admin/tiptap-editor2'
 
 
 const postFormSchema = postPostSchema;
@@ -145,12 +145,15 @@ export function ItemDataActionDialog({
 
   return (
     <Dialog
-      open={open}
-      onOpenChange={(state) => {
-        form.reset()
-        onOpenChange(state)
-      }}
-    >
+  open={open}
+  onOpenChange={(state) => {
+    if (!isEdit) {
+      form.reset()
+    }
+    onOpenChange(state)
+  }}
+>
+
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-left'>
           <DialogTitle>
@@ -183,7 +186,7 @@ export function ItemDataActionDialog({
                     render={({ field }) => (
                       <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
                         <FormLabel className='col-span-2 text-right'>
-                          {column}
+                          {(fieldName === 'published_at' || (fieldName === 'content' && isEdit)) ? null : column}
                         </FormLabel>
                         <FormControl className='col-span-4'>
                           {fieldName === 'hero_image' ? (
@@ -257,10 +260,15 @@ export function ItemDataActionDialog({
                               autoComplete="off"
                             />
                           ) : fieldName === 'content' ? (
-                            <TiptapEditor
-                              value={field.value}
-                              onChange={field.onChange}
-                            />
+                            !isEdit ? (
+                              <TipTapEditor
+                                value={field.value}
+                                onChange={field.onChange}
+                              />
+                            ) : null
+                            
+                          ) : fieldName === 'published_at' ? (
+                            null
                           ) : (
                             <Input
                               placeholder={'Enter ' + column + '...'}

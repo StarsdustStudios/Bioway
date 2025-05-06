@@ -15,7 +15,7 @@ export const cmsData: CmsData[] = [
     },
     {
         cmsName: "Post",
-        cmsColumns: ["Judul", "Kategori", "Foto", "Slug", "Content", "Dipublikasi"],
+        cmsColumns: ["Judul", "Kategori", "Foto", "URL", "Content", "Dipublikasi"],
         cmsColDataset: ["title", "category_id", "hero_image", "slug", "content", "published_at"],
         cmsStatus: ["Aktif", "NonAktif", "Bertugas", "Dipesan"]
     },
