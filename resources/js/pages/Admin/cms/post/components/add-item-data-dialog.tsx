@@ -145,12 +145,15 @@ export function ItemDataActionDialog({
 
   return (
     <Dialog
-      open={open}
-      onOpenChange={(state) => {
-        form.reset()
-        onOpenChange(state)
-      }}
-    >
+  open={open}
+  onOpenChange={(state) => {
+    if (!isEdit) {
+      form.reset()
+    }
+    onOpenChange(state)
+  }}
+>
+
       <DialogContent className='sm:max-w-lg'>
         <DialogHeader className='text-left'>
           <DialogTitle>
@@ -183,7 +186,7 @@ export function ItemDataActionDialog({
                     render={({ field }) => (
                       <FormItem className='grid grid-cols-6 items-center gap-x-4 gap-y-1 space-y-0'>
                         <FormLabel className='col-span-2 text-right'>
-                          {fieldName !== 'published_at' ? column : null}
+                          {(fieldName === 'published_at' || (fieldName === 'content' && isEdit)) ? null : column}
                         </FormLabel>
                         <FormControl className='col-span-4'>
                           {fieldName === 'hero_image' ? (
@@ -257,10 +260,12 @@ export function ItemDataActionDialog({
                               autoComplete="off"
                             />
                           ) : fieldName === 'content' ? (
-                            <TipTapEditor
-                              value={field.value}
-                              onChange={field.onChange}
-                            />
+                            !isEdit ? (
+                              <TipTapEditor
+                                value={field.value}
+                                onChange={field.onChange}
+                              />
+                            ) : null
                             
                           ) : fieldName === 'published_at' ? (
                             null

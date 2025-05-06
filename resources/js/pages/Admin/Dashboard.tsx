@@ -5,6 +5,7 @@ import { type SharedData } from '@/types'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import AppSidebar from '@/components/app-sidebar'
 import { ThemeProvider } from '@/context/theme-context'
+import BlogEditorPage from './cms/post/BlogEditorPage'
 
 const NotFoundError = lazy(() => import('../errors/not-found-error'))
 
@@ -40,7 +41,16 @@ interface Cars {
   updated_at: string;
 }
 
-export type DashboardData = { brands: Brand[]} | { cars: Cars[]};
+interface Blog {
+  id: number,
+  category_id: number,
+  title: string,
+  hero_image: string,
+  slug: string,
+  contents: string,
+}
+
+export type DashboardData = { brands: Brand[]} | { cars: Cars[]} | {blog: Blog};
 
 export default function Dashboard(data: {data: DashboardData}) {
   const { url } = usePage<SharedData>() 
@@ -83,6 +93,9 @@ export default function Dashboard(data: {data: DashboardData}) {
         case '/cms/categories':
           return <CategoryPage index={3} data={data}/>
         default:
+          if (url.startsWith('/cms/posts/')) {
+            return <BlogEditorPage data={data}/>
+          } 
           return <NotFoundError/>
       }
     }

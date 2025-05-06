@@ -40,8 +40,6 @@ interface Props {
 export default function TiptapEditor({ value, onChange }: Props) {
     const [open, setOpen] = useState(false);
     const [linkDialogOpen, setLinkDialogOpen] = useState(false);
-    const [linkURL, setLinkURL] = useState('');
-    const [linkText, setLinkText] = useState('');
 
     const editor = useEditor({
         extensions: [
@@ -67,13 +65,9 @@ export default function TiptapEditor({ value, onChange }: Props) {
     if (!editor) return null;
 
     const handleClick = () => {
-        setOpen(true);
-        console.log('handleclick');
-    };
-
-    const closeLinkDialog = () => {
-        setLinkDialogOpen(false);
-        console.log('handlecloseclick');
+        if (!open) { // Open only if not already open
+            setOpen(true);
+        }
     };
 
     const addImage = () => {
@@ -86,6 +80,10 @@ export default function TiptapEditor({ value, onChange }: Props) {
     const saveContent = () => {
         onChange(editor.getHTML());
         setOpen(false);
+    };
+
+    const handleToolbarClick = (e: React.MouseEvent) => {
+        e.stopPropagation(); // Prevent closing the editor dialog when clicking toolbar buttons
     };
 
     return (
@@ -118,7 +116,7 @@ export default function TiptapEditor({ value, onChange }: Props) {
                         {/* Toolbar */}
                         <div className="rounded-xl border border-neutral-8flex-grow flex flex-col">
                             <div className="flex flex-wrap items-center gap-1 px-4 py-2 border-b border-neutral-700">
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}>
+                            <Button variant="ghost" size="icon" onClick={(e) => {handleToolbarClick(e); editor?.chain().focus().toggleHeading({ level: 1 }).run();}}>
                                     <IconH1 size={16} />
                                 </Button>
                                 <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}>

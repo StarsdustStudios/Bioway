@@ -47,6 +47,22 @@ class PostController extends Controller
         return redirect()->back()->with('success', 'Post created successfully!');
     }
 
+    public function edit(Post $post)
+    {
+        return Inertia::render('Admin/Dashboard', [
+            'id' => $post->id,
+            'category_id' => $post->category_id,
+            'title' => $post->title,
+            'slug' => $post->slug,
+            'hero_image' => asset('storage/' . ltrim($post->hero_image, '/storage/')),
+            'contents' => $post->content,
+        ]);
+
+        // return response()->json([
+        //     'contents' => $post->content,
+        // ]);
+    }
+
     public function update(PostRequest $request)
     {
         $post = Post::find($request->id);
@@ -69,6 +85,20 @@ class PostController extends Controller
         $post->save();
 
         return redirect()->back()->with('success', 'Post updated successfully!');
+    }
+
+    public function editContent(Request $request)
+    {
+        $post = Post::find($request->id);
+
+        if (!$post) {
+            return redirect()->back()->withErrors(['Post not found']);
+        }
+
+        $post->content = $request->content;
+        $post->save();
+
+        return redirect()->back()->with('success', 'Post content updated successfully!');
     }
 
     public function destroy(Post $post)

@@ -7,7 +7,7 @@ const itemStatusSchema = z.union([
   z.literal('Bertugas')
 ]);
 
-const getSchema = z.object({
+export const getSchema = z.object({
   id: z.number(),
   category_id: z.coerce.number(),
   title: z.string(),

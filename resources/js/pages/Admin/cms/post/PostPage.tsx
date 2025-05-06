@@ -13,7 +13,7 @@ import { DataTableViewOptions } from '@/components/tables/data-table-view-option
 import ItemDataProvider, { useItemData } from '@/context/item-data-context'
 import { cmsData } from '@/components/data/cms-data'
 import { languageData } from '@/components/data/strings'
-import { IconEdit, IconTrash, IconUserPlus } from '@tabler/icons-react'
+import { IconArticle, IconBlobFilled, IconEdit, IconTrash, IconUserPlus } from '@tabler/icons-react'
 import { Cross2Icon, DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { PostGetData, categoryListSchema, postGetSchema } from './components/schema'
 import { ItemDataActionDialog } from './components/add-item-data-dialog'
@@ -37,6 +37,7 @@ import {
 } from '@tanstack/react-table'
 import { ItemDataPrimaryButton } from '@/components/layout/Admin/ItemDataPrimaryButton'
 import { CategoryGetData } from '../category/components/schema'
+import { router } from '@inertiajs/react'
 
 
 let categoryList: CategoryGetData[] | undefined = undefined
@@ -214,6 +215,18 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
             </DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          <DropdownMenuItem
+          onClick={() => {
+            router.visit(`posts/${row.original.id}/edit`);
+          }}
+        >
+          Blog
+          <DropdownMenuShortcut>
+            <IconArticle size={16} />
+          </DropdownMenuShortcut>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               setCurrentRow(row.original)
