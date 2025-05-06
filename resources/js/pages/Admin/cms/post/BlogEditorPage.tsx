@@ -81,16 +81,26 @@ export default function BlogEditorPage({ data }: { data: Props }) {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
+  
     input.onchange = async (event) => {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
   
+        // Image type validation (only allow images)
+        if (!file.type.startsWith('image/')) {
+          alert('Please select a valid image file');
+          return;
+        }
+  
         reader.onloadend = () => {
           const base64Image = reader.result;
-  
-          // Insert the Base64 image into the editor
+          // Insert image into the editor
           editor.chain().focus().setImage({ src: base64Image }).run();
+        };
+  
+        reader.onerror = () => {
+          alert('Error occurred while reading the image file');
         };
   
         // Convert image file to Base64
@@ -100,6 +110,7 @@ export default function BlogEditorPage({ data }: { data: Props }) {
   
     input.click();
   };
+  
   
 
   return (
@@ -132,7 +143,9 @@ export default function BlogEditorPage({ data }: { data: Props }) {
                       'Content-Type': 'multipart/form-data',
                     },
                     onSuccess: () => {
-                      console.log('Post saved successfully');}
+                      console.log('Post saved successfully');
+                      console.log(formData.get('content')); // This line shows the content that was added to FormData
+                    }
                   });                }}
                 variant="outline"
               >
