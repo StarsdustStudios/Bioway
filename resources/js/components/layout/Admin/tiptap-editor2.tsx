@@ -31,6 +31,7 @@ import {
     IconH5,
     IconH6,
 } from '@tabler/icons-react';
+import { Main } from '../main';
 
 interface Props {
     value: string;
@@ -71,10 +72,37 @@ export default function TiptapEditor({ value, onChange }: Props) {
     };
 
     const addImage = () => {
-        const url = window.prompt('Enter image URL');
-        if (url) {
-            editor?.chain().focus().setImage({ src: url }).run();
-        }
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+
+        input.onchange = async (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                // Image type validation (only allow images)
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select a valid image file');
+                    return;
+                }
+
+                reader.onloadend = () => {
+                    const base64Image = reader.result;
+                    // Insert image into the editor
+                    editor.chain().focus().setImage({ src: base64Image }).run();
+                };
+
+                reader.onerror = () => {
+                    alert('Error occurred while reading the image file');
+                };
+
+                // Convert image file to Base64
+                reader.readAsDataURL(file);
+            }
+        };
+
+        input.click();
     };
 
     const saveContent = () => {
@@ -116,86 +144,68 @@ export default function TiptapEditor({ value, onChange }: Props) {
                         {/* Toolbar */}
                         <div className="rounded-xl border border-neutral-8flex-grow flex flex-col">
                             <div className="flex flex-wrap items-center gap-1 px-4 py-2 border-b border-neutral-700">
-                            <Button variant="ghost" size="icon" onClick={(e) => {handleToolbarClick(e); editor?.chain().focus().toggleHeading({ level: 1 }).run();}}>
-                                    <IconH1 size={16} />
-                                </Button>
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}>
-                                    <IconH2 size={16} />
-                                </Button>
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}>
-                                    <IconH3 size={16} />
-                                </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleHeading({ level: 4 }).run()}>
-                                    <IconH4 size={16} />
-                                </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleHeading({ level: 5 }).run()}>
-                                    <IconH5 size={16} />
-                                </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleHeading({ level: 6 }).run()}>
-                                    <IconH6 size={16} />
-                                </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleBulletList().run()}>
+                                {[1, 2, 3, 4, 5, 6].map((level) => (
+                                    <Button
+                                        key={level}
+                                        variant={editor.isActive('heading', { level }) ? 'secondary' : 'ghost'}
+                                        size="icon"
+                                        onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
+                                    >
+                                        {{
+                                            1: <IconH1 size={16} />,
+                                            2: <IconH2 size={16} />,
+                                            3: <IconH3 size={16} />,
+                                            4: <IconH4 size={16} />,
+                                            5: <IconH5 size={16} />,
+                                            6: <IconH6 size={16} />,
+                                        }[level]}
+                                    </Button>
+                                ))}
+                                <Button variant={editor.isActive('bulletList') ? 'secondary' : 'ghost'} size="icon" onClick={() => editor.chain().focus().toggleBulletList().run()}>
                                     <IconList size={16} />
                                 </Button>
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleOrderedList().run()}>
+                                <Button variant={editor.isActive('orderedList') ? 'secondary' : 'ghost'} size="icon" onClick={() => editor.chain().focus().toggleOrderedList().run()}>
                                     <IconListNumbers size={16} />
                                 </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleBlockquote().run()}>
+                                <Button variant={editor.isActive('blockquote') ? 'secondary' : 'ghost'} size="icon" onClick={() => editor.chain().focus().toggleBlockquote().run()}>
                                     <IconQuote size={16} />
                                 </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleBold().run()}>
+                                <Button variant={editor.isActive('bold') ? 'secondary' : 'ghost'} size="icon" onClick={() => editor.chain().focus().toggleBold().run()}>
                                     <IconBold size={16} />
                                 </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleItalic().run()}>
+                                <Button variant={editor.isActive('italic') ? 'secondary' : 'ghost'} size="icon" onClick={() => editor.chain().focus().toggleItalic().run()}>
                                     <IconItalic size={16} />
                                 </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleHighlight().run()}>
+                                <Button variant={editor.isActive('highlight') ? 'secondary' : 'ghost'} size="icon" onClick={() => editor.chain().focus().toggleHighlight().run()}>
                                     <IconHighlight size={16} />
                                 </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleSuperscript().run()}>
+                                <Button variant={editor.isActive('superscript') ? 'secondary' : 'ghost'} size="icon" onClick={() => editor.chain().focus().toggleSuperscript().run()}>
                                     <IconSuperscript size={16} />
                                 </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().toggleSubscript().run()}>
+                                <Button variant={editor.isActive('subscript') ? 'secondary' : 'ghost'} size="icon" onClick={() => editor.chain().focus().toggleSubscript().run()}>
                                     <IconSubscript size={16} />
                                 </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => {
+                                <Button variant={editor.isActive('link') ? 'secondary' : 'ghost'} size="icon" onClick={() => {
                                     const url = window.prompt('Enter URL');
-                                    if (url) editor?.chain().focus().setLink({ href: url }).run();
+                                    if (url) editor.chain().focus().setLink({ href: url }).run();
                                 }}>
                                     <IconLink size={16} />
                                 </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().setTextAlign('left').run()}>
+                                <Button variant={editor.isActive({ textAlign: 'left' }) ? 'secondary' : 'ghost'} size="icon" onClick={() => editor.chain().focus().setTextAlign('left').run()}>
                                     <IconAlignLeft size={16} />
                                 </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().setTextAlign('center').run()}>
+                                <Button variant={editor.isActive({ textAlign: 'center' }) ? 'secondary' : 'ghost'} size="icon" onClick={() => editor.chain().focus().setTextAlign('center').run()}>
                                     <IconAlignCenter size={16} />
                                 </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().setTextAlign('right').run()}>
+                                <Button variant={editor.isActive({ textAlign: 'right' }) ? 'secondary' : 'ghost'} size="icon" onClick={() => editor.chain().focus().setTextAlign('right').run()}>
                                     <IconAlignRight size={16} />
                                 </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().setTextAlign('justify').run()}>
+                                <Button variant={editor.isActive({ textAlign: 'justify' }) ? 'secondary' : 'ghost'} size="icon" onClick={() => editor.chain().focus().setTextAlign('justify').run()}>
                                     <IconAlignJustified size={16} />
                                 </Button>
-
-                                <Button variant="ghost" size="icon" onClick={() => editor?.chain().focus().setHorizontalRule().run()}>
+                                <Button variant="ghost" size="icon" onClick={() => editor.chain().focus().setHorizontalRule().run()}>
                                     <IconMinus size={16} />
                                 </Button>
-
                                 <Button variant="ghost" size="icon" onClick={addImage}>
                                     <IconTextPlus size={16} />
                                 </Button>

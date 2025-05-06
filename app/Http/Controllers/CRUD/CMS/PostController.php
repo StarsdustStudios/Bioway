@@ -57,10 +57,6 @@ class PostController extends Controller
             'hero_image' => asset('storage/' . ltrim($post->hero_image, '/storage/')),
             'contents' => $post->content,
         ]);
-
-        // return response()->json([
-        //     'contents' => $post->content,
-        // ]);
     }
 
     public function update(PostRequest $request)
@@ -76,6 +72,7 @@ class PostController extends Controller
         $post->slug = $request->slug;
         $post->content = $request->content;
 
+        
         $imagePath = $post->hero_image;
         if ($request->hasFile('hero_image')) {
             $imagePath = $request->file('hero_image')->store('posts', 'public');
