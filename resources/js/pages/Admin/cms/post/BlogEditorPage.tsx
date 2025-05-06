@@ -78,11 +78,29 @@ export default function BlogEditorPage({ data }: { data: Props }) {
   if (!editor) return null;
 
   const addImage = () => {
-    const url = window.prompt('Enter image URL');
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
-    }
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+  
+        reader.onloadend = () => {
+          const base64Image = reader.result;
+  
+          // Insert the Base64 image into the editor
+          editor.chain().focus().setImage({ src: base64Image }).run();
+        };
+  
+        // Convert image file to Base64
+        reader.readAsDataURL(file);
+      }
+    };
+  
+    input.click();
   };
+  
 
   return (
     <ItemDataProvider>
