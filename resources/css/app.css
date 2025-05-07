@@ -275,6 +275,11 @@
     .prose th {
       @apply text-left bg-gray-200 font-semibold;
     }
+
+    prose img {
+      max-width: 100%;
+      height: auto;
+    }    
   }
   
   

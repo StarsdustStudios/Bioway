@@ -5,7 +5,6 @@ import { type SharedData } from '@/types'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import AppSidebar from '@/components/app-sidebar'
 import { ThemeProvider } from '@/context/theme-context'
-import BlogEditorPage from './cms/post/BlogEditorPage'
 
 const NotFoundError = lazy(() => import('../errors/not-found-error'))
 
@@ -18,6 +17,7 @@ const DeliveryPage = lazy(() => import('./product/delivery/DeliveryPage'))
 const EventPage = lazy(() => import('./cms/event/EventPage'))
 const CategoryPage = lazy(() => import('./cms/category/CategoryPage'))
 const PostPage = lazy(() => import('./cms/post/PostPage'))
+const BlogEditorPage = lazy(() => import('./cms/post/BlogEditorPage'))
 
 const LocationPage = lazy(() => import('./option/location/LocationPage'))
 const BrandPage = lazy(() => import('./option/brand/BrandPage'))
