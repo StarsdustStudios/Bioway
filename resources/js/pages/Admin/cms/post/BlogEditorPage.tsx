@@ -64,7 +64,7 @@ export default function BlogEditorPage({ data }: { data: Props }) {
         inline: true, 
         allowBase64:true,
         HTMLAttributes: {
-          class: 'block max-w-full h-auto border-rounded-lg',
+          class: 'block max-w-full h-auto border-rounded-lg mx-auto',
         },
       }),
       TextAlign.configure({

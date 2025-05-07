@@ -53,11 +53,11 @@ export default function TiptapEditor({ value, onChange }: Props) {
                 inline: true, 
                 allowBase64:true,
                 HTMLAttributes: {
-                  class: 'block max-w-full h-auto border-rounded-lg',
+                    class: 'block max-w-full h-auto border-rounded-lg mx-auto',
                 },
               }),            
             TextAlign.configure({
-                types: ['heading', 'paragraph', 'image'],
+                types: ['heading', 'paragraph'],
             }),
         ],
         content: value,
