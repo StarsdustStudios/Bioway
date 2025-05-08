@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Tour;
 use Faker\Factory as Faker;
 use App\Models\Location;
+use DB;
 
 class ToursSeeder extends Seeder
 {
@@ -42,8 +42,16 @@ class ToursSeeder extends Seeder
             ]);
 
             // Attach 2–4 random locations to the tour (many-to-many)
-            $randomLocations = $locations->random(rand(2, 4))->pluck('id');
-            $tour->locations()->attach($randomLocations);
+            $randomLocations = $locations->random(rand(2, 4));
+
+            // Insert manually with the 'id' field
+            foreach ($randomLocations as $location) {
+                DB::table('tour_locations')->insert([
+                    'tour_id' => $tour->id,
+                    'location_id' => $location->id,
+                    'id' => DB::table('tour_locations')->max('id') + 1, // Get the next available ID
+                ]);
+            }
         }
     }
 }
