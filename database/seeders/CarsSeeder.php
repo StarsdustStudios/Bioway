@@ -21,7 +21,7 @@ class CarsSeeder extends Seeder
 
             Car::create([
                 'model' => $faker->word,
-                'brand_id' => $faker->rand(1, 10),
+                'brand_id' => rand(1, 10),
                 'car_image' => 'storage/cars/' . $image,
                 'luggage' => rand(1, 5),
                 'seat' => rand(1, 5),
