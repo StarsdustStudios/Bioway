@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\PublicProductController;
-
+use App\Http\Controllers\Public\PublicBlogController;
 
 
 //Home Controller route
@@ -25,8 +25,8 @@ Route::prefix('produk')->group(function () {
 });
 
 Route::prefix('blog')->group(function () { 
-    Route::get('/', fn() => Inertia::render('Main/Blog/Blog'))->name('blog.index');
-    // Route::get('/{slug}', fn() => Inertia::render('Blog/Detail'))->name('blog.detail');
+    Route::get('/', [PublicBlogController::class, 'index'])->name('blog.index');
+    Route::get('/{slug}', [PublicBlogController::class, 'show'])->name('blog.show');
 });
 
 Route::get('/profil', function () {

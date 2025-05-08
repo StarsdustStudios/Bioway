@@ -49,7 +49,13 @@ export default function TiptapEditor({ value, onChange }: Props) {
             Highlight,
             Superscript,
             Subscript,
-            Image,
+            Image.configure({
+                inline: true, 
+                allowBase64:true,
+                HTMLAttributes: {
+                    class: 'block max-w-full h-auto border-rounded-lg mx-auto',
+                },
+              }),            
             TextAlign.configure({
                 types: ['heading', 'paragraph'],
             }),
