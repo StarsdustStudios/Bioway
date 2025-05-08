@@ -30,6 +30,8 @@ import {
   IconH4,
   IconH5,
   IconH6,
+  IconImageInPicture,
+  IconPhoto,
 } from '@tabler/icons-react';
 import ItemDataProvider from '@/context/item-data-context';
 import { Header } from '@/components/layout/header';
@@ -58,9 +60,15 @@ export default function BlogEditorPage({ data }: { data: Props }) {
       Highlight,
       Superscript,
       Subscript,
-      Image,
+      Image.configure({
+        inline: true, 
+        allowBase64:true,
+        HTMLAttributes: {
+          class: 'block max-w-full h-auto border-rounded-lg mx-auto',
+        },
+      }),
       TextAlign.configure({
-        types: ['heading', 'paragraph'],
+        types: ['heading', 'paragraph'],        
       }),
     ],
     content: data.contents,
@@ -71,9 +79,20 @@ export default function BlogEditorPage({ data }: { data: Props }) {
 
   useEffect(() => {
     if (editor && data.contents !== editor.getHTML()) {
-      editor.commands.setContent(typeof data.contents === 'string' ? data.contents : data.contents?.contents ?? '');
+      // Check if content has changed, then set it again
+      const contentToSet = typeof data.contents === 'string' ? data.contents : data.contents?.contents ?? '';
+      editor.commands.setContent(contentToSet);
+      console.log(editor)
+      const imageTags = contentToSet.match(/<img[^>]*src="[^"]+"[^>]*>/g);
+      if (imageTags) {
+        console.log("Images found in content:", imageTags);
+      }
     }
   }, [data.contents, editor]);
+  
+  
+  
+  
 
   if (!editor) return null;
 
@@ -94,9 +113,9 @@ export default function BlogEditorPage({ data }: { data: Props }) {
         }
   
         reader.onloadend = () => {
-          const base64Image = reader.result;
-          // Insert image into the editor
-          editor.chain().focus().setImage({ src: base64Image }).run();
+          const base64Image = reader.result as string;
+          // Insert image into the editor as base64
+          editor.chain().focus().insertContent(`<img src="${base64Image}" alt="image" />`).run();
         };
   
         reader.onerror = () => {
@@ -223,7 +242,7 @@ export default function BlogEditorPage({ data }: { data: Props }) {
               <IconMinus size={16} />
             </Button>
             <Button variant="ghost" size="icon" onClick={addImage}>
-              <IconTextPlus size={16} />
+              <IconPhoto size={16} />
             </Button>
           </div>
 

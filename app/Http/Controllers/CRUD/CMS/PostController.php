@@ -32,7 +32,7 @@ class PostController extends Controller
         $post->category_id = $request->category_id;
         $post->title = $request->title;
         $post->slug = $request->slug;
-        $post->content = $request->content;
+        $post->content = $request->input('content'); // Ensure this is saved as raw HTML, not escaped text
         $post->published_at = now();
 
         $imagePath = 'posts/placeholder.png';
@@ -70,7 +70,7 @@ class PostController extends Controller
         $post->category_id = $request->category_id;
         $post->title = $request->title;
         $post->slug = $request->slug;
-        $post->content = $request->content;
+        $post->content = $request->input('content'); // Ensure this is saved as raw HTML, not escaped text
 
         
         $imagePath = $post->hero_image;

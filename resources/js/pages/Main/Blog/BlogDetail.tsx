@@ -24,12 +24,27 @@ export interface Blogs {
   };
 }
 
+export interface OpenedBlog {
+  id: number;
+  category_id: number;
+  title: string;
+  hero_image: string;
+  slug: string;
+  content: string;
+  published_at: string;
+  category: {
+    id: number;
+    name: string;
+  };
+}
+
 interface BlogProps {
   events: Event[];
   posts: Blogs[]; // NOTE: adjust to your JSON structure
+  openedBlog: OpenedBlog;
 }
 
-function Blog({ events, posts }: BlogProps) {
+function Blog({ events, posts, openedBlog }: BlogProps) {
   const blogs = posts; // remap to match internal usage
 
   const [page, setPage] = useState(1);
@@ -93,18 +108,10 @@ function Blog({ events, posts }: BlogProps) {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-        {visibleBlogs.map((blog) => (
-          <BlogCard
-            key={blog.id}
-            title={blog.title}
-            hero_image={blog.hero_image}
-            categoryName={blog.category.name}
-            slug={blog.slug}
-            published_at={blog.published_at}
-          />
-        ))}
-      </div>
+      <div
+  className="prose max-w-none mx-auto my-10"
+  dangerouslySetInnerHTML={{ __html: openedBlog.content }}
+/>
 
       <div className="flex justify-center gap-4 mt-6">
         <Button onClick={() => setPage((p) => p - 1)} disabled={page === 1}>

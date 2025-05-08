@@ -1,18 +1,46 @@
+import { Link } from "@inertiajs/react";
+import { Card } from "@/components/ui/card";
+import { IconBriefcase2, IconArmchair } from "@tabler/icons-react";
 
+interface BlogCardProps {
+  title: string;
+  hero_image: string;
+  categoryName: string;
+  slug: string;
+  published_at: string;
+}
 
-export function BlogCard({ title, description, imageUrl, link }: { title: string; description: string; imageUrl: string; link: string }) {
-    return (
-        <div className="bg-white p-4 rounded-2xl shadow-md flex flex-col gap-4">
-        <span className="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded-full w-max">News Article</span>
-        
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-gray-600 pr-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse ultricies.
-          </p>
-          <div className="w-16 h-16 bg-gray-300 rounded-xl flex items-center justify-center text-gray-700 font-semibold">
-            Img
+export function BlogCard({
+  title,
+  hero_image,
+  categoryName,
+  slug,
+  published_at,
+}: BlogCardProps) {
+  return (
+    <Link href={`/blog/${slug}`} className="block hover:opacity-90 transition">
+      <Card className="flex p-4 gap-4 rounded-2xl shadow-md border-blue-300">
+        <div className="flex items-center gap-4 py-0">
+          <div className="aspect-video max-w-56">
+            <img
+              src={hero_image}
+              alt={title}
+              className="object-cover w-full h-full rounded-md"
+            />
+          </div>
+          <div className="flex flex-col gap-2 flex-1">
+            <h2 className="md:text-md text-sm font-semibold">{title}</h2>
+            <div className="flex items-center gap-4 text-xs font-bold">
+              <span className="flex items-center gap-1">
+                <IconArmchair size={18} /> {categoryName}
+              </span>
+              <span className="flex items-center gap-1">
+                <IconBriefcase2 size={18} /> {published_at}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-    )
+      </Card>
+    </Link>
+  );
 }
