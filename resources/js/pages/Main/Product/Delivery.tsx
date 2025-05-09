@@ -67,7 +67,7 @@ function Delivery({ events, deliveries }: DeliveryProps) {
         <PromoCarousel events={events} />
       </div>
       
-      <h1 className="text-4xl font-bold my-7 mt-20 text-center">Delivery Mobil Balikpapan</h1>
+      <h1 className="text-2xl font-bold my-7 mt-20 text-center">Delivery Balikpapan</h1>
 
       <div className="md:flex grid grid-cols-2 justify-between md:w-4/5 items-center gap-4 mb-12">
         <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))}>
@@ -101,13 +101,13 @@ function Delivery({ events, deliveries }: DeliveryProps) {
       </div>
 
       <div className="flex justify-center gap-4 mt-6">
-        <Button onClick={() => setPage((p) => p - 1)} disabled={page === 1}>
+        <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setPage((p) => p - 1)} disabled={page === 1}>
           Prev
         </Button>
         <span className="flex items-center font-medium">
           Page {page} of {totalPages}
         </span>
-        <Button onClick={() => setPage((p) => p + 1)} disabled={page === totalPages}>
+        <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setPage((p) => p + 1)} disabled={page === totalPages}>
           Next
         </Button>
       </div>

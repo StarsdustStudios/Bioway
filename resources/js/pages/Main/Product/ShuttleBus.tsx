@@ -58,7 +58,7 @@ function ShuttleBus({ events, shuttleBuses }: ShuttleBusProps) {
       setSelectedTo(locations[0].id)
     }
   }, [locations, selectedFrom, selectedTo])
-  
+
 
   const filteredShuttles = shuttleBuses.filter((shuttle) => {
     const matchFrom = shuttle.from_location.id === selectedFrom
@@ -92,11 +92,11 @@ function ShuttleBus({ events, shuttleBuses }: ShuttleBusProps) {
         <PromoCarousel events={events} />
       </div>
 
-      <h1 className="text-4xl font-bold my-7">
+      <h1 className="text-2xl font-bold my-7">
         Shuttle Bus dari {locations.find((loc) => loc.id === selectedFrom)?.city_name || '-'} ke {locations.find((loc) => loc.id === selectedTo)?.city_name || '-'}
       </h1>
 
-      <div className="md:flex grid grid-cols-2 justify-between md:w-4/5 items-center gap-4 mb-12">
+      <div className="md:flex grid justify-between md:w-4/5 items-center gap-4 mb-12">
         <Button
           className="bg-blue-500 hover:bg-blue-400"
           onClick={() => setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))}
@@ -105,30 +105,38 @@ function ShuttleBus({ events, shuttleBuses }: ShuttleBusProps) {
         </Button>
 
         {locations.length > 0 ? (
-          <div className="flex gap-2">
-            <select
-              className="border rounded px-3 py-1"
-              value={selectedFrom}
-              onChange={(e) => handleFromChange(e.target.value)}
-            >
-              {locations.map((loc) => (
-                <option key={loc.id} value={loc.id}>
-                  {loc.city_name}
-                </option>
-              ))}
-            </select>
+          <div className="grid gap-2">
+            <div className='flex items-center gap-2 w-1/2'>
+              <p>dari:</p>
+              <select
+                className="border rounded px-3 py-1"
+                value={selectedFrom}
+                onChange={(e) => handleFromChange(e.target.value)}
+              >
+                {locations.map((loc) => (
+                  <option key={loc.id} value={loc.id}>
+                    {loc.city_name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <select
-              className="border rounded px-3 py-1"
-              value={selectedTo}
-              onChange={(e) => handleToChange(e.target.value)}
-            >
-              {locations.map((loc) => (
-                <option key={loc.id} value={loc.id}>
-                  {loc.city_name}
-                </option>
-              ))}
-            </select>
+            <div className='flex items-center gap-2 w-1/2'>
+              <p>ke:</p>
+              <select
+                className="border rounded px-3 py-1"
+                value={selectedTo}
+                onChange={(e) => handleToChange(e.target.value)}
+              >
+                {locations.map((loc) => (
+                  <option key={loc.id} value={loc.id}>
+                    {loc.city_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+
           </div>
         ) : (
           <div className="text-gray-500 text-sm">Loading locations...</div>
@@ -155,13 +163,13 @@ function ShuttleBus({ events, shuttleBuses }: ShuttleBusProps) {
       )}
 
       <div className="flex justify-center gap-4 mt-6">
-        <Button onClick={() => setPage((p) => p - 1)} disabled={page === 1}>
+        <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setPage((p) => p - 1)} disabled={page === 1}>
           Prev
         </Button>
         <span className="flex items-center font-medium">
           Page {page} of {totalPages}
         </span>
-        <Button onClick={() => setPage((p) => p + 1)} disabled={page === totalPages}>
+        <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setPage((p) => p + 1)} disabled={page === totalPages}>
           Next
         </Button>
       </div>

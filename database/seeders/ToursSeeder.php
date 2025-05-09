@@ -7,6 +7,7 @@ use App\Models\Tour;
 use Faker\Factory as Faker;
 use App\Models\Location;
 use DB;
+use Illuminate\Support\Str;
 
 
 class ToursSeeder extends Seeder

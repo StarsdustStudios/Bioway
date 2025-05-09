@@ -71,9 +71,12 @@ class PublicProductController extends Controller
     });
 
     $carters = Carter::with(['car', 'location'])->get()->map(function ($carter) {
-        if ($carter->car && $carter->car->car_image && !Str::startsWith($carter->car->car_image, ['http://', 'https://'])) {
-            $carter->car->car_image = asset('storage/' . ltrim($carter->car->car_image, '/'));
+        $carterImage = $carter->car->car_image;
+        if (!Str::startsWith($carterImage, 'http')) {
+            $carterImage = asset('storage/' . Str::replaceFirst('storage/', '', $carterImage));
         }
+
+        $carter->car->car_image = $carterImage;
         return $carter;
     });
 
@@ -92,10 +95,11 @@ public function shuttleBus()
     });
 
     $shuttleBuses = ShuttleBus::with(['car'])->get()->map(function ($shuttleBus) {
-        // Ensure car image is correctly formatted
-        if ($shuttleBus->car && $shuttleBus->car->car_image && !Str::startsWith($shuttleBus->car->car_image, ['http://', 'https://'])) {
-            $shuttleBus->car->car_image = asset('storage/' . ltrim($shuttleBus->car->car_image, '/'));
+        $shuttleBusImage = $shuttleBus->car->car_image;
+        if (!Str::startsWith($shuttleBusImage, 'http')) {
+            $shuttleBusImage = asset('storage/' . Str::replaceFirst('storage/', '', $shuttleBusImage));
         }
+        $shuttleBus->car->car_image = $shuttleBusImage;
 
         // Load locations based on 'from' and 'to' IDs
         $shuttleBus->from_location = Location::find($shuttleBus->from);
@@ -127,7 +131,11 @@ public function shuttleBus()
         return $event;
     });
         $tours = Tour::with('locations')->get()->map(function ($tour) {
-            $tour->tour_image = asset('storage/' . ltrim($tour->tour_image, '/'));
+            $tourImage = $tour->tour_image;
+            if (!Str::startsWith($tourImage, 'http')) {
+                $tourImage = asset('storage/' . Str::replaceFirst('storage/', '', $tourImage));
+            }
+            $tour->tour_image = $tourImage;
             return $tour;
         });
 
