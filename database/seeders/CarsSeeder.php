@@ -17,7 +17,7 @@ class CarsSeeder extends Seeder
         $faker = Faker::create();
 
         foreach (range(1, 10) as $index) {
-            $image = $faker->image(storage_path('app/public/cars'), 1280, 720, null, false);
+            $image = $faker->image(storage_path('storage/cars'), 1280, 720, null, false);
 
             Car::create([
                 'model' => $faker->word,

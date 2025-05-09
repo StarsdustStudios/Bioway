@@ -15,7 +15,7 @@ class ToursSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create();
+ $faker = Faker::create();
 
         // Make sure you have at least some locations seeded
         $locations = Location::all();

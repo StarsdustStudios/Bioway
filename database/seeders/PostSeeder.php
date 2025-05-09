@@ -17,7 +17,7 @@ class PostSeeder extends Seeder
         $faker = Faker::create();
 
         foreach (range(1, 10) as $i) {
-            $image = $faker->image(storage_path('app/public/posts'), 1280, 720, null, false);
+            $image = $faker->image(storage_path('storage/posts'), 1280, 720, null, false);
 
             Post::create([
                 'category_id' => rand(1, 5),
