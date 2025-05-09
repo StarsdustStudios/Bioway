@@ -6,7 +6,6 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Tour;
 use Faker\Factory as Faker;
-use App\Models\Location;
 
 class ToursSeeder extends Seeder
 {
@@ -15,7 +14,7 @@ class ToursSeeder extends Seeder
      */
     public function run(): void
     {
-        $faker = Faker::create();
+ $faker = Faker::create();
 
         // Make sure you have at least some locations seeded
         $locations = Location::all();
