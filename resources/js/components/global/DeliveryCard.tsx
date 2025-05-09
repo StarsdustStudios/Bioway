@@ -27,7 +27,7 @@ export function DeliveryCard({
             </span>
           </div>
           <p className="md:text-lg text-[15px] font-bold text-black">
-            Rp {price.toLocaleString('id-ID')} / Hari
+            Rp {price.toLocaleString('id-ID')}
           </p>
           <Button className="w-fit mt-2 bg-blue-600 hover:bg-blue-700 text-white md:text-base text-xs">
             ORDER SEKARANG

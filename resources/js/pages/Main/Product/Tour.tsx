@@ -77,14 +77,14 @@ function Tour({ events, tours, locations }: TourProps) {
         <PromoCarousel events={events} />
       </div>
 
-      <h1 className="text-4xl font-bold my-7 mt-20 text-center">
+      <h1 className="text-2xl font-bold my-7 mt-20 text-center">
         Tour {selectedLocation === 'all'
           ? 'Semua Lokasi'
           : locations.find((loc) => loc.id === selectedLocation)?.city_name ?? 'Tidak Diketahui'}
       </h1>
 
 
-      <div className="md:flex grid grid-cols-2 justify-between md:w-4/5 items-center gap-4 mb-12">
+      <div className="md:flex grid justify-between md:w-4/5 items-center gap-4 mb-12">
         <Button
           className="bg-blue-500 hover:bg-blue-400"
           onClick={() => setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))}
@@ -92,20 +92,25 @@ function Tour({ events, tours, locations }: TourProps) {
           Sort by Price ({sortDirection === 'asc' ? 'Asc' : 'Desc'})
         </Button>
 
-        <select
-          className="border rounded ml-auto px-3 py-1"
-          value={selectedLocation}
-          onChange={(e) =>
-            setSelectedLocation(e.target.value === 'all' ? 'all' : parseInt(e.target.value))
-          }
-        >
-          <option value="all">All Locations</option>
-          {locationsSet.map((loc) => (
-            <option key={loc.id} value={loc.id}>
-              {loc.city_name}
-            </option>
-          ))}
-        </select>
+        <div className='flex items-center gap-2'>
+          <p>lokasi:</p>
+          <select
+            className="border rounded ml-auto px-3 py-1"
+            value={selectedLocation}
+            onChange={(e) =>
+              setSelectedLocation(e.target.value === 'all' ? 'all' : parseInt(e.target.value))
+            }
+          >
+            <option value="all">All Locations</option>
+            {locationsSet.map((loc) => (
+              <option key={loc.id} value={loc.id}>
+                {loc.city_name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
@@ -125,13 +130,13 @@ function Tour({ events, tours, locations }: TourProps) {
       </div>
 
       <div className="flex justify-center gap-4 mt-6">
-        <Button onClick={() => setPage((p) => p - 1)} disabled={page === 1}>
+        <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setPage((p) => p - 1)} disabled={page === 1}>
           Prev
         </Button>
         <span className="flex items-center font-medium">
           Page {page} of {totalPages}
         </span>
-        <Button onClick={() => setPage((p) => p + 1)} disabled={page === totalPages}>
+        <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setPage((p) => p + 1)} disabled={page === totalPages}>
           Next
         </Button>
       </div>
