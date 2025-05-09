@@ -40,21 +40,27 @@ class PublicProductController extends Controller
     public function rental()
     {
         $events = Event::get()->map(function ($event) {
-        $event->poster_img = asset('storage/' . $event->poster_img);
-        return $event;
+            if (!Str::startsWith($event->poster_img, 'http')) {
+                $event->poster_img = asset('storage/' . Str::replaceFirst('storage/', '', $event->poster_img));
+            }
+            return $event;
         });
-
+    
         $rentals = Rental::with(['car', 'location', 'car.brand'])->get()->map(function ($rental) {
-            $rental->car->car_image = asset('storage/' . ltrim($rental->car->car_image, '/storage/'));
+            $carImage = $rental->car->car_image;
+            if (!Str::startsWith($carImage, 'http')) {
+                $carImage = asset('storage/' . Str::replaceFirst('storage/', '', $carImage));
+            }
+    
+            $rental->car->car_image = $carImage;
             return $rental;
         });
-
+    
         return Inertia::render('Main/Product/Rent', [
             'title' => 'Rental',
             'events' => $events,
             'rentals' => $rentals,
         ]);
-        
     }
 
     public function carter()

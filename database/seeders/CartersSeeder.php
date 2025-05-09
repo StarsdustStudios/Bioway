@@ -16,7 +16,7 @@ class CartersSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 30) as $index) {
+        foreach (range(1, 50) as $index) {
             Carter::create([
                 'car_id' => rand(1, 10),
                 'location_id' => rand(1, 10),
