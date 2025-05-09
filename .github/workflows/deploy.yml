@@ -42,10 +42,6 @@ jobs:
         run: |
           php artisan migrate --force
 
-      - name: Test Seeder
-        run: |
-          php artisan db:seed --class=BrandSeeder
-
     #   - name: Deploy to Hostinger or Other Platform
     #     run: |
     #       # Your deploy script here, e.g., SSH into your server

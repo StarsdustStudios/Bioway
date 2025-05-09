@@ -16,9 +16,9 @@ class RentalsSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 100) as $index) {
+        foreach (range(1, 50) as $index) {
             Rental::create([
-                'car_id' => rand(1, 10),
+                'car_id' => rand(1, 20),
                 'location_id' => rand(1, 10),
                 'price' => rand(1000000, 3000000),
                 'driver_fee' => rand(100000, 300000),      

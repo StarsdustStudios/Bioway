@@ -16,7 +16,7 @@ class DeliveriesSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 10) as $index) {
+        foreach (range(1, 30) as $index) {
             Delivery::create([
                 'location_id' => rand(1, 10),
                 'size' => ['S', 'M', 'L'][rand(0, 2)],

@@ -20,16 +20,13 @@ class ToursSeeder extends Seeder
 
         // Make sure you have at least some locations seeded
         $locations = Location::all();
+        $directory = public_path('storage/tours');
 
         foreach (range(1, 5) as $i) {
-            // Generate a 16:9 image (1280x720)
-            $image = $faker->image(
-                storage_path('app/public/tours'), // Save path
-                1280,
-                720,
-                null,
-                false // Return filename only
-            );
+            $imageName = Str::random(10) . '.jpg';
+            $imagePath = $directory . '/' . $imageName;
+            $imageContent = file_get_contents("https://loremflickr.com/1920/1080/logo");
+            file_put_contents($imagePath, $imageContent);
 
             // Create tour record
             $tour = Tour::create([
@@ -37,7 +34,7 @@ class ToursSeeder extends Seeder
                 'title' => $faker->sentence,
                 'desc' => $faker->text(100),
                 'price' => rand(500, 1000),
-                'tour_image' => 'storage/tours/' . $image,
+                'tour_image' => 'storage/tours/' . $imageName,
                 'passenger' => rand(4, 12),
                 'luggage' => rand(2, 6),
             ]);

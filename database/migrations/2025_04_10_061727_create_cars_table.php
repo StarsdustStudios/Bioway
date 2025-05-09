@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
-            $table->string('model')->unique();
+            $table->string('model');
             $table->foreignId('brand_id')->constrained('brands')->onDelete('cascade');
             $table->string('car_image')->nullable();
             $table->timestamps();
