@@ -17,11 +17,11 @@ class BrandSeeder extends Seeder
         $faker = Faker::create();
 
         foreach (range(1, 10) as $index) {
-            $image = $faker->image(storage_path('storage/brands'), 400, 400, null, false);
+            $image = $faker->image(storage_path('brands'), 400, 400, null, false);
 
             Brand::create([
                 'name' => $faker->company,
-                'brand_logo' => 'storage/brands/' . $image,
+                'brand_logo' => 'brands/' . $image,
             ]);
         }
     }
