@@ -8,6 +8,7 @@ use Faker\Factory as Faker;
 use App\Models\Location;
 use DB;
 
+
 class ToursSeeder extends Seeder
 {
     /**
