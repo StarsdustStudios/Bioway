@@ -4,6 +4,7 @@ import MainProduct from './MainProduct';
 import { PromoCarousel } from '@/components/global/PromoCarousel';
 import { RentalCard } from '@/components/global/RentalCard';
 import { Button } from '@/components/ui/button';
+import * as Switch  from '@radix-ui/react-switch';
 
 export interface Event {
     id: number;
@@ -96,14 +97,18 @@ function Rent({ events, rentals }: RentProps) {
                     Sort by Price ({sortDirection === 'asc' ? 'Asc' : 'Desc'})
                 </Button>
 
-                <label className="flex items-center gap-2">
-                    <input
-                        type="checkbox"
-                        checked={useDriver}
-                        onChange={(e) => setUseDriver(e.target.checked)}
-                    />
-                    Pakai Supir
-                </label>
+                <label className="flex items-center gap-4">
+  <span>Pakai Supir</span>
+  <Switch.Root
+    checked={useDriver}
+    onCheckedChange={setUseDriver}
+    className="w-[42px] h-[25px] bg-gray-300 dark:bg-gray-700 rounded-full relative data-[state=checked]:bg-blue-600 transition-colors"
+  >
+    <Switch.Thumb
+      className="block w-[21px] h-[21px] bg-white rounded-full shadow-md transition-transform translate-x-1 data-[state=checked]:translate-x-[19px]"
+    />
+  </Switch.Root>
+</label>
 
                 <div className="flex items-center gap-2">
                     <p>Lokasi:</p>
