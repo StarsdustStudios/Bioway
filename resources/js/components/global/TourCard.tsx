@@ -60,7 +60,7 @@ export function TourCard({
             </span>
           </div>
           <p className="md:text-lg text-base font-bold text-black">
-            Rp {price.toLocaleString('id-ID')} / Hari
+            Rp {price.toLocaleString('id-ID')}
           </p>
           <p className="text-xs text-gray-600">Lokasi Awal: {startLocation}</p>
           <p className="text-xs text-gray-600">

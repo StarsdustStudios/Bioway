@@ -4,6 +4,8 @@ import { PromoCarousel } from '@/components/global/PromoCarousel';
 import { BlogCard } from '@/components/global/BlogCard';
 import { Button } from '@/components/ui/button';
 import MainProduct from '../Product/MainProduct';
+import MainLayout from '../Main';
+import { IconBrandWhatsapp, IconBrandFacebook, IconBrandX, IconCopy } from '@tabler/icons-react';
 
 export interface Event {
   id: number;
@@ -80,56 +82,83 @@ function Blog({ events, posts, openedBlog }: BlogProps) {
 
   return (
     <>
-      <h1 className="text-4xl font-bold my-7">Promo Hari Ini</h1>
-      <div>
-        <PromoCarousel events={events} />
+      <div className="flex flex-col items-center justify-center mt-10">
+        <h1 className="md:text-5xl text-xl font-bold text-center">{openedBlog.title}</h1>
+        <p className="text-gray-500 text-sm mt-2">Di Upload {openedBlog.published_at}</p>
+        <div className="flex items-center mt-4">
+          <span className="text-gray-500 text-sm">{openedBlog.category?.name}</span>
+        </div>
+        <img
+          src={openedBlog.hero_image}
+          alt={openedBlog.title}
+          className="md:w-1/2 object-cover mt-4 rounded-lg"
+        />
       </div>
-      
-      <h1 className="text-4xl font-bold my-7 mt-20 text-center">Blog</h1>
-
-      <div className="md:flex grid grid-cols-2 justify-between md:w-4/5 items-center gap-4 mb-12">
-        <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))}>
-          Sort by ID ({sortDirection === 'asc' ? 'Asc' : 'Desc'})
-        </Button>
-
-        <select
-          className="border rounded ml-auto px-3 py-1"
-          value={selectedCategory.toString()}
-          onChange={(e) =>
-            setSelectedCategory(e.target.value === 'all' ? 'all' : parseInt(e.target.value))
-          }
+      <div className="flex justify-center">
+        <h1 className="text-lg font-semibold text-gray-600 mt-7 text-center">Bagikan Artikel Ini</h1>
+      </div>
+      <div className="flex justify-center mt-4 gap-5">
+        <Button
+          variant="outline"
+          className="mr-2"
+          onClick={() => {
+            const url = `${window.location.href} ayo cek artikel dari Bioway ini!`;
+            navigator.clipboard.writeText(url);
+            alert('Link copied to clipboard!');
+          }}
         >
-          <option value="all">All</option>
-          {categorys.map((categ) => (
-            <option key={categ!.id} value={categ!.id}>
-              {categ!.name}
-            </option>
-          ))}
-        </select>
+          <IconCopy className="" />
+        </Button>
+        <Button
+          variant="outline"
+          className="mr-2"
+          onClick={() => {
+            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(
+              openedBlog.title + ' ' + window.location.href
+            )} ayo cek artikel dari Bioway ini!`;
+            window.open(url, '_blank');
+          }}
+        >
+          <IconBrandWhatsapp color='#25D366' className="" />
+        </Button>
+        <Button
+          variant="outline"
+          className="mr-2"
+          onClick={() => {
+            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+              window.location.href
+            )} Ayo cek artikel dari Bioway ini!`;
+            window.open(url, '_blank');
+          }}
+        >
+          <IconBrandFacebook color="#1877F2" className="" />
+        </Button>
+        <Button
+          variant="outline"
+          className="mr-2"
+          onClick={() => {
+            const url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+              window.location.href
+            )} ayo cek artikel dari Bioway ini!`;
+            window.open(url, '_blank');
+          }}
+        >
+          <IconBrandX className="" />
+        </Button>
       </div>
+
 
       <div
-  className="prose max-w-none mx-auto my-10"
-  dangerouslySetInnerHTML={{ __html: openedBlog.content }}
-/>
+        className="prose md:w-1/2 mx-auto my-10"
+        dangerouslySetInnerHTML={{ __html: openedBlog.content }}
+      />
 
-      <div className="flex justify-center gap-4 mt-6">
-        <Button onClick={() => setPage((p) => p - 1)} disabled={page === 1}>
-          Prev
-        </Button>
-        <span className="flex items-center font-medium">
-          Page {page} of {totalPages}
-        </span>
-        <Button onClick={() => setPage((p) => p + 1)} disabled={page === totalPages}>
-          Next
-        </Button>
-      </div>
 
       <div className="mb-20" />
     </>
   );
 }
 
-Blog.layout = (page: React.ReactNode) => <MainProduct>{page}</MainProduct>;
+Blog.layout = (page: React.ReactNode) => <MainLayout>{page}</MainLayout>;
 
 export default Blog;

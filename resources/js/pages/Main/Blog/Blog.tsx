@@ -4,6 +4,7 @@ import { PromoCarousel } from '@/components/global/PromoCarousel';
 import { BlogCard } from '@/components/global/BlogCard';
 import { Button } from '@/components/ui/button';
 import MainProduct from '../Product/MainProduct';
+import MainLayout from '../Main';
 
 export interface Event {
   id: number;
@@ -69,8 +70,8 @@ function Blog({ events, posts }: BlogProps) {
       <div>
         <PromoCarousel events={events} />
       </div>
-      
-      <h1 className="text-4xl font-bold my-7 mt-20 text-center">Blog</h1>
+
+      <h1 className="text-4xl font-bold my-7 mt-20 text-center">Blog dan Artikel</h1>
 
       <div className="md:flex grid grid-cols-2 justify-between md:w-4/5 items-center gap-4 mb-12">
         <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setSortDirection((d) => (d === 'asc' ? 'desc' : 'asc'))}>
@@ -93,7 +94,7 @@ function Blog({ events, posts }: BlogProps) {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 md:px-20 p-4">
         {visibleBlogs.map((blog) => (
           <BlogCard
             key={blog.id}
@@ -107,13 +108,13 @@ function Blog({ events, posts }: BlogProps) {
       </div>
 
       <div className="flex justify-center gap-4 mt-6">
-        <Button onClick={() => setPage((p) => p - 1)} disabled={page === 1}>
+        <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setPage((p) => p - 1)} disabled={page === 1}>
           Prev
         </Button>
         <span className="flex items-center font-medium">
           Page {page} of {totalPages}
         </span>
-        <Button onClick={() => setPage((p) => p + 1)} disabled={page === totalPages}>
+        <Button className='bg-blue-500 hover:bg-blue-400' onClick={() => setPage((p) => p + 1)} disabled={page === totalPages}>
           Next
         </Button>
       </div>
@@ -123,6 +124,6 @@ function Blog({ events, posts }: BlogProps) {
   );
 }
 
-Blog.layout = (page: React.ReactNode) => <MainProduct>{page}</MainProduct>;
+Blog.layout = (page: React.ReactNode) => <MainLayout>{page}</MainLayout>;
 
 export default Blog;
