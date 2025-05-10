@@ -30,7 +30,12 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        {{-- app icons --}}
+        <link rel="icon" sizes="32x32" href="{{ asset('biowayfav.ico') }}">
+        <link rel="icon" sizes="192x192" href="{{ asset('biowayfav.ico') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('biowayfav.ico') }}">
+
+        <title>Bioway - Tour and Rent Solution </title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
