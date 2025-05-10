@@ -83,7 +83,7 @@ function Blog({ events, posts, openedBlog }: BlogProps) {
   return (
     <>
       <div className="flex flex-col items-center justify-center mt-10">
-        <h1 className="md:text-5xl text-xl font-bold text-center">{openedBlog.title}</h1>
+        <h1 className="md:text-5xl text-2xl font-bold text-center">{openedBlog.title}</h1>
         <p className="text-gray-500 text-sm mt-2">Di Upload {openedBlog.published_at}</p>
         <div className="flex items-center mt-4">
           <span className="text-gray-500 text-sm">{openedBlog.category?.name}</span>

@@ -18,6 +18,8 @@ const menuItems = [
   { label: "About", icon: IconInfoSquareFilled, path: "/profil" },
 ]
 
+import BiowayLogo from "@/assets/Bioway_Logo.png"
+
 import { Link, usePage } from "@inertiajs/react"
 
 
@@ -38,7 +40,7 @@ export function DesktopNavBar() {
   return (
     <div className="bg-blue-500 top-0 left-0 right-0 py-2 px-56 h-fit flex">
       <div className="w-fit flex items-center">
-      <img className="max-h-15" src="/img/Bioway_Logo.png" alt="Bioway Logo" />
+        <img className="max-h-15" src={BiowayLogo} alt="Bioway Logo" />
       </div>
       <NavigationMenu className="ml-auto">
         <NavigationMenuList>
@@ -57,6 +59,7 @@ export function MobileNavBar() {
   const { url } = usePage()
 
   return (
+
     <div className="bg-blue-500 fixed bottom-0 w-full p-2 flex items-center justify-center h-fit rounded-t-4xl z-10">
       <NavigationMenu>
         <NavigationMenuList className="flex items-center gap-5 justify-center">
@@ -67,6 +70,16 @@ export function MobileNavBar() {
           ))}
         </NavigationMenuList>
       </NavigationMenu>
+    </div>
+  )
+}
+
+export function MobileNavbarTop() {
+  return (
+    <div className="bg-blue-500 top-0 left-0 right-0 py-2 px-4 h-fit flex">
+      <div className="w-fit flex items-center">
+        <img className="max-h-15" src={BiowayLogo} alt="Bioway Logo" />
+      </div>
     </div>
   )
 }

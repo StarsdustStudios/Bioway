@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 export interface Partner {
     id: number
     name: string
-    logo: string // full URL after mapping in controller
+    logo: string 
 }
 
 export interface Event {

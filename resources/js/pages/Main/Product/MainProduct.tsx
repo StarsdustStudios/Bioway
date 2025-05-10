@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { DesktopNavBar, MobileNavBar } from '@/components/global/Navbar'
+import { DesktopNavBar, MobileNavBar, MobileNavbarTop } from '@/components/global/Navbar'
 import { ProductNav } from '@/components/global/ProductNav'
 import { PromoCarousel } from '@/components/global/PromoCarousel'
 
@@ -17,6 +17,7 @@ export default function MainProduct({ children}: { children: React.ReactNode }) 
     return (
         <div className="flex flex-col">
             {isDesktop ? <DesktopNavBar /> : <MobileNavBar />}
+            {isDesktop ? null : <MobileNavbarTop />}
             
             <main className="flex-grow flex flex-col justify-center items-center p-4">
             <ProductNav />

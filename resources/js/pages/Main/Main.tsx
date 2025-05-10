@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { DesktopNavBar, MobileNavBar } from '@/components/global/Navbar'
+import { DesktopNavBar, MobileNavBar, MobileNavbarTop } from '@/components/global/Navbar'
+import { Footer } from '@/components/global/Footer'
 
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -14,10 +15,13 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     return (
         <div className="flex flex-col">
             {isDesktop ? <DesktopNavBar /> : <MobileNavBar />}
+            {isDesktop ? null : <MobileNavbarTop />}
             
             <main className="flex-grow flex flex-col justify-center items-center p-4">
                 {children}
             </main>
+
+            <Footer />
         </div>
     )
 }
