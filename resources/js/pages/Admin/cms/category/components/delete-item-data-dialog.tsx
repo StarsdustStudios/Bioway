@@ -2,13 +2,13 @@
 
 import { useState } from 'react'
 import { IconAlertTriangle } from '@tabler/icons-react'
-import { toast } from '@/hooks/use-toast'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/input'
 import { Label } from '@/components/ui/label'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { CategoryGetData } from './schema'
 import { router } from '@inertiajs/react'
+import { useToast } from '@/hooks/use-toast'
 
 interface Props {
   open: boolean
@@ -18,8 +18,7 @@ interface Props {
 
 export function UsersDeleteDialog({ open, onOpenChange, currentRow }: Props) {
   const [value, setValue] = useState('')
-
-    
+  const {toast} = useToast()
   const handleDelete = () => {
     if (!currentRow || !currentRow.id) {
       toast({
